@@ -13,6 +13,7 @@ use Skirttique\Core\Contracts\ServiceInterface;
 use Skirttique\Core\Payments\GatewayRouter;
 use Skirttique\Core\Services\CartAjax;
 use Skirttique\Core\Services\Currency;
+use Skirttique\Core\Services\HouseContent;
 use Skirttique\Core\Services\Market;
 use Skirttique\Core\Services\Newsletter;
 use Skirttique\Core\Services\QuickView;
@@ -31,6 +32,7 @@ final class Plugin {
 	private const SERVICES = array(
 		Market::class,
 		Currency::class,
+		HouseContent::class,
 		Newsletter::class,
 		CartAjax::class,
 		Wishlist::class,

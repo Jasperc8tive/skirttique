@@ -18,9 +18,25 @@ declare( strict_types=1 );
 
 $st_shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/shop/' );
 
-// Curated, verified editorial photography (Skirttique Design System v1.0,
-// §Imagery) — one image per real product_cat term. Replace with brand
-// photography as it becomes available; slugs are stable, images are not.
+// Owner-edited copy (Skirttique → House Settings); every value falls
+// back to the shipped voice when blank.
+$st_house = (array) get_option( 'skirttique_house', array() );
+$st_text  = static function ( string $key, string $default ) use ( $st_house ): string {
+	$value = trim( (string) ( $st_house[ $key ] ?? '' ) );
+
+	return '' !== $value ? $value : $default;
+};
+
+// Owner-set image (attachment id) rendered through wp_get_attachment_image.
+$st_image = static function ( string $key, array $attrs ) use ( $st_house ): string {
+	$id = absint( $st_house[ $key ] ?? 0 );
+
+	return $id ? wp_get_attachment_image( $id, 'woocommerce_single', false, $attrs ) : '';
+};
+
+// Fallback editorial photography (Skirttique Design System v1.0,
+// §Imagery) — used until the owner sets a category thumbnail
+// (Products → Categories) per collection. Slugs are stable, images are not.
 $st_collection_images = array(
 	'maxi'            => 'photo-1762342676026-09e25daaf607',
 	'midi'            => 'photo-1722486245824-7bb0ff9827dc',
@@ -61,14 +77,28 @@ $st_delay = static fn ( int $i ): string => 'st-drape--delay-' . ( ( $i % 4 ) + 
 
 <section class="st-hero">
 	<div class="st-hero__media">
-		<img src="https://images.unsplash.com/photo-1693259317871-6dfeb116c763?q=80&amp;w=1800&amp;auto=format&amp;fit=crop" alt="" loading="eager" fetchpriority="high" width="1800" height="1200">
+		<?php
+		$st_hero_img = $st_image(
+			'hero_image_id',
+			array(
+				'alt'           => '',
+				'loading'       => 'eager',
+				'fetchpriority' => 'high',
+			)
+		);
+		if ( $st_hero_img ) {
+			echo $st_hero_img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image() output.
+		} else {
+			?>
+			<img src="https://images.unsplash.com/photo-1693259317871-6dfeb116c763?q=80&amp;w=1800&amp;auto=format&amp;fit=crop" alt="" loading="eager" fetchpriority="high" width="1800" height="1200">
+		<?php } ?>
 	</div>
 	<div class="st-drape">
 		<div class="st-hero__content">
-			<p class="st-hero__eyebrow"><?php esc_html_e( 'Collection I', 'skirttique' ); ?></p>
-			<h1 class="st-hero__statement"><?php esc_html_e( 'The skirt, reconsidered', 'skirttique' ); ?></h1>
-			<p class="st-hero__sub"><?php esc_html_e( 'Midi and maxi silhouettes cut for movement, made to be kept.', 'skirttique' ); ?></p>
-			<a class="st-hemline st-hero__cta" href="<?php echo esc_url( $st_shop_url ); ?>"><?php esc_html_e( 'Shop the collection', 'skirttique' ); ?></a>
+			<p class="st-hero__eyebrow"><?php echo esc_html( $st_text( 'hero_eyebrow', __( 'Collection I', 'skirttique' ) ) ); ?></p>
+			<h1 class="st-hero__statement"><?php echo esc_html( $st_text( 'hero_statement', __( 'The skirt, reconsidered', 'skirttique' ) ) ); ?></h1>
+			<p class="st-hero__sub"><?php echo esc_html( $st_text( 'hero_sub', __( 'Midi and maxi silhouettes cut for movement, made to be kept.', 'skirttique' ) ) ); ?></p>
+			<a class="st-hemline st-hero__cta" href="<?php echo esc_url( $st_shop_url ); ?>"><?php echo esc_html( $st_text( 'hero_cta', __( 'Shop the collection', 'skirttique' ) ) ); ?></a>
 		</div>
 	</div>
 </section>
@@ -86,9 +116,25 @@ $st_delay = static fn ( int $i ): string => 'st-drape--delay-' . ( ( $i % 4 ) + 
 			<div class="st-drape <?php echo esc_attr( $st_delay( $st_i ) ); ?>">
 				<a class="st-collections__card" href="<?php echo esc_url( get_term_link( $st_category ) ); ?>">
 					<span class="st-collections__frame">
-						<?php if ( isset( $st_collection_images[ $st_category->slug ] ) ) : ?>
+						<?php
+						// The collection's own image (Products → Categories →
+						// Thumbnail) wins; the design-system fallback covers
+						// collections the owner has not dressed yet.
+						$st_thumb_id = absint( get_term_meta( $st_category->term_id, 'thumbnail_id', true ) );
+						if ( $st_thumb_id ) {
+							echo wp_get_attachment_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image() output.
+								$st_thumb_id,
+								'large',
+								false,
+								array(
+									'alt'     => '',
+									'loading' => 'lazy',
+								)
+							);
+						} elseif ( isset( $st_collection_images[ $st_category->slug ] ) ) {
+							?>
 							<img src="https://images.unsplash.com/<?php echo esc_attr( $st_collection_images[ $st_category->slug ] ); ?>?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="900" height="1125">
-						<?php endif; ?>
+						<?php } ?>
 					</span>
 					<span class="st-collections__name"><?php echo esc_html( $st_category->name ); ?></span>
 				</a>
@@ -102,14 +148,27 @@ $st_delay = static fn ( int $i ): string => 'st-drape--delay-' . ( ( $i % 4 ) + 
 	<div class="st-drape">
 		<div class="st-philosophy__copy">
 			<p class="st-section__eyebrow"><?php esc_html_e( 'The house view', 'skirttique' ); ?></p>
-			<h2 class="st-philosophy__statement" id="st-philosophy-title"><?php esc_html_e( 'A skirt is not an afterthought to an outfit. It is the architecture of one.', 'skirttique' ); ?></h2>
-			<p class="st-philosophy__prose"><?php esc_html_e( 'Skirttique exists for women who dress with intention — cut for the boardroom and the aisle, the flight and the function, in fabrics chosen to move the way you do. Every piece is made in limited runs, then retired.', 'skirttique' ); ?></p>
+			<h2 class="st-philosophy__statement" id="st-philosophy-title"><?php echo esc_html( $st_text( 'philosophy_statement', __( 'A skirt is not an afterthought to an outfit. It is the architecture of one.', 'skirttique' ) ) ); ?></h2>
+			<p class="st-philosophy__prose"><?php echo esc_html( $st_text( 'philosophy_prose', __( 'Skirttique exists for women who dress with intention — cut for the boardroom and the aisle, the flight and the function, in fabrics chosen to move the way you do. Every piece is made in limited runs, then retired.', 'skirttique' ) ) ); ?></p>
 			<a class="st-hemline" href="<?php echo esc_url( home_url( '/about/' ) ); ?>"><?php esc_html_e( 'The house, in full', 'skirttique' ); ?></a>
 		</div>
 	</div>
 	<div class="st-drape st-drape--delay-2">
 		<figure class="st-philosophy__figure">
-			<img src="https://images.unsplash.com/photo-1774380255851-72e8a36d7a59?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="1200" height="1500">
+			<?php
+			$st_philosophy_img = $st_image(
+				'philosophy_image_id',
+				array(
+					'alt'     => '',
+					'loading' => 'lazy',
+				)
+			);
+			if ( $st_philosophy_img ) {
+				echo $st_philosophy_img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image() output.
+			} else {
+				?>
+				<img src="https://images.unsplash.com/photo-1774380255851-72e8a36d7a59?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="1200" height="1500">
+			<?php } ?>
 		</figure>
 	</div>
 </section>
@@ -189,7 +248,7 @@ $st_quotes = apply_filters(
 <section class="st-section st-closing has-foliage-background-color has-nectar-color has-text-color has-background">
 	<div class="st-drape">
 		<div class="st-closing__inner">
-			<h2 class="st-closing__statement"><?php esc_html_e( 'Worn in five countries. Cut in one house.', 'skirttique' ); ?></h2>
+			<h2 class="st-closing__statement"><?php echo esc_html( $st_text( 'closing_statement', __( 'Worn in five countries. Cut in one house.', 'skirttique' ) ) ); ?></h2>
 			<a class="st-hemline" href="#st-house-list"><?php esc_html_e( 'Join the house list', 'skirttique' ); ?></a>
 		</div>
 	</div>

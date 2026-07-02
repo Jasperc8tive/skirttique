@@ -108,6 +108,19 @@ Block theme (FSE), PHP 8.3, strict types everywhere.
   PDP-panel promises (GIG/DHL, 14-day unworn returns) and needs a legal read before
   launch. Size Guide, FAQs, and Contact remain unwritten.
 
+- **CMS Experience (Stage 11):** the owner edits day-to-day content at **Skirttique →
+  House Settings** (plugin `Services\HouseContent`, capability `manage_woocommerce`):
+  announcement lines, homepage hero (copy + image), philosophy (copy + figure), press
+  quotes, closing band, social URLs, and the multi-currency rates (writes the
+  `skirttique_currency_rates` option Currency reads). Values live in the
+  `skirttique_house` option; anything left blank falls back to the shipped copy — the
+  theme stays authoritative for defaults. Announcements/socials/quotes reach the theme
+  through its existing filters (the plugin bridges them); the homepage pattern reads the
+  option directly for hero/philosophy/closing. Collection-card imagery is the native
+  WooCommerce category thumbnail (Products → Categories), falling back to the
+  design-system Unsplash map until set. Products and pages are edited in their native
+  screens — the House Settings page says so on its face.
+
 ## Plugin — `skirttique-core`
 
 `Skirttique\Core\` PSR-4 (spl_autoload_register, no Composer dependency in production).
@@ -121,6 +134,7 @@ Block theme (FSE), PHP 8.3, strict types everywhere.
 | `Services\Wishlist` — user-meta list behind nonce-verified get/toggle/merge endpoints (guest side lives in localStorage) | shipped (7) |
 | `Services\RecentlyViewed` — shared read-only `skirttique_product_cards` fragment endpoint (tracking itself is client-side) | shipped (7) |
 | `Services\QuickView` — `skirttique_quickview` fragment endpoint; markup via `skirttique_quickview_html` filter (theme) | shipped (7) |
+| `Services\HouseContent` — the House Settings screen (`skirttique_house` option) + filter bridges into the theme's announcement/social/press filters; also edits `skirttique_currency_rates` | shipped (11) |
 | `Services\Currency` — full multi-currency: `woocommerce_currency` + price/variation/shipping conversion off `Market::current()`, NGN-based rates (`skirttique_currency_rates` option/filter, shipped rates are placeholders), whole-unit rounding, variation-price cache keyed by currency; admin stays NGN | shipped (9) |
 | `Payments\GatewayRouter` — filters `woocommerce_available_payment_gateways` to the mapped gateway per currency (NGN→`paystack`, else `stripe`, `skirttique_currency_gateways` filter); passes through untouched when the mapped gateway is unconfigured so checkout never dead-ends | shipped (9) |
 | `Shipping\CarrierInterface` — contract for GIG/DHL/FedEx/UPS methods | later stage |
