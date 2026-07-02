@@ -8,7 +8,7 @@
 import http from "node:http";
 
 const UPSTREAM = { host: "127.0.0.1", port: 8888 };
-const PORT = 4180;
+const PORT = Number(process.env.PROXY_PORT ?? 4180);
 const FROM = new RegExp(`localhost:${UPSTREAM.port}`, "g");
 // Override for browser tooling that can't resolve "localhost" itself
 // (e.g. a containerized browser reaching this proxy via host.docker.internal).

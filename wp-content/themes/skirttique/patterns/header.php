@@ -143,7 +143,24 @@ $st_current_market = $st_markets[ $st_current_code ];
 			</ul>
 			<div class="st-panel__aside">
 				<figure class="st-panel__figure">
-					<img src="https://images.unsplash.com/photo-1722486245824-7bb0ff9827dc?q=80&amp;w=700&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="700" height="875">
+					<?php
+					// First collection that has a thumbnail dresses the panel;
+					// the hotlink survives only as the no-media fallback.
+					$st_panel_img = '';
+					foreach ( $st_categories as $st_panel_cat ) {
+						$st_panel_thumb = absint( get_term_meta( $st_panel_cat->term_id, 'thumbnail_id', true ) );
+						if ( $st_panel_thumb ) {
+							$st_panel_img = wp_get_attachment_image( $st_panel_thumb, 'woocommerce_single', false, array( 'loading' => 'lazy' ) );
+							break;
+						}
+					}
+
+					if ( $st_panel_img ) {
+						echo $st_panel_img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image() output.
+					} else {
+						echo '<img src="https://images.unsplash.com/photo-1722486245824-7bb0ff9827dc?q=80&amp;w=700&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="700" height="875">';
+					}
+					?>
 				</figure>
 				<a class="st-hemline" href="<?php echo esc_url( $st_shop_url ); ?>"><?php esc_html_e( 'View everything', 'skirttique' ); ?></a>
 			</div>

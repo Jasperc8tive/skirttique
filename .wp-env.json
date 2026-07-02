@@ -5,6 +5,7 @@
     "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
     "https://downloads.wordpress.org/plugin/woo-paystack.latest-stable.zip",
     "https://downloads.wordpress.org/plugin/woocommerce-gateway-stripe.latest-stable.zip",
+    "https://downloads.wordpress.org/plugin/seo-by-rank-math.latest-stable.zip",
     "./wp-content/plugins/skirttique-core"
   ],
   "themes": ["./wp-content/themes/skirttique"],

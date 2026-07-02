@@ -56,19 +56,19 @@ function enqueue(): void {
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue' );
 
 /**
- * Preload the two critical brand fonts to protect LCP and CLS.
+ * Preload the critical resources: both brand fonts everywhere, and the
+ * hero image on the front page (it is the LCP element).
  *
- * @param array<int, array<string, string>> $urls          URLs to hint.
- * @param string                            $relation_type Relation type.
+ * Uses `wp_preload_resources` (WP 6.1+) — NOT `wp_resource_hints`,
+ * which silently ignores the `preload` relation (Stage 12 audit found
+ * the original hints never rendered).
+ *
+ * @param array<int, array<string, string>> $resources Resources to preload.
  * @return array<int, array<string, string>>
  */
-function preload_fonts( array $urls, string $relation_type ): array {
-	if ( 'preload' !== $relation_type ) {
-		return $urls;
-	}
-
+function preload_resources( array $resources ): array {
 	foreach ( array( 'laluxes-regular.woff2', 'garet-book.woff2' ) as $font ) {
-		$urls[] = array(
+		$resources[] = array(
 			'href'        => SKIRTTIQUE_URI . '/assets/fonts/' . $font,
 			'as'          => 'font',
 			'type'        => 'font/woff2',
@@ -76,9 +76,33 @@ function preload_fonts( array $urls, string $relation_type ): array {
 		);
 	}
 
-	return $urls;
+	if ( is_front_page() ) {
+		$house   = (array) get_option( 'skirttique_house', array() );
+		$hero_id = isset( $house['hero_image_id'] ) ? absint( $house['hero_image_id'] ) : 0;
+
+		if ( $hero_id ) {
+			$src = wp_get_attachment_image_src( $hero_id, 'full' );
+			if ( $src ) {
+				$preload = array(
+					'href'          => $src[0],
+					'as'            => 'image',
+					'fetchpriority' => 'high',
+				);
+
+				$srcset = wp_get_attachment_image_srcset( $hero_id, 'full' );
+				if ( $srcset ) {
+					$preload['imagesrcset'] = $srcset;
+					$preload['imagesizes']  = '100vw';
+				}
+
+				$resources[] = $preload;
+			}
+		}
+	}
+
+	return $resources;
 }
-add_filter( 'wp_resource_hints', __NAMESPACE__ . '\\preload_fonts', 10, 2 );
+add_filter( 'wp_preload_resources', __NAMESPACE__ . '\\preload_resources' );
 
 /**
  * Without JavaScript, drape.ts never adds `.is-visible`, and the CSS
