@@ -59,7 +59,7 @@ final class Market implements ServiceInterface {
 	public const DEFAULT_MARKET = 'NG';
 
 	public function register(): void {
-		// Stage 9: hook currency filters and price conversion off current().
+		// Pure state holder — Currency and GatewayRouter hook off current().
 	}
 
 	/**

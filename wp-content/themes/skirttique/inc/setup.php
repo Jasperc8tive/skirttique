@@ -21,6 +21,10 @@ function setup(): void {
 	add_theme_support( 'responsive-embeds' );
 	add_theme_support( 'html5', array( 'search-form', 'gallery', 'caption', 'style', 'script' ) );
 
+	// Classic-template surfaces WooCommerce still renders (My Account,
+	// order emails) — also unlocks theme overrides under /woocommerce/.
+	add_theme_support( 'woocommerce' );
+
 	load_theme_textdomain( 'skirttique', SKIRTTIQUE_DIR . '/languages' );
 }
 add_action( 'after_setup_theme', __NAMESPACE__ . '\\setup' );

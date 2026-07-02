@@ -334,6 +334,48 @@ function companion_products( \WC_Product $product, int $limit = 4 ): array {
 }
 
 /**
+ * The account menu, in the house voice: no Downloads (nothing to
+ * download), Saved pieces woven in beside Orders, Sign out last.
+ *
+ * @param array<string, string> $items Endpoint → label.
+ * @return array<string, string>
+ */
+function account_menu_items( array $items ): array {
+	unset( $items['downloads'] );
+
+	$items['dashboard']       = __( 'Overview', 'skirttique' );
+	$items['customer-logout'] = __( 'Sign out', 'skirttique' );
+
+	// Saved pieces sits directly after Orders.
+	$ordered = array();
+	foreach ( $items as $endpoint => $label ) {
+		$ordered[ $endpoint ] = $label;
+		if ( 'orders' === $endpoint ) {
+			$ordered['saved-pieces'] = __( 'Saved pieces', 'skirttique' );
+		}
+	}
+
+	return $ordered;
+}
+add_filter( 'woocommerce_account_menu_items', __NAMESPACE__ . '\\account_menu_items' );
+
+/**
+ * 'saved-pieces' is a menu entry, not a real endpoint — send it to the
+ * wishlist page.
+ *
+ * @param string $url      Generated URL.
+ * @param string $endpoint Endpoint key.
+ */
+function account_menu_urls( string $url, string $endpoint ): string {
+	if ( 'saved-pieces' === $endpoint ) {
+		return home_url( '/saved/' );
+	}
+
+	return $url;
+}
+add_filter( 'woocommerce_get_endpoint_url', __NAMESPACE__ . '\\account_menu_urls', 10, 2 );
+
+/**
  * Quick-view fragment (served through the plugin's endpoint): image,
  * name, price, the shared purchase form, and the road to the full PDP.
  */

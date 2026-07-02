@@ -91,6 +91,16 @@ Block theme (FSE), PHP 8.3, strict types everywhere.
   in page content by `tools/customize-cart-empty-state.php` (idempotent, `wp eval-file`).
   Placeholders until Stage 9: COD gateway ("Pay on delivery"), flat-rate shipping
   (NG zone ₦3,500 / rest-of-world ₦45,000) — GatewayRouter + real carriers replace both.
+- **Account (Stage 10):** `templates/page-my-account.html` → `patterns/account-head.php`
+  (greets by first name when signed in) around the classic `[woocommerce_my_account]`
+  shortcode. `_account.scss` re-clothes Woo's classic markup: nav rail (hairline +
+  foliage current-marker; wraps to a pill row ≤60rem), dashboard tiles (theme override
+  `woocommerce/myaccount/dashboard.php` — `add_theme_support('woocommerce')` in setup.php
+  unlocks overrides), orders tables (stacking to labelled rows ≤40rem via Woo's
+  `data-title`), address cards, and the sign-in/register split. Menu voice via
+  `account_menu_items` in inc/woocommerce.php: Overview / Orders / Saved pieces (→
+  `/saved/`) / Addresses / Account details / Sign out — Downloads removed. Store
+  settings: self-registration ON, customers choose their own password.
 - **Content pages:** `templates/page.html` is the editorial prose shell (`.st-page`,
   `_page.scss`: measured column, serif title, ruled caption headings). Privacy Policy,
   Terms of Service, and Delivery & Returns are seeded by
@@ -111,8 +121,17 @@ Block theme (FSE), PHP 8.3, strict types everywhere.
 | `Services\Wishlist` — user-meta list behind nonce-verified get/toggle/merge endpoints (guest side lives in localStorage) | shipped (7) |
 | `Services\RecentlyViewed` — shared read-only `skirttique_product_cards` fragment endpoint (tracking itself is client-side) | shipped (7) |
 | `Services\QuickView` — `skirttique_quickview` fragment endpoint; markup via `skirttique_quickview_html` filter (theme) | shipped (7) |
-| `Payments\GatewayRouter` — currency→gateway map (NGN→Paystack, else Stripe) | 9 |
-| `Shipping\CarrierInterface` — contract for GIG/DHL/FedEx/UPS methods | 9 |
+| `Services\Currency` — full multi-currency: `woocommerce_currency` + price/variation/shipping conversion off `Market::current()`, NGN-based rates (`skirttique_currency_rates` option/filter, shipped rates are placeholders), whole-unit rounding, variation-price cache keyed by currency; admin stays NGN | shipped (9) |
+| `Payments\GatewayRouter` — filters `woocommerce_available_payment_gateways` to the mapped gateway per currency (NGN→`paystack`, else `stripe`, `skirttique_currency_gateways` filter); passes through untouched when the mapped gateway is unconfigured so checkout never dead-ends | shipped (9) |
+| `Shipping\CarrierInterface` — contract for GIG/DHL/FedEx/UPS methods | later stage |
+
+Paystack (`woo-paystack`) and Stripe (`woocommerce-gateway-stripe`) are installed via
+`.wp-env.json` and active but have NO API keys — until keys are entered they are not
+"available", so the placeholder COD gateway carries checkout. Enter test keys in
+WooCommerce → Settings → Payments to see the router narrow checkout to one gateway per
+currency. Orders store their settlement currency natively (mixed-currency order history is
+expected); WooCommerce's stock reports assume a single currency — a reporting decision for
+a later stage.
 
 ## Local environment
 

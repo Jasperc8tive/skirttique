@@ -1,0 +1,459 @@
+/* Stage 10 — My Account. WooCommerce renders this area through classic
+   templates (shortcode), so this file re-clothes Woo's own markup:
+   navigation rail, dashboard tiles, orders tables, address cards, and
+   the sign-in/register forms. Scoped under .st-account throughout. */
+
+.st-account {
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+	padding: var(--st-space-8) var(--st-gutter) var(--st-section);
+
+	/* ------------------------------------------------------------- */
+	/* Signed-in shell: nav rail + content                            */
+	/* ------------------------------------------------------------- */
+	.woocommerce:has(.woocommerce-MyAccount-navigation) {
+		display: grid;
+		grid-template-columns: 14rem minmax(0, 1fr);
+		gap: var(--st-space-12);
+		align-items: start;
+
+		@media (max-width: 60rem) {
+			grid-template-columns: 1fr;
+			gap: var(--st-space-6);
+		}
+	}
+
+	.woocommerce-MyAccount-navigation {
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			border-left: 1px solid var(--st-color-hairline);
+
+			@media (max-width: 60rem) {
+				display: flex;
+				flex-wrap: wrap;
+				gap: var(--st-space-2) var(--st-space-5);
+				border-left: 0;
+				border-bottom: 1px solid var(--st-color-hairline);
+				padding-bottom: var(--st-space-4);
+			}
+		}
+
+		li {
+			margin: 0;
+
+			a {
+				display: block;
+				padding: var(--st-space-2) 0 var(--st-space-2) var(--st-space-5);
+				margin-left: -1px;
+				border-left: 1px solid transparent;
+				color: var(--st-color-sage-deep);
+				text-decoration: none;
+				font-size: var(--st-text-caption);
+				text-transform: uppercase;
+				letter-spacing: var(--st-track-caps);
+				transition:
+					color var(--st-dur-micro) var(--st-ease-silk),
+					border-color var(--st-dur-micro) var(--st-ease-silk);
+
+				&:hover,
+				&:focus-visible {
+					color: var(--st-color-seaweed);
+				}
+
+				@media (max-width: 60rem) {
+					padding: var(--st-space-1) 0;
+					margin-left: 0;
+					border-left: 0;
+				}
+			}
+
+			&.is-active a {
+				color: var(--st-color-seaweed);
+				border-left-color: var(--st-color-foliage);
+
+				@media (max-width: 60rem) {
+					border-left: 0;
+					border-bottom: 1px solid var(--st-color-foliage);
+				}
+			}
+		}
+	}
+
+	/* ------------------------------------------------------------- */
+	/* Dashboard tiles                                                 */
+	/* ------------------------------------------------------------- */
+	&__intro {
+		max-width: var(--st-measure);
+		margin: 0 0 var(--st-space-8);
+		color: var(--st-color-ink-soft);
+		line-height: var(--st-leading-body);
+	}
+
+	&__tiles {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--st-space-4);
+
+		@media (max-width: 40rem) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__tile {
+		display: flex;
+		flex-direction: column;
+		gap: var(--st-space-2);
+		padding: var(--st-space-6);
+		border: 1px solid var(--st-color-hairline);
+		border-radius: var(--st-radius);
+		text-decoration: none;
+		transition:
+			border-color var(--st-dur-micro) var(--st-ease-silk),
+			background-color var(--st-dur-micro) var(--st-ease-silk);
+
+		&:hover,
+		&:focus-visible {
+			border-color: var(--st-color-seaweed);
+			background: var(--st-color-surface);
+		}
+	}
+
+	&__tile-title {
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-body-lg);
+		letter-spacing: var(--st-track-display);
+		color: var(--st-color-seaweed);
+	}
+
+	&__tile-note {
+		font-size: var(--st-text-small);
+		color: var(--st-color-ink-soft);
+	}
+
+	/* ------------------------------------------------------------- */
+	/* Shared classic-Woo re-clothing                                  */
+	/* ------------------------------------------------------------- */
+	.woocommerce {
+		h2 {
+			font-family: var(--st-font-display);
+			font-size: var(--st-text-h3);
+			font-weight: var(--st-weight-book);
+			letter-spacing: var(--st-track-display);
+			margin: 0 0 var(--st-space-5);
+		}
+
+		/* Buttons — the primary house button everywhere Woo prints one. */
+		.button,
+		button[type="submit"] {
+			display: inline-block;
+			font-family: var(--st-font-body);
+			font-size: var(--st-text-caption);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			font-weight: var(--st-weight-book);
+			padding: 1rem 2rem;
+			border-radius: var(--st-radius);
+			background: var(--st-color-foliage);
+			color: var(--st-color-nectar);
+			border: 1px solid var(--st-color-foliage);
+			cursor: pointer;
+			text-decoration: none;
+			transition:
+				background-color var(--st-dur-micro) var(--st-ease-silk),
+				border-color var(--st-dur-micro) var(--st-ease-silk);
+
+			&:hover {
+				background: var(--st-color-foliage-deep);
+				border-color: var(--st-color-foliage-deep);
+			}
+		}
+
+		/* Table row actions read quieter than form submits. */
+		table .button {
+			background: transparent;
+			color: var(--st-color-seaweed);
+			border-color: var(--st-color-seaweed);
+			padding: 0.5rem 1.125rem;
+
+			&:hover {
+				background: var(--st-color-foliage);
+				border-color: var(--st-color-foliage);
+				color: var(--st-color-nectar);
+			}
+		}
+
+		/* Form fields — same hand as the checkout. */
+		.form-row {
+			margin: 0 0 var(--st-space-4);
+
+			label {
+				display: block;
+				margin-bottom: var(--st-space-2);
+				font-size: var(--st-text-caption);
+				text-transform: uppercase;
+				letter-spacing: var(--st-track-caps);
+				color: var(--st-color-sage-deep);
+			}
+
+			.input-text,
+			select {
+				width: 100%;
+				padding: 0.875rem 1rem;
+				border: 1px solid var(--st-color-hairline);
+				border-radius: var(--st-radius);
+				background: var(--st-color-nectar);
+				color: var(--st-color-seaweed);
+				font-family: var(--st-font-body);
+				font-size: var(--st-text-small);
+
+				&:focus {
+					border-color: var(--st-color-seaweed);
+					box-shadow: 0 0 0 1px var(--st-color-seaweed);
+					outline: none;
+				}
+			}
+		}
+
+		fieldset {
+			margin: var(--st-space-8) 0 var(--st-space-4);
+			padding: 0;
+			border: 0;
+			border-top: 1px solid var(--st-color-hairline);
+
+			legend {
+				padding-right: var(--st-space-4);
+				font-size: var(--st-text-caption);
+				text-transform: uppercase;
+				letter-spacing: var(--st-track-caps);
+				color: var(--st-color-sage-deep);
+			}
+		}
+
+		/* Tables (orders, order detail). */
+		table.shop_table {
+			width: 100%;
+			border-collapse: collapse;
+			border: 0;
+			font-size: var(--st-text-small);
+
+			th,
+			td {
+				padding: var(--st-space-4) var(--st-space-3);
+				border: 0;
+				border-bottom: 1px solid var(--st-color-hairline);
+				text-align: left;
+				vertical-align: middle;
+			}
+
+			thead th,
+			tfoot th {
+				font-size: var(--st-text-caption);
+				font-weight: var(--st-weight-book);
+				text-transform: uppercase;
+				letter-spacing: var(--st-track-caps);
+				color: var(--st-color-sage-deep);
+			}
+
+			a {
+				color: var(--st-color-seaweed);
+			}
+		}
+
+		/* Small screens: responsive tables stack into labelled rows
+		   (Woo supplies data-title on every cell). */
+		@media (max-width: 40rem) {
+			table.shop_table_responsive {
+				display: block;
+
+				thead {
+					display: none;
+				}
+
+				tbody,
+				tr,
+				td {
+					display: block;
+				}
+
+				tr {
+					padding: var(--st-space-4) 0;
+					border-bottom: 1px solid var(--st-color-hairline);
+				}
+
+				td {
+					display: flex;
+					justify-content: space-between;
+					align-items: baseline;
+					gap: var(--st-space-4);
+					padding: var(--st-space-1) 0;
+					border: 0;
+					text-align: right;
+
+					&::before {
+						content: attr(data-title);
+						font-size: var(--st-text-caption);
+						text-transform: uppercase;
+						letter-spacing: var(--st-track-caps);
+						color: var(--st-color-sage-deep);
+						text-align: left;
+					}
+
+					&.woocommerce-orders-table__cell-order-actions::before {
+						content: "";
+					}
+				}
+			}
+		}
+
+		/* Notices in the house palette. */
+		.woocommerce-message,
+		.woocommerce-info,
+		.woocommerce-error {
+			margin: 0 0 var(--st-space-6);
+			padding: var(--st-space-4) var(--st-space-5);
+			border: 1px solid var(--st-color-hairline);
+			border-left: 2px solid var(--st-color-foliage);
+			border-radius: var(--st-radius);
+			background: var(--st-color-surface);
+			color: var(--st-color-seaweed);
+			font-size: var(--st-text-small);
+			list-style: none;
+
+			.button {
+				float: right;
+				margin-left: var(--st-space-4);
+				padding: 0.5rem 1.125rem;
+				background: transparent;
+				color: var(--st-color-seaweed);
+				border-color: var(--st-color-seaweed);
+
+				&:hover {
+					background: var(--st-color-foliage);
+					border-color: var(--st-color-foliage);
+					color: var(--st-color-nectar);
+				}
+			}
+		}
+
+		.woocommerce-error {
+			border-left-color: var(--st-color-amber-deep);
+
+			li {
+				margin: 0;
+			}
+		}
+
+		/* Address cards. */
+		.woocommerce-Addresses {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: var(--st-space-4);
+
+			@media (max-width: 40rem) {
+				grid-template-columns: 1fr;
+			}
+
+			.woocommerce-Address {
+				max-width: none;
+				padding: var(--st-space-6);
+				border: 1px solid var(--st-color-hairline);
+				border-radius: var(--st-radius);
+			}
+
+			.woocommerce-Address-title {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: var(--st-space-4);
+
+				h3 {
+					margin: 0 0 var(--st-space-3);
+					font-family: var(--st-font-display);
+					font-size: var(--st-text-body-lg);
+					font-weight: var(--st-weight-book);
+					letter-spacing: var(--st-track-display);
+				}
+
+				.edit {
+					font-size: var(--st-text-caption);
+					text-transform: uppercase;
+					letter-spacing: var(--st-track-caps);
+					color: var(--st-color-sage-deep);
+					text-decoration: none;
+					border-bottom: 1px solid transparent;
+
+					&:hover,
+					&:focus-visible {
+						border-bottom-color: currentcolor;
+					}
+				}
+			}
+
+			address {
+				font-style: normal;
+				color: var(--st-color-ink-soft);
+				line-height: var(--st-leading-body);
+			}
+		}
+
+		/* Sign in / register split (guest view). */
+		#customer_login {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: var(--st-space-12);
+			max-width: 64rem;
+
+			@media (max-width: 60rem) {
+				grid-template-columns: 1fr;
+				gap: var(--st-space-10);
+			}
+
+			> div {
+				width: auto;
+				max-width: none;
+				float: none;
+			}
+
+			@media (min-width: 60rem) {
+				> div + div {
+					border-left: 1px solid var(--st-color-hairline);
+					padding-left: var(--st-space-12);
+				}
+			}
+		}
+
+		form.login,
+		form.register,
+		.woocommerce-ResetPassword {
+			border: 0;
+			padding: 0;
+			margin: 0;
+			max-width: 26rem;
+		}
+
+		.lost_password {
+			font-size: var(--st-text-small);
+
+			a {
+				color: var(--st-color-sage-deep);
+			}
+		}
+
+		.woocommerce-privacy-policy-text {
+			font-size: var(--st-text-small);
+			color: var(--st-color-ink-soft);
+		}
+
+		/* Order detail voice. */
+		.woocommerce-customer-details address {
+			font-style: normal;
+			border: 1px solid var(--st-color-hairline);
+			border-radius: var(--st-radius);
+			padding: var(--st-space-5);
+			color: var(--st-color-ink-soft);
+			line-height: var(--st-leading-body);
+		}
+	}
+}

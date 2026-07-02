@@ -19,8 +19,10 @@ use Skirttique\Core\Contracts\ServiceInterface;
  *   extensible to Flutterwave and future gateways without code changes
  *   elsewhere).
  *
- * Skeleton (Stage 3). Implementation lands in Stage 9 (Checkout):
- * filters woocommerce_available_payment_gateways by active currency.
+ * Routing is deliberately soft: when the mapped gateway is enabled and
+ * configured, it becomes the ONLY offer at checkout; when it is absent
+ * or unconfigured (no API keys yet), the available list passes through
+ * untouched, so checkout never dead-ends on a half-configured store.
  */
 final class GatewayRouter implements ServiceInterface {
 
@@ -38,7 +40,26 @@ final class GatewayRouter implements ServiceInterface {
 	);
 
 	public function register(): void {
-		// Stage 9: hook woocommerce_available_payment_gateways.
+		add_filter( 'woocommerce_available_payment_gateways', array( $this, 'route' ) );
+	}
+
+	/**
+	 * Narrow the available gateways to the one mapped for the active
+	 * currency. Admin screens (order editing, settings) are left alone.
+	 *
+	 * @param array<string, \WC_Payment_Gateway> $gateways Available gateways.
+	 * @return array<string, \WC_Payment_Gateway>
+	 */
+	public function route( array $gateways ): array {
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return $gateways;
+		}
+
+		$target = $this->gateway_for( get_woocommerce_currency() );
+
+		return isset( $gateways[ $target ] )
+			? array( $target => $gateways[ $target ] )
+			: $gateways;
 	}
 
 	/**
