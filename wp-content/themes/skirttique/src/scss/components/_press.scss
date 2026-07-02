@@ -8,6 +8,7 @@
 	padding: var(--st-section) var(--st-gutter) 0;
 
 	&__inner {
+		position: relative; /* anchors the pause control */
 		max-width: 52rem;
 		margin-inline: auto;
 		padding-block: var(--st-space-16);

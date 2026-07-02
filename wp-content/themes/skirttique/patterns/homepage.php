@@ -230,6 +230,12 @@ $st_quotes = apply_filters(
 <?php if ( $st_quotes ) : ?>
 <section class="st-press" aria-label="<?php esc_attr_e( 'In their words', 'skirttique' ); ?>">
 	<div class="st-press__inner" data-st-rotate="9000">
+		<?php if ( count( $st_quotes ) > 1 ) : ?>
+			<button type="button" class="st-rotate-pause st-rotate-pause--press" data-st-rotate-pause aria-pressed="false" aria-label="<?php esc_attr_e( 'Pause quotes', 'skirttique' ); ?>">
+				<svg class="st-rotate-pause__pause" viewBox="0 0 10 10" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M3 1.5v7M7 1.5v7"/></svg>
+				<svg class="st-rotate-pause__play" viewBox="0 0 10 10" width="10" height="10" fill="currentColor" aria-hidden="true"><path d="M2.5 1.2l6 3.8-6 3.8z"/></svg>
+			</button>
+		<?php endif; ?>
 		<p class="st-section__eyebrow"><?php esc_html_e( 'In their words', 'skirttique' ); ?></p>
 		<ul class="st-press__list">
 			<?php foreach ( $st_quotes as $st_i => $st_quote ) : ?>

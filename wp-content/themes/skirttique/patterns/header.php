@@ -64,6 +64,12 @@ $st_current_market = $st_markets[ $st_current_code ];
 			</li>
 		<?php endforeach; ?>
 	</ul>
+	<?php if ( count( $st_announcements ) > 1 ) : ?>
+		<button type="button" class="st-rotate-pause" data-st-rotate-pause aria-pressed="false" aria-label="<?php esc_attr_e( 'Pause announcements', 'skirttique' ); ?>">
+			<svg class="st-rotate-pause__pause" viewBox="0 0 10 10" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M3 1.5v7M7 1.5v7"/></svg>
+			<svg class="st-rotate-pause__play" viewBox="0 0 10 10" width="10" height="10" fill="currentColor" aria-hidden="true"><path d="M2.5 1.2l6 3.8-6 3.8z"/></svg>
+		</button>
+	<?php endif; ?>
 </div>
 
 <header class="st-header" data-st-header>

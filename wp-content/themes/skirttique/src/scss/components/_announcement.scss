@@ -1,6 +1,7 @@
 /* Announcement bar — Dark Foliage band, one rotating message. */
 
 .st-announcement {
+	position: relative;
 	background: var(--st-color-foliage);
 	color: var(--st-color-khaki);
 
@@ -11,6 +12,60 @@
 		list-style: none;
 		height: 2.5rem;
 	}
+}
+
+/* Pause/play control (WCAG 2.2.2) — quiet, but reachable and visible.
+   Shared by the announcement bar and the press band. */
+.st-rotate-pause {
+	position: absolute;
+	top: 50%;
+	right: var(--st-space-3);
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	background: none;
+	border: 0;
+	cursor: pointer;
+	color: inherit;
+	opacity: 0.7;
+
+	&:hover,
+	&:focus-visible {
+		opacity: 1;
+	}
+
+	.st-rotate-pause__play {
+		display: none;
+	}
+
+	&[aria-pressed="true"] {
+		.st-rotate-pause__pause {
+			display: none;
+		}
+
+		.st-rotate-pause__play {
+			display: block;
+		}
+	}
+
+	@media (pointer: coarse) {
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+}
+
+.st-rotate-pause--press {
+	top: var(--st-space-4);
+	right: var(--st-space-4);
+	transform: none;
+	color: var(--st-color-sage-deep);
+}
+
+.st-announcement {
 
 	&__item {
 		position: absolute;

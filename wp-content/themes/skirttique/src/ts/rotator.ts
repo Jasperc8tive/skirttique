@@ -9,6 +9,11 @@
  *
  * `data-st-rotate` may hold a custom interval in milliseconds — quotes
  * need more reading time than a shipping notice.
+ *
+ * WCAG 2.2.2 (Pause, Stop, Hide): an optional `[data-st-rotate-pause]`
+ * button inside the container gives keyboard and screen-reader users an
+ * explicit stop. Hover/focus pausing is a courtesy on top, never the
+ * compliance mechanism. An explicit pause always wins over hover state.
  */
 
 const DEFAULT_INTERVAL_MS = 6000;
@@ -18,9 +23,12 @@ export function initRotators(): void {
 		const items = Array.from(
 			container.querySelectorAll<HTMLElement>( '[data-st-rotate-item]' )
 		);
+		const pauseButton = container.querySelector<HTMLButtonElement>( '[data-st-rotate-pause]' );
 		const reduced = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
 
 		if ( items.length < 2 || reduced ) {
+			// Static bar — the pause control would toggle nothing.
+			pauseButton?.setAttribute( 'hidden', '' );
 			return;
 		}
 
@@ -30,10 +38,11 @@ export function initRotators(): void {
 			items.findIndex( ( item ) => item.classList.contains( 'is-current' ) ),
 			0
 		);
-		let paused = false;
+		let hoverPaused = false;
+		let userPaused = false;
 
 		window.setInterval( () => {
-			if ( paused ) {
+			if ( hoverPaused || userPaused ) {
 				return;
 			}
 
@@ -42,9 +51,14 @@ export function initRotators(): void {
 			items[ current ]?.classList.add( 'is-current' );
 		}, interval );
 
-		container.addEventListener( 'mouseenter', () => ( paused = true ) );
-		container.addEventListener( 'mouseleave', () => ( paused = false ) );
-		container.addEventListener( 'focusin', () => ( paused = true ) );
-		container.addEventListener( 'focusout', () => ( paused = false ) );
+		container.addEventListener( 'mouseenter', () => ( hoverPaused = true ) );
+		container.addEventListener( 'mouseleave', () => ( hoverPaused = false ) );
+		container.addEventListener( 'focusin', () => ( hoverPaused = true ) );
+		container.addEventListener( 'focusout', () => ( hoverPaused = false ) );
+
+		pauseButton?.addEventListener( 'click', () => {
+			userPaused = ! userPaused;
+			pauseButton.setAttribute( 'aria-pressed', String( userPaused ) );
+		} );
 	} );
 }
