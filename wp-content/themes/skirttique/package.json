@@ -1,0 +1,19 @@
+{
+  "name": "skirttique-theme",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Skirttique block theme — build pipeline (SCSS + TypeScript via @wordpress/scripts).",
+  "scripts": {
+    "tokens": "node tools/generate-theme-json.mjs",
+    "prebuild": "npm run tokens",
+    "build": "wp-scripts build index=./src/index.ts --output-path=build",
+    "start": "wp-scripts start index=./src/index.ts --output-path=build",
+    "typecheck": "tsc --noEmit",
+    "lint:js": "wp-scripts lint-js src",
+    "lint:css": "wp-scripts lint-style \"src/scss/**/*.scss\""
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^30.23.0",
+    "typescript": "^5.9.3"
+  }
+}

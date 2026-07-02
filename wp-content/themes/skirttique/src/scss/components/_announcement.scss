@@ -1,0 +1,33 @@
+/* Announcement bar — Dark Foliage band, one rotating message. */
+
+.st-announcement {
+	background: var(--st-color-foliage);
+	color: var(--st-color-khaki);
+
+	&__list {
+		position: relative;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		height: 2.5rem;
+	}
+
+	&__item {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding-inline: var(--st-gutter);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		text-align: center;
+		opacity: 0;
+		transition: opacity var(--st-dur-move) var(--st-ease-silk);
+
+		&.is-current {
+			opacity: 1;
+		}
+	}
+}

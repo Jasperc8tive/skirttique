@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(uipro init *)",
+      "PowerShell($ff = Get-Command ffmpeg -ErrorAction SilentlyContinue; if \\($ff\\) { $ff.Source } else { \"ffmpeg not found\" })",
+      "PowerShell(Test-Path \"C:\\\\Program Files\\\\VideoLAN\\\\VLC\\\\vlc.exe\"; Get-Command winget -ErrorAction SilentlyContinue | ForEach-Object { $_.Source })",
+      "PowerShell($out = \"C:\\\\Users\\\\Mayowa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Skirttique\\\\0fd37e38-7ca3-404c-a8bb-d26b885fd6fe\\\\scratchpad\\\\frames\"; New-Item -ItemType Directory -Force $out | Out-Null; & \"C:\\\\Program Files\\\\VideoLAN\\\\VLC\\\\vlc.exe\" -I dummy --dummy-quiet --no-audio --rate=4 --video-filter=scene --scene-format=jpeg --scene-ratio=120 --scene-path=$out --scene-prefix=frame \"C:\\\\Skirttique\\\\Homepage.mp4\" vlc://quit 2>$null; Get-ChildItem $out | Measure-Object | Select-Object -ExpandProperty Count)",
+      "PowerShell($out = \"C:\\\\Users\\\\Mayowa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Skirttique\\\\0fd37e38-7ca3-404c-a8bb-d26b885fd6fe\\\\scratchpad\\\\frames\"; & \"C:\\\\Program Files\\\\VideoLAN\\\\VLC\\\\vlc.exe\" -I dummy --dummy-quiet --no-audio --video-filter=scene --scene-format=jpeg --scene-ratio=120 --scene-path=$out \"C:\\\\Skirttique\\\\Homepage.mp4\" vlc://quit --play-and-exit; Get-ChildItem $out | Select-Object Name, Length -First 40)"
+    ]
+  }
+}

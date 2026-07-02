@@ -1,0 +1,19 @@
+{
+  "name": "skirttique",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Skirttique — luxury WooCommerce build. Root workspace: local WordPress environment.",
+  "scripts": {
+    "env:start": "wp-env start",
+    "env:stop": "wp-env stop",
+    "env:destroy": "wp-env destroy",
+    "env:cli": "wp-env run cli",
+    "theme:install": "npm --prefix wp-content/themes/skirttique install",
+    "theme:build": "npm --prefix wp-content/themes/skirttique run build",
+    "theme:start": "npm --prefix wp-content/themes/skirttique run start",
+    "tokens": "npm --prefix wp-content/themes/skirttique run tokens"
+  },
+  "devDependencies": {
+    "@wordpress/env": "^10.30.0"
+  }
+}

@@ -1,0 +1,69 @@
+/* The Hemline — signature underline. JS (hemline.ts) injects the SVG;
+   without it the link keeps a standard underline. */
+
+a.st-hemline {
+	position: relative;
+	display: inline-block;
+	font-size: var(--st-text-caption);
+	text-transform: uppercase;
+	letter-spacing: var(--st-track-caps);
+	text-decoration: underline;
+	text-underline-offset: 6px;
+	text-decoration-thickness: 1px;
+
+	&.is-enhanced {
+		text-decoration: none;
+		padding-block-end: 6px;
+	}
+
+	.st-hemline__svg {
+		position: absolute;
+		inset-inline: 0;
+		bottom: 0;
+		width: 100%;
+		height: 6px;
+		overflow: visible;
+	}
+
+	.st-hemline__straight,
+	.st-hemline__curve {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1;
+		vector-effect: non-scaling-stroke;
+		transition:
+			opacity var(--st-dur-micro) var(--st-ease-silk),
+			transform var(--st-dur-micro) var(--st-ease-silk);
+	}
+
+	.st-hemline__curve {
+		opacity: 0;
+		transform: translateY(2px);
+	}
+
+	&:hover,
+	&:focus-visible {
+		.st-hemline__straight {
+			opacity: 0;
+		}
+
+		.st-hemline__curve {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+}
+
+/* Section divider variant — a pre-curved hem. */
+.st-hem-divider {
+	display: block;
+	width: 100%;
+	height: 12px;
+	margin-block: var(--st-space-12);
+	color: var(--st-color-hairline);
+
+	.has-foliage-background-color &,
+	.has-seaweed-background-color & {
+		color: var(--st-color-hairline-dark);
+	}
+}

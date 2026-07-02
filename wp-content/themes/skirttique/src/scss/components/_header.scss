@@ -1,0 +1,144 @@
+/* Site header — sticky, hairline-structured, quiet. */
+
+.st-header {
+	position: sticky;
+	top: 0;
+	z-index: 40;
+	background: var(--st-color-nectar);
+	border-bottom: 1px solid transparent;
+	transition: border-color var(--st-dur-micro) var(--st-ease-silk);
+
+	&.is-scrolled {
+		border-bottom-color: var(--st-color-hairline);
+	}
+
+	&__inner {
+		display: flex;
+		align-items: center;
+		gap: var(--st-space-8);
+		max-width: var(--st-container-max);
+		margin-inline: auto;
+		padding: var(--st-space-6) var(--st-gutter);
+	}
+
+	&__brand {
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-body-lg);
+		letter-spacing: 0.35em;
+		text-transform: uppercase;
+		text-decoration: none;
+		color: inherit;
+		white-space: nowrap;
+	}
+
+	&__nav {
+		margin-inline: auto;
+
+		ul {
+			display: flex;
+			gap: var(--st-space-8);
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		a,
+		button {
+			display: inline-block;
+			padding: var(--st-space-2) 0;
+			background: none;
+			border: 0;
+			cursor: pointer;
+			color: inherit;
+			font-family: var(--st-font-body);
+			font-size: var(--st-text-caption);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			text-decoration: none;
+			border-bottom: 1px solid transparent;
+			transition: border-color var(--st-dur-micro) var(--st-ease-silk);
+
+			&:hover,
+			&[aria-expanded="true"] {
+				border-bottom-color: currentcolor;
+			}
+		}
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: var(--st-space-4);
+	}
+
+	&__icon {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		padding: 0;
+		background: none;
+		border: 0;
+		cursor: pointer;
+		color: inherit;
+	}
+
+	&__burger {
+		display: none;
+		background: none;
+		border: 0;
+		padding: 0;
+		width: 2.5rem;
+		height: 2.5rem;
+		cursor: pointer;
+		color: inherit;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+.st-cart-count {
+	position: absolute;
+	top: 0.25rem;
+	right: 0;
+	min-width: 1rem;
+	height: 1rem;
+	padding-inline: 0.2rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--st-color-foliage);
+	color: var(--st-color-nectar);
+	font-size: 0.625rem;
+	line-height: 1;
+	border-radius: 50%;
+
+	&.is-empty {
+		display: none;
+	}
+}
+
+/* Tablet & below: nav collapses into the menu drawer. */
+@media (max-width: 60rem) {
+	.st-header__nav {
+		display: none;
+	}
+
+	.st-header__burger {
+		display: inline-flex;
+	}
+
+	.st-header__inner {
+		gap: var(--st-space-4);
+	}
+
+	.st-header__brand {
+		margin-inline: auto;
+	}
+
+	.st-market {
+		display: none; /* market selector lives in the menu drawer on mobile — Stage 4 keeps one instance */
+	}
+}

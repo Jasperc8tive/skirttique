@@ -1,0 +1,66 @@
+/* Button system. core/button inherits the primary look via theme.json;
+   these classes serve custom components and the secondary variant. */
+
+.st-btn {
+	display: inline-block;
+	font-family: var(--st-font-body);
+	font-size: var(--st-text-caption);
+	text-transform: uppercase;
+	letter-spacing: var(--st-track-caps);
+	padding: 1.125rem 2.5rem;
+	border-radius: var(--st-radius);
+	border: 1px solid var(--st-color-foliage);
+	cursor: pointer;
+	text-decoration: none;
+	transition:
+		background-color var(--st-dur-micro) var(--st-ease-silk),
+		color var(--st-dur-micro) var(--st-ease-silk),
+		border-color var(--st-dur-micro) var(--st-ease-silk);
+
+	&--primary {
+		background: var(--st-color-foliage);
+		color: var(--st-color-nectar);
+
+		&:hover {
+			background: var(--st-color-foliage-deep);
+			border-color: var(--st-color-foliage-deep);
+		}
+	}
+
+	&--secondary {
+		background: transparent;
+		color: var(--st-color-seaweed);
+		border-color: var(--st-color-seaweed);
+
+		&:hover {
+			background: var(--st-color-foliage);
+			border-color: var(--st-color-foliage);
+			color: var(--st-color-nectar);
+		}
+	}
+}
+
+/* Inversions on dark grounds. */
+.has-foliage-background-color,
+.has-seaweed-background-color {
+	.st-btn--primary {
+		background: var(--st-color-nectar);
+		color: var(--st-color-foliage);
+		border-color: var(--st-color-nectar);
+
+		&:hover {
+			background: var(--st-color-khaki);
+			border-color: var(--st-color-khaki);
+		}
+	}
+
+	.st-btn--secondary {
+		color: var(--st-color-nectar);
+		border-color: var(--st-color-nectar);
+
+		&:hover {
+			background: var(--st-color-nectar);
+			color: var(--st-color-foliage);
+		}
+	}
+}

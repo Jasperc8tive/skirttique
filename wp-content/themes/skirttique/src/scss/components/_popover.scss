@@ -1,0 +1,135 @@
+/* Popovers — the collections panel and the market selector. */
+
+.st-popover {
+	position: absolute;
+	z-index: 50;
+	background: var(--st-color-nectar);
+	border: 1px solid var(--st-color-hairline);
+
+	&[hidden] {
+		display: none;
+	}
+
+	&__label {
+		margin: 0 0 var(--st-space-3);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+}
+
+/* Collections panel — full-width under the header row. */
+.st-panel {
+	left: 0;
+	right: 0;
+	border-inline: 0;
+
+	&__inner {
+		display: grid;
+		grid-template-columns: 1fr minmax(16rem, 22rem);
+		gap: var(--st-space-16);
+		max-width: var(--st-container-max);
+		margin-inline: auto;
+		padding: var(--st-space-12) var(--st-gutter) var(--st-space-16);
+	}
+
+	&__list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		align-content: start;
+		gap: var(--st-space-4);
+
+		a {
+			text-decoration: none;
+			color: inherit;
+		}
+	}
+
+	&__name {
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h2);
+		line-height: var(--st-leading-heading);
+		border-bottom: 1px solid transparent;
+		transition: border-color var(--st-dur-micro) var(--st-ease-silk);
+
+		a:hover &,
+		a:focus-visible & {
+			border-bottom-color: var(--st-color-sage);
+		}
+	}
+
+	&__figure {
+		margin: 0 0 var(--st-space-4);
+		aspect-ratio: var(--st-ratio-portrait);
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+}
+
+/* Market selector. */
+.st-market {
+	position: relative;
+
+	&__toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--st-space-2);
+		padding: var(--st-space-2) var(--st-space-3);
+		background: none;
+		border: 0;
+		cursor: pointer;
+		color: inherit;
+		font-family: var(--st-font-body);
+		font-size: var(--st-text-caption);
+		letter-spacing: var(--st-track-caps);
+	}
+
+	&__panel {
+		top: calc(100% + var(--st-space-3));
+		right: 0;
+		min-width: 17rem;
+		padding: var(--st-space-6);
+
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		li + li {
+			border-top: 1px solid var(--st-color-hairline);
+		}
+
+		button {
+			display: flex;
+			justify-content: space-between;
+			gap: var(--st-space-6);
+			width: 100%;
+			padding: var(--st-space-3) 0;
+			background: none;
+			border: 0;
+			cursor: pointer;
+			color: inherit;
+			font-family: var(--st-font-body);
+			font-size: var(--st-text-small);
+			text-align: left;
+
+			&:hover span:first-child,
+			&[aria-current="true"] span:first-child {
+				border-bottom: 1px solid currentcolor;
+			}
+		}
+	}
+
+	&__currency {
+		color: var(--st-color-sage-deep);
+	}
+}

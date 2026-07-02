@@ -1,0 +1,208 @@
+/* Drawers — native <dialog>: search overlay, bag, mobile menu. */
+
+.st-drawer {
+	border: 0;
+	padding: 0;
+	background: var(--st-color-nectar);
+	color: var(--st-color-seaweed);
+	max-width: none;
+	max-height: none;
+
+	&::backdrop {
+		background: rgba(18, 27, 26, 0.4);
+	}
+
+	&__bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: var(--st-space-6) var(--st-space-8);
+		border-bottom: 1px solid var(--st-color-hairline);
+	}
+
+	&__title {
+		margin: 0;
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+	}
+
+	&__close {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		margin-left: auto;
+		padding: 0;
+		background: none;
+		border: 0;
+		cursor: pointer;
+		color: inherit;
+	}
+
+	&__body {
+		padding: var(--st-space-8);
+		overflow-y: auto;
+		flex: 1;
+	}
+
+	&__foot {
+		display: grid;
+		gap: var(--st-space-4);
+		justify-items: center;
+		padding: var(--st-space-6) var(--st-space-8) var(--st-space-8);
+		border-top: 1px solid var(--st-color-hairline);
+
+		.st-btn {
+			width: 100%;
+			text-align: center;
+		}
+	}
+}
+
+/* Side drawer (bag, mobile menu) — slides from the right. */
+.st-drawer--side {
+	position: fixed;
+	inset: 0 0 0 auto;
+	width: min(26rem, 100vw);
+	height: 100dvh;
+	display: flex;
+	flex-direction: column;
+
+	transform: translateX(100%);
+	transition: transform var(--st-dur-move) var(--st-ease-drape);
+
+	&[open] {
+		transform: translateX(0);
+	}
+}
+
+/* Search — full-width sheet from the top. */
+.st-drawer--search {
+	position: fixed;
+	inset: 0 0 auto 0;
+	width: 100vw;
+
+	transform: translateY(-100%);
+	transition: transform var(--st-dur-move) var(--st-ease-drape);
+
+	&[open] {
+		transform: translateY(0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.st-drawer--side,
+	.st-drawer--search {
+		transform: none;
+		transition: none;
+	}
+}
+
+.st-search {
+	display: grid;
+	gap: var(--st-space-6);
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+	padding: var(--st-space-12) var(--st-gutter) var(--st-space-16);
+
+	&__label {
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+
+	&__field {
+		width: 100%;
+		padding: var(--st-space-3) 0;
+		background: none;
+		border: 0;
+		border-bottom: 1px solid var(--st-color-seaweed);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h1);
+		color: inherit;
+
+		&:focus {
+			outline: none;
+			border-bottom-color: var(--st-color-foliage);
+		}
+
+		&::placeholder {
+			color: var(--st-color-sage);
+		}
+	}
+
+	.st-btn {
+		justify-self: start;
+	}
+}
+
+/* Mobile menu contents. */
+.st-menu {
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	a {
+		display: block;
+		padding: var(--st-space-3) 0;
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+		text-decoration: none;
+		color: inherit;
+	}
+
+	&__sub a {
+		padding-left: var(--st-space-6);
+		font-family: var(--st-font-body);
+		font-size: var(--st-text-small);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+	}
+
+	/* The market selector's mobile home (the header instance hides ≤60rem). */
+	&__markets {
+		margin-top: var(--st-space-8);
+		padding-top: var(--st-space-6);
+		border-top: 1px solid var(--st-color-hairline);
+
+		&-label {
+			margin: 0 0 var(--st-space-3);
+			font-size: var(--st-text-caption);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			color: var(--st-color-sage-deep);
+		}
+
+		li + li {
+			border-top: 1px solid var(--st-color-hairline);
+		}
+
+		button {
+			display: flex;
+			justify-content: space-between;
+			gap: var(--st-space-6);
+			width: 100%;
+			padding: var(--st-space-3) 0;
+			background: none;
+			border: 0;
+			cursor: pointer;
+			color: inherit;
+			font-family: var(--st-font-body);
+			font-size: var(--st-text-small);
+			text-align: left;
+
+			&:hover span:first-child,
+			&[aria-current="true"] span:first-child {
+				border-bottom: 1px solid currentcolor;
+			}
+		}
+	}
+
+	&__markets-currency {
+		color: var(--st-color-sage-deep);
+	}
+}

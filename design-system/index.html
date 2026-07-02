@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skirttique — Design System v1.0</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* ---------- Fonts (regular weights on hand; others pending) ---------- */
+  @font-face {
+    font-family: "La Luxes";
+    src: url("fonts/laluxes-regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Garet";
+    src: url("fonts/garet-book.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* Pending files — slots reserved:
+     La Luxes Light/Medium/Bold · Garet Light/Medium/Bold · Parfumerie Script */
+
+  /* ---------- Base ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--st-color-nectar);
+    color: var(--st-color-seaweed);
+    font-family: var(--st-font-body);
+    font-size: var(--st-text-body);
+    line-height: var(--st-leading-body);
+    letter-spacing: var(--st-track-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  :focus-visible {
+    outline: 2px solid var(--st-color-focus);
+    outline-offset: 3px;
+  }
+  .on-dark :focus-visible { outline-color: var(--st-color-focus-dark); }
+
+  .container {
+    max-width: var(--st-container-max);
+    margin-inline: auto;
+    padding-inline: var(--st-gutter);
+  }
+  section.band { padding-block: var(--st-space-24); border-top: var(--st-hairline); }
+
+  /* ---------- Typography roles ---------- */
+  .eyebrow {
+    font-size: var(--st-text-caption);
+    text-transform: uppercase;
+    letter-spacing: var(--st-track-caps);
+    color: var(--st-color-sage-deep);
+    display: block;
+    margin-bottom: var(--st-space-6);
+  }
+  h1, h2, h3, .display, .hero-type {
+    font-family: var(--st-font-display);
+    font-weight: 400;
+    letter-spacing: var(--st-track-display);
+    line-height: var(--st-leading-heading);
+    margin: 0 0 var(--st-space-6);
+  }
+  .hero-type { font-size: var(--st-text-hero); line-height: var(--st-leading-display); }
+  .display  { font-size: var(--st-text-display); line-height: var(--st-leading-display); }
+  h1 { font-size: var(--st-text-h1); }
+  h2 { font-size: var(--st-text-h2); }
+  h3 { font-size: var(--st-text-h3); }
+  .prose { max-width: var(--st-measure); color: var(--st-color-ink-soft); }
+  .note { font-size: var(--st-text-small); color: var(--st-color-sage-deep); }
+
+  /* ---------- Signature: the Hemline ---------- */
+  .hemline-link {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    padding-bottom: 6px;
+    font-size: var(--st-text-caption);
+    text-transform: uppercase;
+    letter-spacing: var(--st-track-caps);
+  }
+  .hemline-link svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 6px; overflow: visible; }
+  .hemline-link .hem-straight, .hemline-link .hem-curve {
+    fill: none; stroke: currentColor; stroke-width: 1; vector-effect: non-scaling-stroke;
+    transition: opacity var(--st-dur-micro) var(--st-ease-silk),
+                transform var(--st-dur-micro) var(--st-ease-silk);
+  }
+  .hemline-link .hem-curve { opacity: 0; transform: translateY(2px); }
+  .hemline-link:hover .hem-straight, .hemline-link:focus-visible .hem-straight { opacity: 0; }
+  .hemline-link:hover .hem-curve, .hemline-link:focus-visible .hem-curve { opacity: 1; transform: translateY(0); }
+
+  .hem-divider { display: block; width: 100%; height: 12px; margin-block: var(--st-space-12); color: var(--st-color-hairline); }
+  .on-dark .hem-divider { color: var(--st-color-hairline-dark); }
+
+  /* ---------- Palette ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--st-grid-gap); }
+  .swatch { border: var(--st-hairline); }
+  .swatch .chip { height: 128px; }
+  .swatch dl { margin: 0; padding: var(--st-space-4); }
+  .swatch dt { font-family: var(--st-font-display); font-size: var(--st-text-h3); }
+  .swatch dd { margin: var(--st-space-1) 0 0; font-size: var(--st-text-small); color: var(--st-color-ink-soft); }
+  .swatch code { font-family: inherit; letter-spacing: var(--st-track-caps); font-size: var(--st-text-caption); text-transform: uppercase; color: var(--st-color-sage-deep); }
+
+  /* ---------- Spacing ---------- */
+  .space-row { display: flex; align-items: center; gap: var(--st-space-6); margin-bottom: var(--st-space-3); }
+  .space-row .bar { height: 16px; background: var(--st-color-foliage); }
+  .space-row span { font-size: var(--st-text-caption); text-transform: uppercase; letter-spacing: var(--st-track-caps); color: var(--st-color-sage-deep); min-width: 9rem; }
+
+  /* ---------- Buttons & forms ---------- */
+  .btn {
+    display: inline-block;
+    font-family: var(--st-font-body);
+    font-size: var(--st-text-caption);
+    text-transform: uppercase;
+    letter-spacing: var(--st-track-caps);
+    padding: 1.125rem 2.5rem;
+    border-radius: var(--st-radius);
+    border: 1px solid var(--st-color-foliage);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color var(--st-dur-micro) var(--st-ease-silk),
+                color var(--st-dur-micro) var(--st-ease-silk),
+                border-color var(--st-dur-micro) var(--st-ease-silk);
+  }
+  .btn-primary { background: var(--st-color-foliage); color: var(--st-color-nectar); }
+  .btn-primary:hover { background: var(--st-color-foliage-deep); border-color: var(--st-color-foliage-deep); }
+  .btn-secondary { background: transparent; color: var(--st-color-seaweed); border-color: var(--st-color-seaweed); }
+  .btn-secondary:hover { background: var(--st-color-foliage); border-color: var(--st-color-foliage); color: var(--st-color-nectar); }
+  .on-dark .btn-primary { background: var(--st-color-nectar); color: var(--st-color-foliage); border-color: var(--st-color-nectar); }
+  .on-dark .btn-primary:hover { background: var(--st-color-khaki); border-color: var(--st-color-khaki); }
+  .on-dark .btn-secondary { color: var(--st-color-nectar); border-color: var(--st-color-nectar); }
+  .on-dark .btn-secondary:hover { background: var(--st-color-nectar); color: var(--st-color-foliage); }
+
+  .field { max-width: 24rem; }
+  .field label { display: block; font-size: var(--st-text-caption); text-transform: uppercase; letter-spacing: var(--st-track-caps); color: var(--st-color-sage-deep); margin-bottom: var(--st-space-2); }
+  .field input {
+    width: 100%; padding: 0.875rem 1rem;
+    background: var(--st-color-surface);
+    border: var(--st-hairline); border-radius: var(--st-radius);
+    font: inherit; color: var(--st-color-seaweed);
+  }
+  .field input:focus { outline: none; border-color: var(--st-color-foliage); }
+  .field .error-msg { display: block; margin-top: var(--st-space-2); font-size: var(--st-text-small); color: var(--st-color-error); }
+  .field.has-error input { border-color: var(--st-color-error); }
+
+  /* ---------- Product card ---------- */
+  .card-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 320px)); gap: var(--st-space-8); }
+  .product-card { text-decoration: none; display: block; }
+  .product-card .frame {
+    position: relative; overflow: hidden;
+    aspect-ratio: var(--st-ratio-product);
+    background: var(--st-color-surface);
+  }
+  .product-card img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    transition: opacity var(--st-dur-move) var(--st-ease-drape),
+                transform var(--st-dur-move) var(--st-ease-drape);
+  }
+  .product-card img.alt { opacity: 0; }
+  .product-card:hover img.alt, .product-card:focus-visible img.alt { opacity: 1; }
+  .product-card:hover img.main, .product-card:focus-visible img.main { opacity: 0; }
+  .product-card .quick-add {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: var(--st-space-4);
+    background: color-mix(in srgb, var(--st-color-nectar) 92%, transparent);
+    font-size: var(--st-text-caption); text-transform: uppercase; letter-spacing: var(--st-track-caps);
+    text-align: center; color: var(--st-color-seaweed);
+    opacity: 0; transform: translateY(8px);
+    transition: opacity var(--st-dur-micro) var(--st-ease-silk), transform var(--st-dur-micro) var(--st-ease-silk);
+  }
+  .product-card:hover .quick-add, .product-card:focus-visible .quick-add { opacity: 1; transform: translateY(0); }
+  .product-card .meta { padding-top: var(--st-space-4); }
+  .product-card .meta .cat { font-size: var(--st-text-caption); text-transform: uppercase; letter-spacing: var(--st-track-caps); color: var(--st-color-sage-deep); }
+  .product-card .meta .name { font-family: var(--st-font-display); font-size: var(--st-text-h3); margin: var(--st-space-1) 0; }
+  .product-card .meta .price { font-size: var(--st-text-small); color: var(--st-color-ink-soft); }
+  .product-card .meta .price .sale { color: var(--st-color-amber-deep); margin-left: var(--st-space-2); }
+
+  /* ---------- Motion demo: the Drape ---------- */
+  .drape { overflow: hidden; }
+  .drape > * {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(24px);
+    transition: clip-path var(--st-dur-reveal) var(--st-ease-silk),
+                transform var(--st-dur-reveal) var(--st-ease-silk);
+  }
+  .drape.is-visible > * { clip-path: inset(0 0 0 0); transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .drape > * { clip-path: none; transform: none; }
+  }
+
+  /* ---------- Dark ground ---------- */
+  .on-dark { background: var(--st-color-foliage); color: var(--st-color-nectar); }
+  .on-dark .eyebrow { color: var(--st-color-khaki); }
+  .on-dark .prose { color: color-mix(in srgb, var(--st-color-nectar) 78%, var(--st-color-foliage)); }
+
+  /* ---------- Masthead ---------- */
+  header.masthead { padding-block: var(--st-space-24) var(--st-space-16); }
+  .masthead .brand-mark { font-family: var(--st-font-display); letter-spacing: 0.35em; text-transform: uppercase; font-size: var(--st-text-body-lg); }
+  .pending {
+    display: inline-block; padding: 0.25rem 0.75rem; margin-left: var(--st-space-3);
+    border: 1px solid var(--st-color-hairline); color: var(--st-color-sage-deep);
+    font-size: var(--st-text-caption); letter-spacing: var(--st-track-caps); text-transform: uppercase;
+    vertical-align: middle;
+  }
+  .spec-table { width: 100%; border-collapse: collapse; font-size: var(--st-text-small); }
+  .spec-table th, .spec-table td { text-align: left; padding: var(--st-space-3) var(--st-space-4); border-bottom: var(--st-hairline); }
+  .spec-table th { font-size: var(--st-text-caption); text-transform: uppercase; letter-spacing: var(--st-track-caps); color: var(--st-color-sage-deep); font-weight: 400; }
+</style>
+</head>
+<body>
+
+<header class="masthead container">
+  <p class="brand-mark">Skirttique</p>
+  <span class="eyebrow">Design System · v1.0 · Stage 2</span>
+  <p class="hero-type">Defined by elegance.<br>Rooted in modesty.</p>
+  <p class="prose">Six colours, two typefaces on hand, one signature device. Everything below is a token — nothing is decorated by hand. This page is the living proof of <code>tokens.css</code>, rendered in the real brand fonts.</p>
+</header>
+
+<section class="band">
+  <div class="container">
+    <span class="eyebrow">01 · Palette</span>
+    <h2>Green is the voice. Orange is the whisper.</h2>
+    <p class="prose">Nectar grounds every page; Seaweed is the ink. Dark Foliage carries the brand — buttons, footer, full-bleed statements. Smoky Orange appears at most once per view. Khaki lives on dark grounds only.</p>
+    <svg class="hem-divider" viewBox="0 0 1200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M0,6 Q600,-4 1200,6" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#FDFFF4; border-bottom:1px solid var(--st-color-hairline)"></div><dl><dt>Nectar</dt><dd><code>#FDFFF4 · ground</code></dd><dd>Page background. Never pure white.</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#121B1A"></div><dl><dt>Seaweed</dt><dd><code>#121B1A · ink</code></dd><dd>Body text and hairline-adjacent detail.</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#17320B"></div><dl><dt>Dark Foliage</dt><dd><code>#17320B · brand</code></dd><dd>Buttons, footer, dark editorial bands.</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#7D9176"></div><dl><dt>Wasabi</dt><dd><code>#7D9176 · whisper</code></dd><dd>Large captions and tints. Small text uses the deep variant <code>#566851</code>.</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#BA6A31"></div><dl><dt>Smoky Orange</dt><dd><code>#BA6A31 · rationed</code></dd><dd>One accent per view: a sale price, a “final few” note. Text uses <code>#91501D</code>.</dd></dl></div>
+      <div class="swatch"><div class="chip" style="background:#F5D796"></div><dl><dt>Khakis</dt><dd><code>#F5D796 · on dark</code></dd><dd>Eyebrows and focus rings on Foliage grounds.</dd></dl></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container">
+    <span class="eyebrow">02 · Typography</span>
+    <h2>La Luxes speaks. Garet works.</h2>
+    <p class="prose">La Luxes Serif draws every glyph as a capital — statements set themselves in caps, so keep them short. It speaks only in headlines. Garet carries every working surface: navigation, body, buttons, captions — uppercase and wide-tracked at small sizes. Parfumerie Script is reserved for one hand-written moment per page.<span class="pending">Script file pending</span></p>
+    <svg class="hem-divider" viewBox="0 0 1200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M0,6 Q600,-4 1200,6" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+    <p class="hero-type" style="margin-bottom:var(--st-space-6)">The maxi, reconsidered</p>
+    <p class="display" style="margin-bottom:var(--st-space-6)">Silk taffeta, floor length</p>
+    <h3 style="margin-bottom:var(--st-space-6)">Cut in Lagos. Worn everywhere.</h3>
+    <p class="prose" style="margin-bottom:var(--st-space-6)">Body — Garet Book at 1rem/1.65. A skirt is not an afterthought to an outfit; it is the architecture of one. Every Skirttique piece is cut for movement and made to be kept.</p>
+    <span class="eyebrow" style="margin-bottom:var(--st-space-8)">Caption — eyebrow · tracked 0.16em</span>
+    <table class="spec-table" style="max-width:52rem">
+      <tr><th>Role</th><th>Token</th><th>Face</th></tr>
+      <tr><td>Hero statement</td><td>--st-text-hero</td><td>La Luxes 400</td></tr>
+      <tr><td>Display / H1–H3</td><td>--st-text-display … h3</td><td>La Luxes 400</td></tr>
+      <tr><td>Body / UI</td><td>--st-text-body</td><td>Garet Book</td></tr>
+      <tr><td>Eyebrow / button / nav</td><td>--st-text-caption</td><td>Garet Book · caps · 0.16em</td></tr>
+      <tr><td>Script accent</td><td>--st-text-script</td><td>Parfumerie Script — pending</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container">
+    <span class="eyebrow">03 · Signature — the Hemline</span>
+    <h2>A line that moves like a hem.</h2>
+    <p class="prose">The recurring device of the whole site: a one-pixel line that catches air on interaction — link underlines lift into a curve, and section dividers drape gently. It is the only ornament the system allows. Hover the links below.</p>
+    <div style="display:flex; gap:var(--st-space-12); flex-wrap:wrap; margin-top:var(--st-space-8)">
+      <a class="hemline-link" href="#">Shop maxi skirts
+        <svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true">
+          <path class="hem-straight" d="M0,5 L100,5"/>
+          <path class="hem-curve" d="M0,5 Q50,0 100,5"/>
+        </svg>
+      </a>
+      <a class="hemline-link" href="#">View the collection
+        <svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true">
+          <path class="hem-straight" d="M0,5 L100,5"/>
+          <path class="hem-curve" d="M0,5 Q50,0 100,5"/>
+        </svg>
+      </a>
+      <a class="hemline-link" href="#">Size guide
+        <svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true">
+          <path class="hem-straight" d="M0,5 L100,5"/>
+          <path class="hem-curve" d="M0,5 Q50,0 100,5"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container">
+    <span class="eyebrow">04 · Motion — the Drape</span>
+    <h2>Everything settles like fabric.</h2>
+    <p class="prose">Two easings only: <em>silk</em> for reveals, <em>drape</em> for weighted moves. Content enters bottom-up, the way a hem falls. Scroll reveals below run once; reduced-motion users see everything immediately.</p>
+    <div class="card-row" style="margin-top:var(--st-space-12)">
+      <div class="drape"><div style="aspect-ratio:4/5; background:var(--st-color-sage)"></div></div>
+      <div class="drape" style="transition-delay:100ms"><div style="aspect-ratio:4/5; background:var(--st-color-khaki)"></div></div>
+      <div class="drape" style="transition-delay:200ms"><div style="aspect-ratio:4/5; background:var(--st-color-foliage)"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container">
+    <span class="eyebrow">05 · Components</span>
+    <h2>Working surfaces.</h2>
+    <div style="display:flex; gap:var(--st-space-6); flex-wrap:wrap; align-items:center; margin-bottom:var(--st-space-12)">
+      <a class="btn btn-primary" href="#">Add to bag</a>
+      <a class="btn btn-secondary" href="#">View lookbook</a>
+      <a class="hemline-link" href="#">Delivery &amp; returns
+        <svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true">
+          <path class="hem-straight" d="M0,5 L100,5"/>
+          <path class="hem-curve" d="M0,5 Q50,0 100,5"/>
+        </svg>
+      </a>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 24rem)); gap:var(--st-space-12); margin-bottom:var(--st-space-16)">
+      <div class="field">
+        <label for="email-demo">Email address</label>
+        <input id="email-demo" type="email" placeholder="you@example.com">
+      </div>
+      <div class="field has-error">
+        <label for="email-err">Email address</label>
+        <input id="email-err" type="email" value="skirttique">
+        <span class="error-msg">Enter a full email address, like name@example.com.</span>
+      </div>
+    </div>
+    <div class="card-row">
+      <a class="product-card" href="#">
+        <div class="frame">
+          <img class="main" src="https://images.unsplash.com/photo-1688582949975-98a0750d7505?q=80&w=900&auto=format&fit=crop" alt="Printed maxi skirt worn among stone columns">
+          <img class="alt" src="https://images.unsplash.com/photo-1604648145659-29f52af5cf7f?q=80&w=900&auto=format&fit=crop" alt="Sand-toned flowing maxi skirt on stone steps" aria-hidden="true">
+          <span class="quick-add">Quick add — select size</span>
+        </div>
+        <div class="meta">
+          <span class="cat">Maxi · Silk taffeta</span>
+          <p class="name">The Adaora Maxi</p>
+          <p class="price">₦145,000</p>
+        </div>
+      </a>
+      <a class="product-card" href="#">
+        <div class="frame">
+          <img class="main" src="https://images.unsplash.com/photo-1762342676026-09e25daaf607?q=80&w=900&auto=format&fit=crop" alt="White pleated maxi skirt at the waterfront">
+          <img class="alt" src="https://images.unsplash.com/photo-1722486245824-7bb0ff9827dc?q=80&w=900&auto=format&fit=crop" alt="Dusty-rose maxi skirt in garden light" aria-hidden="true">
+          <span class="quick-add">Quick add — select size</span>
+        </div>
+        <div class="meta">
+          <span class="cat">Midi · Pleated crêpe</span>
+          <p class="name">The Zaria Midi</p>
+          <p class="price"><s>₦120,000</s><span class="sale">₦96,000</span></p>
+        </div>
+      </a>
+    </div>
+    <p class="note" style="margin-top:var(--st-space-6)">Sale price is this view’s single Smoky Orange moment. Imagery: editorial placeholders from Unsplash — final photography to brand.</p>
+  </div>
+</section>
+
+<section class="band on-dark">
+  <div class="container">
+    <span class="eyebrow">06 · On dark ground</span>
+    <p class="display">Foliage carries the brand.</p>
+    <p class="prose">Footer, membership, and statement bands invert to Dark Foliage. Khaki takes the eyebrow, Nectar takes the ink, and focus rings switch to Khaki. Nothing else changes — same tokens, same rules.</p>
+    <svg class="hem-divider" viewBox="0 0 1200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M0,6 Q600,-4 1200,6" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+    <div style="display:flex; gap:var(--st-space-6); flex-wrap:wrap">
+      <a class="btn btn-primary" href="#">Join the house list</a>
+      <a class="btn btn-secondary" href="#">Explore collections</a>
+    </div>
+  </div>
+</section>
+
+<footer class="container" style="padding-block:var(--st-space-12)">
+  <p class="note">Skirttique Design System v1.0 · Stage 2 · tokens.css is the single source of truth. Maps 1:1 to theme.json in Stage 3.</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.25 });
+  document.querySelectorAll('.drape').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

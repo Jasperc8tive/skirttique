@@ -1,0 +1,124 @@
+/**
+ * Skirttique Design Tokens — v1.0 (Stage 2)
+ *
+ * Canonical token source. Stage 3 maps these 1:1 into theme.json
+ * (--wp--preset--*) and SCSS ($st-*). Naming: --st-<category>-<name>.
+ *
+ * Rules encoded here (see docs/design-system.md for the full spec):
+ *  - Nectar is the ground, Seaweed is the ink, Foliage is the brand voice.
+ *  - Amber (Smoky Orange) appears at most ONCE per view.
+ *  - Khaki lives on dark grounds only.
+ *  - Sage at small text sizes must use the -deep variant (AA contrast).
+ *  - Radius is 0. Structure comes from hairlines, not shadows.
+ */
+
+:root {
+  /* ------------------------------------------------------------------ */
+  /* Colour — brand core                                                 */
+  /* ------------------------------------------------------------------ */
+  --st-color-nectar:        #FDFFF4; /* page ground */
+  --st-color-seaweed:       #121B1A; /* primary ink */
+  --st-color-foliage:       #17320B; /* brand anchor: dark sections, buttons */
+  --st-color-sage:          #7D9176; /* whisper: large captions, tints, hovers */
+  --st-color-amber:         #BA6A31; /* rationed accent — one per view */
+  --st-color-khaki:         #F5D796; /* highlight on dark grounds only */
+
+  /* Colour — derived (tonal support, same temperature) */
+  --st-color-surface:       #F6F8EA; /* alt surface: cards, form fields */
+  --st-color-hairline:      #E4E7D6; /* borders on light */
+  --st-color-hairline-dark: #2C4420; /* borders on foliage */
+  --st-color-sage-deep:     #566851; /* AA-safe sage for small text on light */
+  --st-color-amber-deep:    #91501D; /* AA-safe amber for small text on light */
+  --st-color-foliage-deep:  #0F2306; /* button hover, pressed states */
+  --st-color-ink-soft:      #3E4A45; /* secondary body text on light */
+
+  /* Colour — semantic */
+  --st-color-error:         #96372A; /* muted brick — never bright red */
+  --st-color-success:       #566851;
+  --st-color-focus:         #BA6A31; /* focus ring on light grounds */
+  --st-color-focus-dark:    #F5D796; /* focus ring on dark grounds */
+
+  /* ------------------------------------------------------------------ */
+  /* Typography                                                          */
+  /* ------------------------------------------------------------------ */
+  --st-font-display: "La Luxes", "Didot", "Bodoni MT", Georgia, serif;
+  --st-font-body:    "Garet", "Avenir Next", "Futura", "Century Gothic", sans-serif;
+  --st-font-script:  "Parfumerie Script", "Snell Roundhand", "Segoe Script", cursive;
+
+  /* Fluid scale — desktop-first, settles gracefully to mobile */
+  --st-text-hero:    clamp(3.25rem, 7.5vw, 6.75rem);  /* one per page */
+  --st-text-display: clamp(2.5rem, 5vw, 4.25rem);
+  --st-text-h1:      clamp(2.125rem, 3.6vw, 3.25rem);
+  --st-text-h2:      clamp(1.625rem, 2.6vw, 2.25rem);
+  --st-text-h3:      clamp(1.3125rem, 1.9vw, 1.625rem);
+  --st-text-body-lg: 1.125rem;
+  --st-text-body:    1rem;
+  --st-text-small:   0.875rem;
+  --st-text-caption: 0.75rem;   /* always uppercase + tracked */
+  --st-text-script:  clamp(1.75rem, 3vw, 2.75rem);
+
+  /* Tracking & leading */
+  --st-track-display: -0.015em;
+  --st-track-body:     0.01em;
+  --st-track-caps:     0.16em;  /* eyebrows, buttons, nav */
+  --st-leading-display: 1.04;
+  --st-leading-heading: 1.15;
+  --st-leading-body:    1.65;
+
+  --st-weight-book:    400;
+  --st-weight-medium:  500;   /* slots reserved — files pending */
+  --st-weight-bold:    700;
+
+  /* ------------------------------------------------------------------ */
+  /* Space — 4px base. Sections breathe: 24/32 desktop rhythm.           */
+  /* ------------------------------------------------------------------ */
+  --st-space-1:  0.25rem;   /*   4 */
+  --st-space-2:  0.5rem;    /*   8 */
+  --st-space-3:  0.75rem;   /*  12 */
+  --st-space-4:  1rem;      /*  16 */
+  --st-space-6:  1.5rem;    /*  24 */
+  --st-space-8:  2rem;      /*  32 */
+  --st-space-12: 3rem;      /*  48 */
+  --st-space-16: 4rem;      /*  64 */
+  --st-space-24: 6rem;      /*  96 */
+  --st-space-32: 8rem;      /* 128 */
+  --st-space-40: 10rem;     /* 160 */
+  --st-section:  clamp(6rem, 10vw, 10rem); /* vertical rhythm between sections */
+
+  /* ------------------------------------------------------------------ */
+  /* Layout                                                              */
+  /* ------------------------------------------------------------------ */
+  --st-container-max: 90rem;                      /* 1440 */
+  --st-gutter: clamp(1.5rem, 5vw, 4rem);          /* 24 → 64 */
+  --st-grid-gap: 1.5rem;                          /* 12-col grid gap */
+  --st-measure: 38rem;                            /* max line length, prose */
+
+  /* ------------------------------------------------------------------ */
+  /* Shape & elevation — sharp edges; hairlines over shadows             */
+  /* ------------------------------------------------------------------ */
+  --st-radius: 0;
+  --st-hairline: 1px solid var(--st-color-hairline);
+  --st-shadow-drawer: 0 24px 64px rgba(18, 27, 26, 0.16); /* drawers/overlays only */
+
+  /* ------------------------------------------------------------------ */
+  /* Motion — fabric vocabulary                                          */
+  /* ------------------------------------------------------------------ */
+  --st-ease-silk:  cubic-bezier(0.22, 1, 0.36, 1);   /* settles like silk — reveals */
+  --st-ease-drape: cubic-bezier(0.65, 0, 0.35, 1);   /* weighted — drawers, swaps */
+  --st-dur-micro:  200ms;   /* hovers, underlines */
+  --st-dur-move:   450ms;   /* drawers, image swaps */
+  --st-dur-reveal: 800ms;   /* scroll reveals, hero */
+
+  /* Aspect ratios */
+  --st-ratio-product: 3 / 4;     /* all product imagery */
+  --st-ratio-editorial: 16 / 9;  /* landscape editorial bands */
+  --st-ratio-portrait: 4 / 5;    /* editorial portrait cards */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --st-dur-micro: 1ms;
+    --st-dur-move: 1ms;
+    --st-dur-reveal: 1ms;
+  }
+}

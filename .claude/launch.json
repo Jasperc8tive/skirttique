@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "design-system",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "serve", "design-system", "-l", "4173"],
+      "port": 4173
+    },
+    {
+      "name": "wordpress",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/dev-proxy.mjs"],
+      "port": 4180
+    }
+  ]
+}

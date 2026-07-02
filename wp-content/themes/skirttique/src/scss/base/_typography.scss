@@ -1,0 +1,28 @@
+/* Typography roles beyond what theme.json can express. */
+
+body {
+	letter-spacing: var(--st-track-body);
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Prose never exceeds the reading measure, wherever it lands. */
+.is-layout-constrained > p,
+.is-layout-constrained > ul,
+.is-layout-constrained > ol {
+	max-width: var(--st-measure);
+}
+
+/* Eyebrow — small tracked label above headings. */
+.st-eyebrow {
+	display: block;
+	font-size: var(--st-text-caption);
+	text-transform: uppercase;
+	letter-spacing: var(--st-track-caps);
+	color: var(--st-color-sage-deep);
+	margin-block-end: var(--st-space-6);
+
+	.has-foliage-background-color &,
+	.has-seaweed-background-color & {
+		color: var(--st-color-khaki);
+	}
+}

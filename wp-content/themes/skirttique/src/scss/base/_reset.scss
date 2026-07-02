@@ -1,0 +1,25 @@
+/* Minimal base on top of WordPress defaults — not a full reset. */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+img,
+video {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* Focus is part of the design system: amber on light, khaki on dark. */
+:focus-visible {
+	outline: 2px solid var(--st-color-focus);
+	outline-offset: 3px;
+}
+
+.has-foliage-background-color :focus-visible,
+.has-seaweed-background-color :focus-visible {
+	outline-color: var(--st-color-focus-dark);
+}
