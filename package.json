@@ -12,7 +12,11 @@
     "theme:install": "npm --prefix wp-content/themes/skirttique install",
     "theme:build": "npm --prefix wp-content/themes/skirttique run build",
     "theme:start": "npm --prefix wp-content/themes/skirttique run start",
-    "tokens": "npm --prefix wp-content/themes/skirttique run tokens"
+    "tokens": "npm --prefix wp-content/themes/skirttique run tokens",
+    "test": "npm run test:unit && npm run test:types",
+    "test:unit": "php wp-content/plugins/skirttique-core/tests/run.php",
+    "test:types": "npm --prefix wp-content/themes/skirttique run typecheck",
+    "test:currency": "bash wp-content/plugins/skirttique-core/tests/currency-matrix.sh"
   },
   "devDependencies": {
     "@wordpress/env": "^10.30.0"
