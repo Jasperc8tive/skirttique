@@ -3,7 +3,7 @@
  * Plugin Name: Skirttique Core
  * Plugin URI: https://skirttique.com
  * Description: Commerce functionality for Skirttique — wishlist, recently viewed, quick view, gateway routing, shipping carriers, schema. Theme-independent by design: the theme dresses the store, this plugin runs it.
- * Version: 0.1.0
+ * Version: 1.0.0
  * Requires at least: 6.6
  * Requires PHP: 8.3
  * Author: Skirttique
@@ -17,7 +17,7 @@ declare( strict_types=1 );
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SKIRTTIQUE_CORE_VERSION', '0.1.0' );
+define( 'SKIRTTIQUE_CORE_VERSION', '1.0.0' );
 define( 'SKIRTTIQUE_CORE_FILE', __FILE__ );
 define( 'SKIRTTIQUE_CORE_DIR', __DIR__ );
 
