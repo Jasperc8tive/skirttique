@@ -1,0 +1,69 @@
+/* Press band — "In their words". One rotating client-voice quote inside
+   a hairline frame, placed before the closing band. Deliberately outside
+   the drape motion budget: the crossfade is its only movement. */
+
+.st-press {
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+	padding: var(--st-section) var(--st-gutter) 0;
+
+	&__inner {
+		max-width: 52rem;
+		margin-inline: auto;
+		padding-block: var(--st-space-16);
+		border-top: 1px solid var(--st-color-hairline);
+		border-bottom: 1px solid var(--st-color-hairline);
+		text-align: center;
+
+		.st-section__eyebrow {
+			margin-bottom: var(--st-space-8);
+		}
+	}
+
+	/* All quotes share one grid cell; the band holds the tallest quote's
+	   height, so rotation never shifts the layout below it. */
+	&__list {
+		display: grid;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__item {
+		grid-area: 1 / 1;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity var(--st-dur-move) var(--st-ease-silk),
+			visibility 0s var(--st-dur-move);
+
+		&.is-current {
+			opacity: 1;
+			visibility: visible;
+			transition:
+				opacity var(--st-dur-move) var(--st-ease-silk),
+				visibility 0s;
+		}
+	}
+
+	&__blockquote {
+		margin: 0;
+	}
+
+	&__quote {
+		margin: 0 0 var(--st-space-6);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h2);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-heading);
+		letter-spacing: var(--st-track-display);
+	}
+
+	&__source {
+		font-style: normal;
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+}

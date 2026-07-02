@@ -28,8 +28,8 @@ function buildUnderline(): SVGSVGElement {
 	return svg;
 }
 
-export function initHemlines(): void {
-	document
+export function initHemlines( root: ParentNode = document ): void {
+	root
 		.querySelectorAll<HTMLAnchorElement>( 'a.st-hemline:not(.is-enhanced)' )
 		.forEach( ( link ) => {
 			link.classList.add( 'is-enhanced' );

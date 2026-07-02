@@ -60,7 +60,10 @@
 	}
 }
 
-/* Side drawer (bag, mobile menu) — slides from the right. */
+/* Side drawer (bag, mobile menu) — slides from the right.
+   `display: flex` overrides the UA's `dialog:not([open]) { display: none }`
+   (needed so the slide transition can run), so closed drawers must be
+   visibility-hidden or their contents stay in the tab order. */
 .st-drawer--side {
 	position: fixed;
 	inset: 0 0 0 auto;
@@ -70,10 +73,17 @@
 	flex-direction: column;
 
 	transform: translateX(100%);
-	transition: transform var(--st-dur-move) var(--st-ease-drape);
+	visibility: hidden;
+	transition:
+		transform var(--st-dur-move) var(--st-ease-drape),
+		visibility 0s var(--st-dur-move);
 
 	&[open] {
 		transform: translateX(0);
+		visibility: visible;
+		transition:
+			transform var(--st-dur-move) var(--st-ease-drape),
+			visibility 0s;
 	}
 }
 
@@ -84,16 +94,62 @@
 	width: 100vw;
 
 	transform: translateY(-100%);
-	transition: transform var(--st-dur-move) var(--st-ease-drape);
+	visibility: hidden;
+	transition:
+		transform var(--st-dur-move) var(--st-ease-drape),
+		visibility 0s var(--st-dur-move);
 
 	&[open] {
 		transform: translateY(0);
+		visibility: visible;
+		transition:
+			transform var(--st-dur-move) var(--st-ease-drape),
+			visibility 0s;
+	}
+}
+
+/* Modal drawer (quick view) — centered card, fade + rise. */
+.st-drawer--modal {
+	position: fixed;
+	inset: 0;
+	margin: auto;
+	width: min(58rem, calc(100vw - 2 * var(--st-space-6)));
+	max-height: min(42rem, calc(100dvh - 2 * var(--st-space-6)));
+	overflow-y: auto;
+	border: 1px solid var(--st-color-hairline);
+
+	opacity: 0;
+	transform: translateY(16px);
+	visibility: hidden;
+	transition:
+		opacity var(--st-dur-move) var(--st-ease-silk),
+		transform var(--st-dur-move) var(--st-ease-silk),
+		visibility 0s var(--st-dur-move);
+
+	&[open] {
+		opacity: 1;
+		transform: none;
+		visibility: visible;
+		transition:
+			opacity var(--st-dur-move) var(--st-ease-silk),
+			transform var(--st-dur-move) var(--st-ease-silk),
+			visibility 0s;
+	}
+
+	.st-drawer__bar {
+		border-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	.st-drawer__body {
+		padding-top: 0;
 	}
 }
 
 @media (prefers-reduced-motion: reduce) {
 	.st-drawer--side,
-	.st-drawer--search {
+	.st-drawer--search,
+	.st-drawer--modal {
 		transform: none;
 		transition: none;
 	}
@@ -135,6 +191,103 @@
 
 	.st-btn {
 		justify-self: start;
+	}
+}
+
+/* Woo mini-cart, re-clothed (bag drawer body). Our drawer foot carries
+   the CTAs, so Woo's own button row is hidden. */
+.st-drawer .widget_shopping_cart_content {
+	.woocommerce-mini-cart {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.woocommerce-mini-cart-item {
+		position: relative;
+		padding-block: var(--st-space-4);
+		padding-right: var(--st-space-8);
+
+		+ .woocommerce-mini-cart-item {
+			border-top: 1px solid var(--st-color-hairline);
+		}
+
+		/* Woo nests the thumbnail inside the product link. */
+		> a:not(.remove) {
+			display: grid;
+			grid-template-columns: 4rem minmax(0, 1fr);
+			gap: var(--st-space-4);
+			align-items: center;
+			font-family: var(--st-font-display);
+			font-size: var(--st-text-body);
+			line-height: var(--st-leading-heading);
+			text-decoration: none;
+		}
+
+		img {
+			width: 4rem;
+			aspect-ratio: var(--st-ratio-product);
+			object-fit: cover;
+			float: none;
+			margin: 0;
+		}
+
+		.quantity {
+			display: block;
+			padding-left: calc(4rem + var(--st-space-4));
+			margin-top: var(--st-space-2);
+			font-size: var(--st-text-small);
+			color: var(--st-color-ink-soft);
+		}
+
+		.remove {
+			position: absolute;
+			top: var(--st-space-4);
+			right: 0;
+			width: 1.75rem;
+			height: 1.75rem;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			text-decoration: none;
+			color: var(--st-color-ink-soft);
+			font-size: var(--st-text-body-lg);
+
+			&:hover,
+			&:focus-visible {
+				color: var(--st-color-error);
+			}
+		}
+	}
+
+	.woocommerce-mini-cart__total {
+		display: flex;
+		justify-content: space-between;
+		gap: var(--st-space-6);
+		margin: 0;
+		padding-block: var(--st-space-4);
+		border-top: 1px solid var(--st-color-hairline);
+		font-size: var(--st-text-small);
+
+		strong {
+			font-weight: var(--st-weight-book);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			font-size: var(--st-text-caption);
+			color: var(--st-color-sage-deep);
+		}
+	}
+
+	.woocommerce-mini-cart__buttons {
+		display: none;
+	}
+
+	.woocommerce-mini-cart__empty-message {
+		margin: 0;
+		padding-block: var(--st-space-8);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+		text-align: center;
 	}
 }
 

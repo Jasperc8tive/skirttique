@@ -4,7 +4,8 @@
   "private": true,
   "description": "Skirttique — luxury WooCommerce build. Root workspace: local WordPress environment.",
   "scripts": {
-    "env:start": "wp-env start",
+    "env:start": "wp-env start && node tools/wp-env-tune.mjs",
+    "env:tune": "node tools/wp-env-tune.mjs",
     "env:stop": "wp-env stop",
     "env:destroy": "wp-env destroy",
     "env:cli": "wp-env run cli",

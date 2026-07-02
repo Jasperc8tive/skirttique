@@ -83,6 +83,12 @@
 		border: 0;
 		cursor: pointer;
 		color: inherit;
+
+		/* 44px minimum touch target. */
+		@media (pointer: coarse) {
+			width: 2.75rem;
+			height: 2.75rem;
+		}
 	}
 
 	&__burger {
@@ -136,6 +142,14 @@
 
 	.st-header__brand {
 		margin-inline: auto;
+		/* The full-tracked logotype overflows narrow viewports next to
+		   the icon cluster — tighten both axes to fit 375px. */
+		font-size: var(--st-text-body);
+		letter-spacing: 0.25em;
+	}
+
+	.st-header__actions {
+		gap: var(--st-space-2);
 	}
 
 	.st-market {

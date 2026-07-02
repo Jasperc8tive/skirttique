@@ -52,6 +52,17 @@ a.st-hemline {
 			transform: translateY(0);
 		}
 	}
+
+	/* Touch devices: caption-size text alone is far below the 44px
+	   target minimum. Expand the hit area vertically without moving
+	   the layout (horizontal stays put so neighbours don't overlap). */
+	@media (pointer: coarse) {
+		&::after {
+			content: "";
+			position: absolute;
+			inset: -12px 0;
+		}
+	}
 }
 
 /* Section divider variant — a pre-curved hem. */

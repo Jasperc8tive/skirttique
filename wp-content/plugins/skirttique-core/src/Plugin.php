@@ -11,7 +11,9 @@ namespace Skirttique\Core;
 
 use Skirttique\Core\Contracts\ServiceInterface;
 use Skirttique\Core\Payments\GatewayRouter;
+use Skirttique\Core\Services\CartAjax;
 use Skirttique\Core\Services\Market;
+use Skirttique\Core\Services\Newsletter;
 use Skirttique\Core\Services\QuickView;
 use Skirttique\Core\Services\RecentlyViewed;
 use Skirttique\Core\Services\Wishlist;
@@ -27,6 +29,8 @@ final class Plugin {
 	/** @var list<class-string<ServiceInterface>> */
 	private const SERVICES = array(
 		Market::class,
+		Newsletter::class,
+		CartAjax::class,
 		Wishlist::class,
 		RecentlyViewed::class,
 		QuickView::class,

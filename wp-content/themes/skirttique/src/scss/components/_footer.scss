@@ -1,0 +1,253 @@
+/* Footer — Foliage ground: the house list, nav columns, legal bar. */
+
+.st-footer {
+	font-size: var(--st-text-small);
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	&__inner {
+		max-width: var(--st-container-max);
+		margin-inline: auto;
+		padding: var(--st-space-24) var(--st-gutter) var(--st-space-16);
+	}
+
+	/* --- The house list ------------------------------------------------ */
+
+	&__news {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+		align-items: end;
+		gap: var(--st-space-8) var(--st-space-16);
+	}
+
+	&__eyebrow {
+		margin: 0 0 var(--st-space-4);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-khaki);
+	}
+
+	&__statement {
+		margin: 0;
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-display);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+	}
+
+	&__promise {
+		margin: var(--st-space-4) 0 0;
+		max-width: var(--st-measure);
+		line-height: var(--st-leading-body);
+	}
+
+	&__note {
+		margin: 0;
+		line-height: var(--st-leading-body);
+	}
+
+	/* --- Grid ----------------------------------------------------------- */
+
+	&__grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+		gap: var(--st-space-12) var(--st-space-8);
+	}
+
+	&__logotype {
+		margin: 0;
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+		letter-spacing: 0.35em;
+		text-transform: uppercase;
+	}
+
+	&__tagline {
+		margin: var(--st-space-3) 0 0;
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-khaki);
+	}
+
+	&__social {
+		display: flex;
+		gap: var(--st-space-6);
+		margin: var(--st-space-8) 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__label {
+		margin: 0 0 var(--st-space-4);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-khaki);
+	}
+
+	&__col ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__col a {
+		display: inline-block;
+		padding-block: var(--st-space-2);
+		border-bottom: 1px solid transparent;
+		transition: border-color var(--st-dur-micro) var(--st-ease-silk);
+
+		&:hover,
+		&:focus-visible {
+			border-bottom-color: var(--st-color-khaki);
+		}
+	}
+
+	/* --- Legal bar ------------------------------------------------------ */
+
+	&__legal {
+		border-top: 1px solid var(--st-color-hairline-dark);
+	}
+
+	&__legal-inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--st-space-4) var(--st-space-8);
+		max-width: var(--st-container-max);
+		margin-inline: auto;
+		padding: var(--st-space-6) var(--st-gutter);
+		font-size: var(--st-text-caption);
+		letter-spacing: var(--st-track-body);
+	}
+
+	&__copyright {
+		margin: 0;
+	}
+
+	&__legal-links {
+		display: flex;
+		gap: var(--st-space-6);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		a {
+			border-bottom: 1px solid transparent;
+			transition: border-color var(--st-dur-micro) var(--st-ease-silk);
+
+			&:hover,
+			&:focus-visible {
+				border-bottom-color: var(--st-color-khaki);
+			}
+		}
+	}
+
+	&__markets {
+		display: flex;
+		gap: var(--st-space-4);
+		margin-left: auto;
+
+		button {
+			position: relative;
+			padding: var(--st-space-2) 0;
+			background: none;
+			border: 0;
+			border-bottom: 1px solid transparent;
+			cursor: pointer;
+			color: inherit;
+			font-family: var(--st-font-body);
+			font-size: var(--st-text-caption);
+			letter-spacing: var(--st-track-caps);
+			transition: border-color var(--st-dur-micro) var(--st-ease-silk);
+
+			/* 44px effective tap target on touch — vertical only, so the
+			   expanded areas of adjacent market buttons never overlap. */
+			@media (pointer: coarse) {
+				&::after {
+					content: "";
+					position: absolute;
+					inset: -12px 0;
+				}
+			}
+
+			&:hover {
+				border-bottom-color: var(--st-color-khaki);
+			}
+
+			&[aria-current="true"] {
+				color: var(--st-color-khaki);
+				border-bottom-color: var(--st-color-khaki);
+			}
+		}
+	}
+
+	@media (max-width: 60rem) {
+		&__news {
+			grid-template-columns: 1fr;
+			align-items: start;
+		}
+
+		&__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		&__brand {
+			grid-column: 1 / -1;
+		}
+
+		&__markets {
+			margin-left: 0;
+		}
+	}
+}
+
+/* --- Join form (on the dark ground) ------------------------------------ */
+
+.st-join {
+	&__hp {
+		position: absolute;
+		left: -9999px;
+		margin: 0;
+	}
+
+	&__row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--st-space-4);
+		align-items: flex-end;
+	}
+
+	&__field {
+		flex: 1 1 14rem;
+		padding: var(--st-space-3) 0;
+		background: none;
+		border: 0;
+		border-bottom: 1px solid var(--st-color-hairline-dark);
+		color: inherit;
+		font-family: var(--st-font-body);
+		font-size: var(--st-text-body);
+		letter-spacing: var(--st-track-body);
+
+		&::placeholder {
+			color: var(--st-color-sage);
+		}
+
+		&:focus {
+			outline: none;
+			border-bottom-color: var(--st-color-khaki);
+		}
+	}
+
+	&__error {
+		margin: var(--st-space-3) 0 0;
+		font-size: var(--st-text-small);
+		color: var(--st-color-khaki);
+	}
+}

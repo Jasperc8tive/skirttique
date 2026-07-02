@@ -56,10 +56,10 @@ $st_current_code   = class_exists( \Skirttique\Core\Services\Market::class )
 $st_current_market = $st_markets[ $st_current_code ];
 ?>
 
-<div class="st-announcement" data-st-announcement>
+<div class="st-announcement" data-st-rotate>
 	<ul class="st-announcement__list">
 		<?php foreach ( $st_announcements as $st_i => $st_message ) : ?>
-			<li class="st-announcement__item<?php echo 0 === $st_i ? ' is-current' : ''; ?>">
+			<li class="st-announcement__item<?php echo 0 === $st_i ? ' is-current' : ''; ?>" data-st-rotate-item>
 				<?php echo esc_html( wp_specialchars_decode( $st_message ) ); ?>
 			</li>
 		<?php endforeach; ?>

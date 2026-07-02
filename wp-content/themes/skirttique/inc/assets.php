@@ -38,6 +38,19 @@ function enqueue(): void {
 			(string) $asset['version'],
 			array( 'strategy' => 'defer' )
 		);
+
+		// Config the bundle needs: login state and the wishlist nonce
+		// (action shared with Skirttique\Core\Services\Wishlist).
+		wp_add_inline_script(
+			'skirttique-main',
+			'window.stConfig = ' . (string) wp_json_encode(
+				array(
+					'loggedIn'      => is_user_logged_in(),
+					'wishlistNonce' => wp_create_nonce( 'skirttique_wishlist' ),
+				)
+			) . ';',
+			'before'
+		);
 	}
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue' );
@@ -66,3 +79,14 @@ function preload_fonts( array $urls, string $relation_type ): array {
 	return $urls;
 }
 add_filter( 'wp_resource_hints', __NAMESPACE__ . '\\preload_fonts', 10, 2 );
+
+/**
+ * Without JavaScript, drape.ts never adds `.is-visible`, and the CSS
+ * clip-path that starts every `.st-drape` hidden would stay hidden
+ * forever. This is the no-JS safety net — the reduced-motion media
+ * query in _drape.scss covers the JS-present case.
+ */
+function noscript_drape_fallback(): void {
+	echo '<noscript><style>.st-drape > * { clip-path: none !important; transform: none !important; }</style></noscript>';
+}
+add_action( 'wp_head', __NAMESPACE__ . '\\noscript_drape_fallback' );

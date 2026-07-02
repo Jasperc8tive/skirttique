@@ -1,0 +1,296 @@
+/* Homepage — hero, collections, philosophy, the edit, closing band. */
+
+/* Shared section rhythm + eyebrow/title, reused by collections/edit. */
+.st-section {
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+	padding: var(--st-section) var(--st-gutter) 0;
+
+	&__head {
+		margin-bottom: var(--st-space-12);
+	}
+
+	&__eyebrow {
+		margin: 0 0 var(--st-space-3);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+
+	&__title {
+		margin: 0;
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-display);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero                                                                 */
+/* ------------------------------------------------------------------ */
+.st-hero {
+	position: relative;
+	display: flex;
+	align-items: flex-end;
+	min-height: 46rem;
+	height: 92vh;
+	max-height: 56rem;
+	overflow: hidden;
+	color: var(--st-color-nectar);
+
+	&__media {
+		position: absolute;
+		inset: 0;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		/* Scrim so the statement stays legible over any photograph. */
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(0deg, rgba(18, 27, 26, 0.55) 0%, rgba(18, 27, 26, 0) 45%);
+		}
+	}
+
+	&__content {
+		position: relative;
+		z-index: 1;
+		max-width: var(--st-container-max);
+		margin-inline: auto;
+		padding: 0 var(--st-gutter) var(--st-space-24);
+		width: 100%;
+		/* Flex item: without this, a long headline word sets min-content
+		   width and drags the whole box past the viewport. */
+		min-width: 0;
+	}
+
+	&__eyebrow {
+		margin: 0 0 var(--st-space-4);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-khaki);
+	}
+
+	&__statement {
+		margin: 0 0 var(--st-space-4);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-hero);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+		max-width: 24ch;
+	}
+
+	&__sub {
+		margin: 0 0 var(--st-space-8);
+		max-width: var(--st-measure);
+		font-size: var(--st-text-body-lg);
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* Collections                                                         */
+/* ------------------------------------------------------------------ */
+.st-collections__grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: var(--st-grid-gap);
+	padding: 0 var(--st-gutter);
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+}
+
+.st-collections__card {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+}
+
+.st-collections__frame {
+	display: block;
+	aspect-ratio: var(--st-ratio-portrait);
+	overflow: hidden;
+	background: var(--st-color-surface);
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform var(--st-dur-move) var(--st-ease-drape);
+	}
+
+	.st-collections__card:hover &,
+	.st-collections__card:focus-visible & {
+		img {
+			transform: scale(1.04);
+		}
+	}
+}
+
+.st-collections__name {
+	display: block;
+	margin-top: var(--st-space-4);
+	font-family: var(--st-font-display);
+	font-size: var(--st-text-h3);
+	font-weight: var(--st-weight-book);
+	line-height: var(--st-leading-heading);
+	border-bottom: 1px solid transparent;
+	transition: border-color var(--st-dur-micro) var(--st-ease-silk);
+
+	.st-collections__card:hover &,
+	.st-collections__card:focus-visible & {
+		border-bottom-color: var(--st-color-sage);
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* Philosophy — split statement / editorial figure                     */
+/* ------------------------------------------------------------------ */
+.st-philosophy {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: var(--st-space-16);
+	align-items: center;
+}
+
+.st-philosophy__statement {
+	margin: 0 0 var(--st-space-6);
+	font-family: var(--st-font-display);
+	font-size: var(--st-text-h1);
+	font-weight: var(--st-weight-book);
+	line-height: var(--st-leading-display);
+	letter-spacing: var(--st-track-display);
+}
+
+.st-philosophy__prose {
+	margin: 0 0 var(--st-space-8);
+	max-width: var(--st-measure);
+	color: var(--st-color-ink-soft);
+	line-height: var(--st-leading-body);
+}
+
+.st-philosophy__figure {
+	margin: 0;
+	aspect-ratio: var(--st-ratio-portrait);
+	overflow: hidden;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* The edit — reuses .st-card from _card.scss                          */
+/* ------------------------------------------------------------------ */
+.st-edit__grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: var(--st-space-12) var(--st-grid-gap);
+	padding: 0 var(--st-gutter);
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+}
+
+.st-edit__more {
+	display: flex;
+	justify-content: center;
+	padding: var(--st-space-12) var(--st-gutter) 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Closing band                                                        */
+/* ------------------------------------------------------------------ */
+.st-closing {
+	margin-top: var(--st-section);
+	padding-block: var(--st-space-24);
+}
+
+.st-closing__inner {
+	max-width: 46rem;
+	margin-inline: auto;
+	padding-inline: var(--st-gutter);
+	text-align: center;
+}
+
+.st-closing__statement {
+	margin: 0 0 var(--st-space-8);
+	font-family: var(--st-font-display);
+	font-size: var(--st-text-h1);
+	font-weight: var(--st-weight-book);
+	line-height: var(--st-leading-display);
+	letter-spacing: var(--st-track-display);
+}
+
+@media (max-width: 75rem) {
+	.st-collections__grid,
+	.st-edit__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 60rem) {
+	.st-philosophy {
+		grid-template-columns: 1fr;
+		gap: var(--st-space-8);
+	}
+
+	.st-hero {
+		height: auto;
+		min-height: 34rem;
+		padding-top: var(--st-space-32);
+	}
+
+	/* The hero clamp minimum (3.25rem caps) cannot fit "RECONSIDERED"
+	   in a 375px viewport — step the statement down so the longest
+	   word fits without breaking. */
+	.st-hero__statement {
+		font-size: var(--st-text-h1);
+	}
+
+	/* The caption-size hemline is a weak tap target with no hover
+	   affordance on touch — the above-fold CTA earns a full button. */
+	a.st-hemline.st-hero__cta {
+		padding: 1.125rem 2.5rem;
+		border: 1px solid var(--st-color-nectar);
+		text-decoration: none;
+
+		&.is-enhanced {
+			padding-block-end: 1.125rem;
+		}
+
+		.st-hemline__svg {
+			display: none;
+		}
+
+		&:hover,
+		&:focus-visible {
+			background: var(--st-color-nectar);
+			color: var(--st-color-foliage);
+		}
+	}
+}
+
+@media (max-width: 40rem) {
+	.st-collections__grid,
+	.st-edit__grid {
+		grid-template-columns: 1fr;
+	}
+
+	/* Long sentences set at H1 size orphan single words on narrow
+	   screens — step down so more of each line fits together. */
+	.st-philosophy__statement,
+	.st-closing__statement {
+		font-size: var(--st-text-h2);
+	}
+}

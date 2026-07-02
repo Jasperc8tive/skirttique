@@ -6,7 +6,14 @@
       "PowerShell($ff = Get-Command ffmpeg -ErrorAction SilentlyContinue; if \\($ff\\) { $ff.Source } else { \"ffmpeg not found\" })",
       "PowerShell(Test-Path \"C:\\\\Program Files\\\\VideoLAN\\\\VLC\\\\vlc.exe\"; Get-Command winget -ErrorAction SilentlyContinue | ForEach-Object { $_.Source })",
       "PowerShell($out = \"C:\\\\Users\\\\Mayowa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Skirttique\\\\0fd37e38-7ca3-404c-a8bb-d26b885fd6fe\\\\scratchpad\\\\frames\"; New-Item -ItemType Directory -Force $out | Out-Null; & \"C:\\\\Program Files\\\\VideoLAN\\\\VLC\\\\vlc.exe\" -I dummy --dummy-quiet --no-audio --rate=4 --video-filter=scene --scene-format=jpeg --scene-ratio=120 --scene-path=$out --scene-prefix=frame \"C:\\\\Skirttique\\\\Homepage.mp4\" vlc://quit 2>$null; Get-ChildItem $out | Measure-Object | Select-Object -ExpandProperty Count)",
-      "PowerShell($out = \"C:\\\\Users\\\\Mayowa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Skirttique\\\\0fd37e38-7ca3-404c-a8bb-d26b885fd6fe\\\\scratchpad\\\\frames\"; & \"C:\\\\Program Files\\\\VideoLAN\\\\VLC\\\\vlc.exe\" -I dummy --dummy-quiet --no-audio --video-filter=scene --scene-format=jpeg --scene-ratio=120 --scene-path=$out \"C:\\\\Skirttique\\\\Homepage.mp4\" vlc://quit --play-and-exit; Get-ChildItem $out | Select-Object Name, Length -First 40)"
+      "PowerShell($out = \"C:\\\\Users\\\\Mayowa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Skirttique\\\\0fd37e38-7ca3-404c-a8bb-d26b885fd6fe\\\\scratchpad\\\\frames\"; & \"C:\\\\Program Files\\\\VideoLAN\\\\VLC\\\\vlc.exe\" -I dummy --dummy-quiet --no-audio --video-filter=scene --scene-format=jpeg --scene-ratio=120 --scene-path=$out \"C:\\\\Skirttique\\\\Homepage.mp4\" vlc://quit --play-and-exit; Get-ChildItem $out | Select-Object Name, Length -First 40)",
+      "Bash(git -C /c/Skirttique status --short)",
+      "PowerShell(npm run theme:build)",
+      "PowerShell(npm --prefix wp-content/themes/skirttique run typecheck)",
+      "PowerShell(curl.exe -s -o NUL -w \"%{http_code}\" http://127.0.0.1:8888/)",
+      "PowerShell(npx wp-env run cli -- wp eval 'wp_get_theme\\(\\)->delete_pattern_cache\\(\\); $p = get_page_by_path\\(\"saved\"\\); echo $p ? \"saved-page-exists id=\" . $p->ID . \" status=\" . $p->post_status : \"saved-page-missing\";')",
+      "PowerShell(npx wp-env run cli -- wp post create --post_type=page --post_title='Saved pieces' --post_name=saved --post_status=publish --porcelain)",
+      "PowerShell(Stop-Process -Id 19096 -Force -Confirm:$false; Start-Sleep -Milliseconds 500; \\(Test-NetConnection 127.0.0.1 -Port 4180 -WarningAction SilentlyContinue\\).TcpTestSucceeded)"
     ]
   }
 }
