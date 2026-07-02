@@ -77,6 +77,26 @@ Block theme (FSE), PHP 8.3, strict types everywhere.
   `recently-viewed.ts`) — no server tracking, nothing to consent-gate. All cart adds
   (cards + purchase forms) go through `cart.ts` → `wc-ajax=skirttique_add_to_cart` →
   fragments → bag drawer.
+- **Bag & Checkout (Stage 8):** WooCommerce's block cart/checkout are kept (Store API,
+  validation, express-payment readiness) and re-clothed, not rebuilt. Theme templates
+  override Woo's: `page-cart.html` (full chrome + `patterns/bag-head.php` editorial head),
+  `page-checkout.html` (distraction-reduced: `patterns/checkout-header.php` back-to-bag /
+  logotype / secure note, `patterns/checkout-footer.php` legal line — no nav, no drawers),
+  `order-confirmation.html` (full chrome around Woo's confirmation blocks).
+  `_checkout.scss` restyles wc-block components with tokens only; buttons start from
+  theme.json's button element (`wp-element-button`). The block cart mutates through the
+  Store API — never legacy fragments — so `cart.ts#initCartSync` subscribes to
+  `wc/store/cart` (when `wp.data` exists) to keep the header count bubble live and
+  re-enhance hemlines after React re-renders. The cart page's empty state is replaced
+  in page content by `tools/customize-cart-empty-state.php` (idempotent, `wp eval-file`).
+  Placeholders until Stage 9: COD gateway ("Pay on delivery"), flat-rate shipping
+  (NG zone ₦3,500 / rest-of-world ₦45,000) — GatewayRouter + real carriers replace both.
+- **Content pages:** `templates/page.html` is the editorial prose shell (`.st-page`,
+  `_page.scss`: measured column, serif title, ruled caption headings). Privacy Policy,
+  Terms of Service, and Delivery & Returns are seeded by
+  `tools/seed-content-pages.php` (idempotent, `wp eval-file`) — the copy mirrors the
+  PDP-panel promises (GIG/DHL, 14-day unworn returns) and needs a legal read before
+  launch. Size Guide, FAQs, and Contact remain unwritten.
 
 ## Plugin — `skirttique-core`
 

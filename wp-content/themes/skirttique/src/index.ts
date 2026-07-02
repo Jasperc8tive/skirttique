@@ -9,6 +9,7 @@
 
 import './scss/main.scss';
 
+import { initCartSync } from './ts/cart';
 import { initDrape } from './ts/drape';
 import { initDrawers } from './ts/drawer';
 import { initHeader } from './ts/header';
@@ -29,6 +30,7 @@ const boot = (): void => {
 	initDrawers();
 	initMarket();
 	initQuickAdd();
+	initCartSync();
 	initQuickView();
 	initWishlist();
 	initPurchaseScopes();

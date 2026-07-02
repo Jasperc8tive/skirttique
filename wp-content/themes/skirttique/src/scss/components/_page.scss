@@ -1,0 +1,92 @@
+/* Editorial content pages (privacy, terms, delivery & returns, …) —
+   the generic page.html shell. A single measured column: serif title,
+   caption-caps section headings ruled like the PDP's panel folds, calm
+   ink-soft prose. */
+
+.st-page {
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+	padding: var(--st-space-12) var(--st-gutter) var(--st-section);
+
+	&__title {
+		max-width: var(--st-measure);
+		margin: 0 auto var(--st-space-10);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h1);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-heading);
+		letter-spacing: var(--st-track-display);
+	}
+
+	.wp-block-post-content {
+		max-width: var(--st-measure);
+		margin-inline: auto;
+
+		> * + * {
+			margin-block-start: var(--st-space-4);
+		}
+
+		h2 {
+			margin-block-start: var(--st-space-10);
+			padding-block-start: var(--st-space-5);
+			border-top: 1px solid var(--st-color-hairline);
+			font-family: var(--st-font-body);
+			font-size: var(--st-text-caption);
+			font-weight: var(--st-weight-book);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			color: var(--st-color-seaweed);
+		}
+
+		p,
+		li {
+			color: var(--st-color-ink-soft);
+			line-height: var(--st-leading-body);
+		}
+
+		ul,
+		ol {
+			padding-inline-start: var(--st-space-5);
+
+			li::marker {
+				color: var(--st-color-sage);
+			}
+		}
+
+		li + li {
+			margin-block-start: var(--st-space-2);
+		}
+
+		a {
+			color: var(--st-color-seaweed);
+			text-decoration: underline;
+			text-decoration-thickness: 1px;
+			text-underline-offset: 0.2em;
+			transition: color var(--st-dur-micro) var(--st-ease-silk);
+
+			&:hover,
+			&:focus-visible {
+				color: var(--st-color-sage-deep);
+			}
+		}
+
+		strong {
+			color: var(--st-color-seaweed);
+			font-weight: var(--st-weight-medium);
+		}
+
+		/* Standing first line: when it was last touched. */
+		p.st-page__updated {
+			font-size: var(--st-text-caption);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			color: var(--st-color-sage-deep);
+		}
+
+		/* Opening summary, set a step larger than the body. */
+		p.st-page__lede {
+			font-size: var(--st-text-body-lg);
+			color: var(--st-color-seaweed);
+		}
+	}
+}
