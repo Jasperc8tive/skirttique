@@ -180,12 +180,17 @@ $st_current_market = $st_markets[ $st_current_code ];
 			<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg>
 		</button>
 	</div>
-	<form role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" class="st-search">
+	<form role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" class="st-search" data-st-instant-search>
 		<label class="st-search__label" for="st-search-field"><?php esc_html_e( 'Search the house', 'skirttique' ); ?></label>
-		<input class="st-search__field" id="st-search-field" type="search" name="s" placeholder="<?php esc_attr_e( 'Maxi, silk, pleated…', 'skirttique' ); ?>" autocomplete="off">
+		<input class="st-search__field" id="st-search-field" type="search" name="s" placeholder="<?php esc_attr_e( 'Maxi, silk, pleated…', 'skirttique' ); ?>" autocomplete="off" aria-describedby="st-search-status">
 		<input type="hidden" name="post_type" value="product">
 		<button type="submit" class="st-btn st-btn--primary"><?php esc_html_e( 'Search', 'skirttique' ); ?></button>
 	</form>
+	<div class="st-search__live">
+		<p class="st-search__status" id="st-search-status" role="status" data-st-search-status></p>
+		<div class="st-search__results" data-st-search-results hidden></div>
+		<p class="st-search__all" data-st-search-all hidden><a class="st-hemline" href="#"></a></p>
+	</div>
 </dialog>
 
 <dialog class="st-drawer st-drawer--side" id="st-drawer-bag" aria-label="<?php esc_attr_e( 'Your bag', 'skirttique' ); ?>">

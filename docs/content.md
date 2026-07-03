@@ -140,6 +140,34 @@ same shop pattern as everything else.
 Dev-only demo data: `tools/seed-product-editorial.php` (refuses to run
 in production) dresses two demo pieces and adds two sample reviews.
 
+## Shop & Search (Stage 22)
+
+**Facets** — a refine row on every catalog view (shop, collections,
+search), entirely server-rendered links and one GET form, so filtering
+works with no JavaScript at all:
+
+- **Size** — links using WooCommerce's *native* `filter_size` main-query
+  param (no plugin, no custom query code). Shown only when sized
+  products exist.
+- **Price** — min/max inputs using Woo's native `min_price`/`max_price`
+  params. Multi-currency aware: the shopper types the *market* currency
+  and `Currency::normalize_price_filter()` converts the params back to
+  the NGN base (floor/ceil, inclusive) before Woo's lookup-table filter
+  reads them.
+- **On sale** — a toggle link (`?on_sale=1`), ours via `pre_get_posts`
+  (`apply_sale_facet` in inc/woocommerce.php).
+- Facets, sort, search phrase, and collection all combine; sorting
+  carries active facets as hidden inputs; a filtered-empty state offers
+  "Clear filters".
+
+**Instant search** — the header search drawer now shows as-you-type
+results: `Services\Search` (`wc-ajax=skirttique_search`) returns up to 4
+product cards (same `skirttique_product_card_html` renderer as
+everything else), a total, and the full-results URL. search.ts debounces
+300ms, aborts stale requests, announces counts through a live region,
+and degrades to the plain GET form without JS. "View all n results"
+lands on the Stage 20 search template.
+
 ## SEO / Performance panels — deliberate scope
 
 The PRD asked for SEO and Performance settings panels. SEO settings

@@ -647,3 +647,24 @@ function quickview_html( string $html, \WC_Product $product ): string {
 	return (string) ob_get_clean();
 }
 add_filter( 'skirttique_quickview_html', __NAMESPACE__ . '\\quickview_html', 10, 2 );
+
+/**
+ * The "on sale" catalog facet (?on_sale=1) — Stage 22. Size and price
+ * facets ride WooCommerce's native main-query params; this one is ours.
+ */
+function apply_sale_facet( \WP_Query $query ): void {
+	if ( is_admin() || ! $query->is_main_query() || empty( $_GET['on_sale'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only facet.
+		return;
+	}
+
+	$is_catalog = $query->is_post_type_archive( 'product' )
+		|| $query->is_tax( 'product_cat' )
+		|| ( $query->is_search() && 'product' === $query->get( 'post_type' ) );
+	if ( ! $is_catalog || ! function_exists( 'wc_get_product_ids_on_sale' ) ) {
+		return;
+	}
+
+	$ids = array_map( 'absint', wc_get_product_ids_on_sale() );
+	$query->set( 'post__in', $ids ? $ids : array( 0 ) ); // array(0) = deliberately empty result.
+}
+add_action( 'pre_get_posts', __NAMESPACE__ . '\\apply_sale_facet' );

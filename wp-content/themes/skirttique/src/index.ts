@@ -23,6 +23,7 @@ import { initQuickAdd } from './ts/quick-add';
 import { initQuickView } from './ts/quickview';
 import { initRecentlyViewed } from './ts/recently-viewed';
 import { initRotators } from './ts/rotator';
+import { initInstantSearch } from './ts/search';
 import { initSliders } from './ts/slider';
 import { initStickyBuy } from './ts/sticky-atc';
 import { initTransitions } from './ts/transitions';
@@ -39,6 +40,7 @@ const boot = (): void => {
 	initQuickView();
 	initWishlist();
 	initPurchaseScopes();
+	initInstantSearch();
 	initStickyBuy();
 	initRecentlyViewed();
 	initSliders();

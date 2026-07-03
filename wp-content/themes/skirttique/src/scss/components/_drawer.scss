@@ -192,6 +192,39 @@
 	.st-btn {
 		justify-self: start;
 	}
+
+	/* Instant results (Stage 22) — under the form, same container. */
+	&__live {
+		max-width: var(--st-container-max);
+		margin-inline: auto;
+		padding: 0 var(--st-gutter) var(--st-space-16);
+	}
+
+	&__status {
+		margin: 0 0 var(--st-space-6);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+
+		&:empty {
+			margin: 0;
+		}
+	}
+
+	&__results {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: var(--st-space-8) var(--st-grid-gap);
+
+		@media (max-width: 60rem) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	&__all {
+		margin: var(--st-space-8) 0 0;
+	}
 }
 
 /* Woo mini-cart, re-clothed (bag drawer body). Our drawer foot carries

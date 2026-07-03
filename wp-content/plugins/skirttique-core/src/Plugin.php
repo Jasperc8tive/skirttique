@@ -21,6 +21,7 @@ use Skirttique\Core\Services\Newsletter;
 use Skirttique\Core\Services\ProductEditorial;
 use Skirttique\Core\Services\QuickView;
 use Skirttique\Core\Services\RecentlyViewed;
+use Skirttique\Core\Services\Search;
 use Skirttique\Core\Services\Wishlist;
 
 /**
@@ -43,6 +44,7 @@ final class Plugin {
 		CartAjax::class,
 		Wishlist::class,
 		RecentlyViewed::class,
+		Search::class,
 		QuickView::class,
 		GatewayRouter::class,
 	);

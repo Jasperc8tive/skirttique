@@ -110,6 +110,65 @@ if ( is_wp_error( $st_categories ) ) {
 
 $st_total   = (int) $wp_query->found_posts;
 $st_orderby = isset( $_GET['orderby'] ) ? wc_clean( wp_unslash( $_GET['orderby'] ) ) : 'date'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only sort choice.
+
+// ---------------------------------------------------------------------
+// Facets (Stage 22) — server-rendered, no JS required. Size and price
+// use WooCommerce's NATIVE main-query params (filter_size, min_price/
+// max_price); "on sale" is ours (inc/woocommerce.php pre_get_posts).
+// ---------------------------------------------------------------------
+// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only filter state.
+$st_filters = array(
+	'filter_size' => isset( $_GET['filter_size'] ) ? (string) wc_clean( wp_unslash( $_GET['filter_size'] ) ) : '',
+	'min_price'   => isset( $_GET['min_price'] ) ? (string) absint( wp_unslash( $_GET['min_price'] ) ) : '',
+	'max_price'   => isset( $_GET['max_price'] ) ? (string) absint( wp_unslash( $_GET['max_price'] ) ) : '',
+	'on_sale'     => isset( $_GET['on_sale'] ) ? '1' : '',
+);
+// phpcs:enable
+$st_filters = array_filter( $st_filters, static fn ( string $v ): bool => '' !== $v && '0' !== $v );
+$st_refined = (bool) $st_filters;
+
+// The archive's own URL — filter links rebuild querystrings on this.
+if ( $st_current_cat ) {
+	$st_base_url = (string) get_term_link( $st_current_cat, 'product_cat' );
+} elseif ( is_search() ) {
+	$st_base_url = add_query_arg(
+		array(
+			's'         => rawurlencode( get_search_query() ),
+			'post_type' => 'product',
+		),
+		home_url( '/' )
+	);
+} else {
+	$st_base_url = $st_shop_url;
+}
+
+/**
+ * A catalog URL with the current sort + filters, some overridden.
+ * Null/'' removes a param — so toggles and "clear" are both overrides.
+ *
+ * @param array<string, string|null> $overrides Param overrides.
+ */
+$st_refine_url = static function ( array $overrides = array() ) use ( $st_filters, $st_orderby, $st_base_url ): string {
+	$params = array_merge( $st_filters, $overrides );
+	if ( 'date' !== $st_orderby && ! array_key_exists( 'orderby', $params ) ) {
+		$params['orderby'] = $st_orderby;
+	}
+	$params = array_filter( $params, static fn ( $v ): bool => null !== $v && '' !== $v );
+
+	return $params ? add_query_arg( array_map( 'rawurlencode', $params ), $st_base_url ) : $st_base_url;
+};
+
+$st_sizes = get_terms(
+	array(
+		'taxonomy'   => 'pa_size',
+		'hide_empty' => true,
+		'orderby'    => 'menu_order',
+	)
+);
+if ( is_wp_error( $st_sizes ) ) {
+	$st_sizes = array();
+}
+$st_active_size = (string) ( $st_filters['filter_size'] ?? '' );
 ?>
 
 <div class="st-shop<?php echo '' !== $st_hero ? ' st-shop--landing' : ''; ?>">
@@ -144,6 +203,68 @@ $st_orderby = isset( $_GET['orderby'] ) ? wc_clean( wp_unslash( $_GET['orderby']
 		<?php endif; ?>
 	</header>
 
+	<div class="st-refine">
+		<?php if ( $st_sizes ) : ?>
+			<nav class="st-refine__group" aria-label="<?php esc_attr_e( 'Filter by size', 'skirttique' ); ?>">
+				<span class="st-refine__label"><?php esc_html_e( 'Size', 'skirttique' ); ?></span>
+				<ul>
+					<li><a href="<?php echo esc_url( $st_refine_url( array( 'filter_size' => null ) ) ); ?>" <?php echo '' === $st_active_size ? 'aria-current="true"' : ''; ?>><?php esc_html_e( 'Any', 'skirttique' ); ?></a></li>
+					<?php foreach ( $st_sizes as $st_size ) : ?>
+						<li>
+							<a href="<?php echo esc_url( $st_refine_url( array( 'filter_size' => $st_size->slug === $st_active_size ? null : $st_size->slug ) ) ); ?>" <?php echo $st_size->slug === $st_active_size ? 'aria-current="true"' : ''; ?>>
+								<?php echo esc_html( $st_size->name ); ?>
+							</a>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</nav>
+		<?php endif; ?>
+
+		<a class="st-refine__sale" href="<?php echo esc_url( $st_refine_url( array( 'on_sale' => isset( $st_filters['on_sale'] ) ? null : '1' ) ) ); ?>" <?php echo isset( $st_filters['on_sale'] ) ? 'aria-current="true"' : ''; ?>>
+			<?php esc_html_e( 'On sale', 'skirttique' ); ?>
+		</a>
+
+		<form class="st-refine__price" method="get" action="<?php echo esc_url( $st_current_cat ? $st_base_url : ( is_search() ? home_url( '/' ) : $st_shop_url ) ); ?>">
+			<?php if ( is_search() ) : ?>
+				<input type="hidden" name="s" value="<?php echo esc_attr( get_search_query() ); ?>">
+				<input type="hidden" name="post_type" value="product">
+			<?php endif; ?>
+			<?php if ( 'date' !== $st_orderby ) : ?>
+				<input type="hidden" name="orderby" value="<?php echo esc_attr( $st_orderby ); ?>">
+			<?php endif; ?>
+			<?php if ( '' !== $st_active_size ) : ?>
+				<input type="hidden" name="filter_size" value="<?php echo esc_attr( $st_active_size ); ?>">
+			<?php endif; ?>
+			<?php if ( isset( $st_filters['on_sale'] ) ) : ?>
+				<input type="hidden" name="on_sale" value="1">
+			<?php endif; ?>
+
+			<span class="st-refine__label" id="st-refine-price-label">
+				<?php
+				echo esc_html(
+					sprintf(
+						/* translators: %s: active currency code. */
+						__( 'Price (%s)', 'skirttique' ),
+						function_exists( 'get_woocommerce_currency' ) ? get_woocommerce_currency() : ''
+					)
+				);
+				?>
+			</span>
+			<label class="screen-reader-text" for="st-min-price"><?php esc_html_e( 'Minimum price', 'skirttique' ); ?></label>
+			<input type="number" inputmode="numeric" min="0" step="1" id="st-min-price" name="min_price" value="<?php echo esc_attr( $st_filters['min_price'] ?? '' ); ?>" placeholder="<?php esc_attr_e( 'From', 'skirttique' ); ?>" aria-describedby="st-refine-price-label">
+			<span aria-hidden="true">–</span>
+			<label class="screen-reader-text" for="st-max-price"><?php esc_html_e( 'Maximum price', 'skirttique' ); ?></label>
+			<input type="number" inputmode="numeric" min="0" step="1" id="st-max-price" name="max_price" value="<?php echo esc_attr( $st_filters['max_price'] ?? '' ); ?>" placeholder="<?php esc_attr_e( 'To', 'skirttique' ); ?>" aria-describedby="st-refine-price-label">
+			<button type="submit" class="st-btn st-btn--secondary"><?php esc_html_e( 'Apply', 'skirttique' ); ?></button>
+		</form>
+
+		<?php if ( $st_refined ) : ?>
+			<a class="st-hemline st-refine__clear" href="<?php echo esc_url( $st_refine_url( array( 'filter_size' => null, 'min_price' => null, 'max_price' => null, 'on_sale' => null ) ) ); ?>">
+				<?php esc_html_e( 'Clear filters', 'skirttique' ); ?>
+			</a>
+		<?php endif; ?>
+	</div>
+
 	<?php if ( have_posts() ) : ?>
 		<div class="st-shop__toolbar">
 			<p class="st-shop__count" role="status">
@@ -169,6 +290,9 @@ $st_orderby = isset( $_GET['orderby'] ) ? wc_clean( wp_unslash( $_GET['orderby']
 					<input type="hidden" name="s" value="<?php echo esc_attr( get_search_query() ); ?>">
 					<input type="hidden" name="post_type" value="product">
 				<?php endif; ?>
+				<?php foreach ( $st_filters as $st_filter_key => $st_filter_value ) : // Sorting keeps the active facets. ?>
+					<input type="hidden" name="<?php echo esc_attr( $st_filter_key ); ?>" value="<?php echo esc_attr( $st_filter_value ); ?>">
+				<?php endforeach; ?>
 				<noscript><button type="submit" class="st-btn st-btn--secondary"><?php esc_html_e( 'Apply', 'skirttique' ); ?></button></noscript>
 			</form>
 		</div>
@@ -200,6 +324,11 @@ $st_orderby = isset( $_GET['orderby'] ) ? wc_clean( wp_unslash( $_GET['orderby']
 			</nav>
 		<?php endif; ?>
 
+	<?php elseif ( $st_refined ) : ?>
+		<div class="st-shop__empty">
+			<p class="st-shop__empty-note"><?php esc_html_e( 'Nothing matches these filters.', 'skirttique' ); ?></p>
+			<a class="st-hemline" href="<?php echo esc_url( $st_refine_url( array( 'filter_size' => null, 'min_price' => null, 'max_price' => null, 'on_sale' => null ) ) ); ?>"><?php esc_html_e( 'Clear filters', 'skirttique' ); ?></a>
+		</div>
 	<?php else : ?>
 		<div class="st-shop__empty">
 			<p class="st-shop__empty-note"><?php esc_html_e( 'Nothing here yet.', 'skirttique' ); ?></p>

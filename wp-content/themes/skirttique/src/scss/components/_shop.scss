@@ -75,6 +75,104 @@
 	}
 }
 
+/* Refine row (Stage 22) — size links, on-sale toggle, price form. */
+.st-refine {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--st-space-4) var(--st-space-8);
+	padding: var(--st-space-4) 0;
+	margin-bottom: var(--st-space-6);
+	border-top: 1px solid var(--st-color-hairline);
+	border-bottom: 1px solid var(--st-color-hairline);
+	font-size: var(--st-text-caption);
+	text-transform: uppercase;
+	letter-spacing: var(--st-track-caps);
+
+	&__label {
+		color: var(--st-color-sage-deep);
+	}
+
+	&__group {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--st-space-4);
+
+		ul {
+			display: inline-flex;
+			flex-wrap: wrap;
+			gap: var(--st-space-4);
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+	}
+
+	&__group a,
+	&__sale {
+		display: inline-block;
+		padding-block: var(--st-space-2);
+		border-bottom: 1px solid transparent;
+		color: var(--st-color-ink-soft);
+		text-decoration: none;
+		transition:
+			color var(--st-dur-micro) var(--st-ease-silk),
+			border-color var(--st-dur-micro) var(--st-ease-silk);
+
+		&:hover,
+		&:focus-visible {
+			color: var(--st-color-seaweed);
+			border-bottom-color: var(--st-color-sage);
+		}
+
+		&[aria-current="true"] {
+			color: var(--st-color-seaweed);
+			border-bottom-color: var(--st-color-seaweed);
+		}
+	}
+
+	&__price {
+		display: inline-flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--st-space-3);
+
+		input {
+			width: 5.5rem;
+			max-width: calc(50vw - var(--st-gutter) - 2rem);
+			padding: 0.5rem 0.625rem;
+			border: 1px solid var(--st-color-hairline);
+			background: none;
+			font: inherit;
+			font-size: var(--st-text-small);
+			letter-spacing: normal;
+			text-transform: none;
+			color: inherit;
+
+			&:focus-visible {
+				outline: 1px solid var(--st-color-seaweed);
+				outline-offset: 0;
+			}
+		}
+
+		.st-btn {
+			padding: 0.5rem 1.125rem;
+		}
+	}
+
+	&__clear {
+		margin-left: auto;
+	}
+
+	@media (max-width: 60rem) {
+		gap: var(--st-space-3) var(--st-space-6);
+
+		&__clear {
+			margin-left: 0;
+		}
+	}
+}
+
 .st-shop {
 	max-width: var(--st-container-max);
 	margin-inline: auto;

@@ -70,6 +70,44 @@ final class Currency implements ServiceInterface {
 
 		// Shipping rates are configured in NGN too.
 		add_filter( 'woocommerce_package_rates', array( $this, 'convert_shipping' ) );
+
+		// Price-facet bridge (Stage 22): the shopper types min/max in the
+		// MARKET currency, but WooCommerce's price filter compares against
+		// the NGN lookup table — normalise the GET params before WC reads
+		// them (its posts_clauses hook reads $_GET after pre_get_posts).
+		add_action( 'pre_get_posts', array( $this, 'normalize_price_filter' ) );
+	}
+
+	/**
+	 * Convert typed min/max price params back to the NGN base, once,
+	 * for the main storefront query.
+	 */
+	public function normalize_price_filter( \WP_Query $query ): void {
+		static $done = false;
+
+		if ( $done || is_admin() || ! $query->is_main_query() || ! self::active() ) {
+			return;
+		}
+		$done = true;
+
+		$currency = Market::current_market()['currency'];
+		if ( self::BASE_CURRENCY === $currency ) {
+			return;
+		}
+
+		$rate = self::rate( $currency );
+		if ( $rate <= 0 ) {
+			return;
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only filter params, normalised in place.
+		if ( isset( $_GET['min_price'] ) && is_numeric( $_GET['min_price'] ) ) {
+			$_GET['min_price'] = (string) floor( (float) $_GET['min_price'] / $rate );
+		}
+		if ( isset( $_GET['max_price'] ) && is_numeric( $_GET['max_price'] ) ) {
+			$_GET['max_price'] = (string) ceil( (float) $_GET['max_price'] / $rate );
+		}
+		// phpcs:enable
 	}
 
 	/**
