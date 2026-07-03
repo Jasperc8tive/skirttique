@@ -6,8 +6,8 @@
   "scripts": {
     "tokens": "node tools/generate-theme-json.mjs",
     "prebuild": "npm run tokens",
-    "build": "wp-scripts build index=./src/index.ts --output-path=build",
-    "start": "wp-scripts start index=./src/index.ts --output-path=build",
+    "build": "wp-scripts build index=./src/index.ts editor=./src/editor/index.jsx --output-path=build",
+    "start": "wp-scripts start index=./src/index.ts editor=./src/editor/index.jsx --output-path=build",
     "typecheck": "tsc --noEmit",
     "lint:js": "wp-scripts lint-js src",
     "lint:css": "wp-scripts lint-style \"src/scss/**/*.scss\""

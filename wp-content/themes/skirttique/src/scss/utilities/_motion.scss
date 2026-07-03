@@ -1,0 +1,65 @@
+/* Stage 17 motion primitives: page transitions, parallax, image zoom.
+   All disabled under prefers-reduced-motion (the TS modules also bail). */
+
+/* --- Page transitions — a nectar veil that lifts on load, falls on exit. */
+.st-veil {
+	position: fixed;
+	inset: 0;
+	z-index: 90;
+	background: var(--st-color-nectar);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity var(--st-dur-move) var(--st-ease-silk);
+}
+
+html.st-leaving .st-veil {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+html.st-arriving .st-veil {
+	opacity: 1;
+	transition: none;
+}
+
+/* --- Parallax — transform is driven by parallax.ts. */
+[data-st-parallax] {
+	will-change: transform;
+
+	> img {
+		/* Oversize slightly so the drift never reveals edges. */
+		height: 112% !important;
+	}
+}
+
+/* --- Image zoom (media.ts) — click/keyboard toggled close-up. */
+[data-st-zoom] {
+	cursor: zoom-in;
+
+	img {
+		transition: transform var(--st-dur-move) var(--st-ease-drape);
+		transform-origin: var(--st-zoom-origin, center);
+	}
+
+	&.is-zoomed {
+		cursor: zoom-out;
+
+		img {
+			transform: scale(1.8);
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.st-veil {
+		display: none;
+	}
+
+	[data-st-parallax] > img {
+		height: 100% !important;
+	}
+
+	[data-st-zoom] img {
+		transition: none;
+	}
+}

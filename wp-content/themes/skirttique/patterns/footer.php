@@ -53,56 +53,16 @@ $st_social = apply_filters(
 	)
 );
 
-// Join-form state, set by the Newsletter service redirect.
-$st_joined     = isset( $_GET['st-joined'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only flag.
-$st_join_error = isset( $_GET['st-join-error'] ) ? sanitize_key( wp_unslash( $_GET['st-join-error'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only flag.
 ?>
 
 <div class="st-footer has-foliage-background-color has-nectar-color has-text-color has-background">
 	<div class="st-footer__inner">
 
-		<section class="st-footer__news" id="st-house-list" aria-labelledby="st-house-list-title">
-			<div class="st-footer__news-copy">
-				<p class="st-footer__eyebrow"><?php esc_html_e( 'The house list', 'skirttique' ); ?></p>
-				<h2 class="st-footer__statement" id="st-house-list-title"><?php esc_html_e( 'First to every collection', 'skirttique' ); ?></h2>
-				<p class="st-footer__promise"><?php esc_html_e( 'New pieces, private previews and the journal — a few letters a season, nothing more.', 'skirttique' ); ?></p>
-			</div>
-
-			<?php if ( $st_joined ) : ?>
-				<p class="st-footer__note" role="status"><?php esc_html_e( 'You are on the list. Welcome to the house.', 'skirttique' ); ?></p>
-			<?php else : ?>
-				<form class="st-join" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-					<input type="hidden" name="action" value="skirttique_join">
-					<?php wp_nonce_field( 'skirttique_join' ); ?>
-
-					<p class="st-join__hp" aria-hidden="true">
-						<label for="st-join-website"><?php esc_html_e( 'Website', 'skirttique' ); ?></label>
-						<input type="text" name="st_website" id="st-join-website" tabindex="-1" autocomplete="off">
-					</p>
-
-					<div class="st-join__row">
-						<label class="screen-reader-text" for="st-join-email"><?php esc_html_e( 'Email address', 'skirttique' ); ?></label>
-						<input
-							class="st-join__field"
-							type="email"
-							name="st_email"
-							id="st-join-email"
-							placeholder="name@example.com"
-							autocomplete="email"
-							required
-							<?php echo 'email' === $st_join_error ? 'aria-describedby="st-join-error" aria-invalid="true"' : ''; ?>
-						>
-						<button type="submit" class="st-btn st-btn--primary"><?php esc_html_e( 'Join the house list', 'skirttique' ); ?></button>
-					</div>
-
-					<?php if ( 'email' === $st_join_error ) : ?>
-						<p class="st-join__error" id="st-join-error" role="alert"><?php esc_html_e( 'Enter a full email address, like name@example.com.', 'skirttique' ); ?></p>
-					<?php elseif ( 'expired' === $st_join_error ) : ?>
-						<p class="st-join__error" role="alert"><?php esc_html_e( 'That took a little long and the form timed out — please try again.', 'skirttique' ); ?></p>
-					<?php endif; ?>
-				</form>
-			<?php endif; ?>
-		</section>
+		<?php
+		// The canonical house-list instance — same renderer the
+		// Newsletter block uses (inc/components.php).
+		echo Skirttique\Components\newsletter( array( 'context' => 'footer' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped within the component.
+		?>
 
 		<svg class="st-hem-divider" viewBox="0 0 1200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M0,6 Q600,-4 1200,6" fill="none" stroke="currentColor" stroke-width="1"/></svg>
 

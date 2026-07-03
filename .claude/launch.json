@@ -11,7 +11,7 @@
       "name": "wordpress",
       "runtimeExecutable": "node",
       "runtimeArgs": ["tools/dev-proxy.mjs"],
-      "port": 4180
+      "autoPort": true
     }
   ]
 }

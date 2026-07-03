@@ -1,0 +1,71 @@
+/* Product slider — scroll-snap rail with quiet arrows (slider.ts). */
+
+.st-slider {
+	&__viewport {
+		overflow: hidden;
+		margin-inline: calc(-1 * var(--st-gutter));
+		padding-inline: var(--st-gutter);
+	}
+
+	&__track {
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(0, calc((100% - 3 * var(--st-grid-gap)) / 4));
+		gap: var(--st-grid-gap);
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scroll-padding-inline: var(--st-gutter);
+		scrollbar-width: none;
+		padding-bottom: var(--st-space-2);
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+
+		> * {
+			scroll-snap-align: start;
+		}
+	}
+
+	&__nav {
+		display: flex;
+		justify-content: flex-end;
+		gap: var(--st-space-2);
+		margin-top: var(--st-space-6);
+	}
+
+	&__arrow {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		background: none;
+		border: 1px solid var(--st-color-hairline);
+		border-radius: var(--st-radius);
+		cursor: pointer;
+		color: var(--st-color-seaweed);
+		transition:
+			border-color var(--st-dur-micro) var(--st-ease-silk),
+			opacity var(--st-dur-micro) var(--st-ease-silk);
+
+		&:hover:not([disabled]) {
+			border-color: var(--st-color-seaweed);
+		}
+
+		&[disabled] {
+			opacity: 0.35;
+			cursor: default;
+		}
+	}
+
+	@media (max-width: 60rem) {
+		&__track {
+			grid-auto-columns: minmax(0, 72%);
+		}
+
+		&__nav {
+			display: none; /* touch scrolls the rail directly */
+		}
+	}
+}

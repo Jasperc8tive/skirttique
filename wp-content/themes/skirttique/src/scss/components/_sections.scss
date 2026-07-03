@@ -1,0 +1,248 @@
+/* Section components introduced by the block library (Stage 17):
+   stats, feature list, trust badges, gallery, video, pricing, FAQ,
+   generic breadcrumbs, standalone newsletter band, editorial flip. */
+
+/* --- Statistics ------------------------------------------------------ */
+.st-stats {
+	&__row {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+		gap: var(--st-grid-gap);
+		margin: 0;
+	}
+
+	&__item {
+		padding-top: var(--st-space-4);
+		border-top: 1px solid var(--st-color-hairline);
+	}
+
+	&__value {
+		margin: 0;
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-display);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+	}
+
+	&__label {
+		margin: 0 0 var(--st-space-2);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+}
+
+/* --- Feature list ----------------------------------------------------- */
+.st-features {
+	&__list {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		gap: var(--st-grid-gap) var(--st-space-12);
+	}
+
+	&__item {
+		padding-top: var(--st-space-4);
+		border-top: 1px solid var(--st-color-hairline);
+	}
+
+	&__name {
+		margin: 0 0 var(--st-space-2);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-heading);
+	}
+
+	&__text {
+		margin: 0;
+		font-size: var(--st-text-small);
+		line-height: var(--st-leading-body);
+		color: var(--st-color-ink-soft);
+	}
+}
+
+/* --- Trust badges ------------------------------------------------------ */
+.st-trust {
+	&__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--st-space-4) var(--st-space-8);
+		margin: 0;
+		padding: var(--st-space-4) 0;
+		list-style: none;
+		border-top: 1px solid var(--st-color-hairline);
+		border-bottom: 1px solid var(--st-color-hairline);
+	}
+
+	&__item {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--st-space-3);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+
+		svg {
+			flex: 0 0 auto;
+			color: var(--st-color-foliage);
+		}
+	}
+}
+
+/* --- Gallery ------------------------------------------------------------ */
+.st-gallery {
+	&__grid {
+		display: grid;
+		gap: var(--st-grid-gap);
+	}
+
+	&--cols-2 .st-gallery__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	&--cols-3 .st-gallery__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+	&--cols-4 .st-gallery__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+	&__figure {
+		margin: 0;
+		overflow: hidden;
+		aspect-ratio: var(--st-ratio-portrait);
+		background: var(--st-color-surface);
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	@media (max-width: 60rem) {
+		&--cols-3 .st-gallery__grid,
+		&--cols-4 .st-gallery__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+}
+
+/* --- Video --------------------------------------------------------------- */
+.st-video {
+	&__frame {
+		margin: 0;
+	}
+
+	&__media {
+		display: block;
+		width: 100%;
+		aspect-ratio: var(--st-ratio-editorial);
+		object-fit: cover;
+		background: var(--st-color-seaweed);
+	}
+
+	&__caption {
+		margin-top: var(--st-space-3);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+}
+
+/* --- Pricing -------------------------------------------------------------- */
+.st-pricing {
+	&__row {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: var(--st-grid-gap);
+	}
+
+	&__card {
+		height: 100%;
+		padding: var(--st-space-8);
+		border: 1px solid var(--st-color-hairline);
+	}
+
+	&__tier {
+		margin: 0 0 var(--st-space-3);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+
+	&__price {
+		margin: 0 0 var(--st-space-4);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h1);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+	}
+
+	&__text {
+		margin: 0;
+		font-size: var(--st-text-small);
+		line-height: var(--st-leading-body);
+		color: var(--st-color-ink-soft);
+	}
+}
+
+/* --- FAQ (block) — reuses the PDP fold styles ------------------------------ */
+.st-faq__list {
+	border-bottom: 1px solid var(--st-color-hairline);
+	max-width: var(--st-measure);
+}
+
+/* --- Generic breadcrumbs (block) — the PDP trail, anywhere ------------------ */
+.st-crumbs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--st-space-3);
+	font-size: var(--st-text-caption);
+	text-transform: uppercase;
+	letter-spacing: var(--st-track-caps);
+	color: var(--st-color-sage-deep);
+
+	a {
+		color: inherit;
+		text-decoration: none;
+		border-bottom: 1px solid transparent;
+		transition: border-color var(--st-dur-micro) var(--st-ease-silk);
+
+		&:hover,
+		&:focus-visible {
+			border-bottom-color: currentcolor;
+		}
+	}
+
+	[aria-current="page"] {
+		color: var(--st-color-seaweed);
+	}
+}
+
+/* --- Standalone newsletter band (block) ------------------------------------- */
+.st-newsletter-band {
+	margin-top: var(--st-section);
+
+	&__inner {
+		max-width: var(--st-container-max);
+		margin-inline: auto;
+		padding: var(--st-space-24) var(--st-gutter);
+	}
+}
+
+/* --- Editorial media-side flip ------------------------------------------------
+   The grid children are the .st-drape wrappers, so order applies there. */
+.st-philosophy--media-left {
+	> .st-drape:first-child {
+		order: 2;
+	}
+
+	> .st-drape:last-child {
+		order: 1;
+	}
+
+	@media (max-width: 60rem) {
+		> .st-drape {
+			order: initial;
+		}
+	}
+}

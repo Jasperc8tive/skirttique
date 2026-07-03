@@ -15,12 +15,16 @@ import { initDrawers } from './ts/drawer';
 import { initHeader } from './ts/header';
 import { initHemlines } from './ts/hemline';
 import { initMarket } from './ts/market';
+import { initAmbientVideo, initZoom } from './ts/media';
+import { initParallax } from './ts/parallax';
 import { initPopovers } from './ts/popover';
 import { initPurchaseScopes } from './ts/purchase';
 import { initQuickAdd } from './ts/quick-add';
 import { initQuickView } from './ts/quickview';
 import { initRecentlyViewed } from './ts/recently-viewed';
 import { initRotators } from './ts/rotator';
+import { initSliders } from './ts/slider';
+import { initTransitions } from './ts/transitions';
 import { initWishlist } from './ts/wishlist';
 
 const boot = (): void => {
@@ -35,6 +39,11 @@ const boot = (): void => {
 	initWishlist();
 	initPurchaseScopes();
 	initRecentlyViewed();
+	initSliders();
+	initParallax();
+	initZoom();
+	initAmbientVideo();
+	initTransitions();
 	initDrape();
 	initHemlines();
 };
