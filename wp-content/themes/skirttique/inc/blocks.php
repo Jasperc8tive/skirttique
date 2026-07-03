@@ -2,8 +2,9 @@
 /**
  * The Skirttique block library.
  *
- * Stage 17: sixteen dynamic blocks, registered natively from one PHP
- * manifest. Each render callback is a thin adapter onto the canonical
+ * Twenty dynamic blocks (sixteen from Stage 17, four from Stage 19),
+ * registered natively from one PHP manifest. Each render callback is a
+ * thin adapter onto the canonical
  * component renderers in inc/components.php — the same functions the
  * shipped patterns call — so editor-composed pages and the patterns
  * produce identical, token-driven markup.
@@ -300,6 +301,68 @@ function manifest(): array {
 		'skirttique/breadcrumbs'      => array(
 			'attributes' => array(),
 			'render'     => static fn (): string => Components\breadcrumbs(),
+		),
+
+		'skirttique/featured-collection' => array(
+			'attributes' => array(
+				'eyebrow'  => $str( __( 'Collection in focus', 'skirttique' ) ),
+				'slug'     => $str(), // Blank = first collection with editorial meta.
+				'ctaLabel' => $str(),
+			),
+			'render'     => static fn ( array $a ): string => Components\featured_collection(
+				array(
+					'eyebrow'   => $a['eyebrow'],
+					'slug'      => $a['slug'],
+					'cta_label' => $a['ctaLabel'],
+				)
+			),
+		),
+
+		'skirttique/featured-product' => array(
+			'attributes' => array(
+				'eyebrow'   => $str( __( 'The featured piece', 'skirttique' ) ),
+				'productId' => $int(), // 0 = the newest piece.
+				'ctaLabel'  => $str(),
+			),
+			'render'     => static fn ( array $a ): string => Components\featured_product(
+				array(
+					'eyebrow'    => $a['eyebrow'],
+					'product_id' => (int) $a['productId'],
+					'cta_label'  => $a['ctaLabel'],
+				)
+			),
+		),
+
+		'skirttique/lookbook'         => array(
+			'attributes' => array(
+				'eyebrow'    => $str( __( 'The lookbook', 'skirttique' ) ),
+				'lookbookId' => $int(), // 0 = the latest published lookbook.
+				'ctaLabel'   => $str(),
+			),
+			'render'     => static fn ( array $a ): string => Components\lookbook_feature(
+				array(
+					'eyebrow'     => $a['eyebrow'],
+					'lookbook_id' => (int) $a['lookbookId'],
+					'cta_label'   => $a['ctaLabel'],
+				)
+			),
+		),
+
+		'skirttique/instagram'        => array(
+			'attributes' => array(
+				'eyebrow'  => $str( __( 'On Instagram', 'skirttique' ) ),
+				'title'    => $str( __( 'The house, worn', 'skirttique' ) ),
+				'url'      => $str(), // Blank = the house profile (House Settings → Social).
+				'imageIds' => array( 'type' => 'array', 'default' => array(), 'items' => array( 'type' => 'number' ) ),
+			),
+			'render'     => static fn ( array $a ): string => Components\instagram(
+				array(
+					'eyebrow'   => $a['eyebrow'],
+					'title'     => $a['title'],
+					'url'       => $a['url'],
+					'image_ids' => (array) $a['imageIds'],
+				)
+			),
 		),
 	);
 }

@@ -1,4 +1,4 @@
-# Skirttique Content Architecture — Stage 18
+# Skirttique Content Architecture — Stages 18 & 19
 
 How editorial content is structured, and where each thing is edited.
 
@@ -50,6 +50,34 @@ Saved with nonce + `manage_product_terms` capability;
   modules early-return when switched off. `prefers-reduced-motion`
   is honoured regardless — the owner switch can only *reduce* motion,
   never force it on.
+
+## Homepage v2 (Stage 19)
+
+Thirteen sections, in order: Hero · Signature Collections · New In ·
+Craftsmanship Story · Best Sellers · Featured Collection · Why
+Skirttique · Featured Product · Philosophy · Editorial Lookbook ·
+In Their Words · Instagram · Closing Band. All render through
+`inc/components.php`; every editable value flows House Settings →
+shipped copy.
+
+**Homepage Builder** — the owner can compose their *own* front page from
+Skirttique blocks (edit the front page in the block editor). If the
+front-page content contains any `skirttique/*` block, that composition
+replaces the shipped homepage entirely; a blank front page renders the
+shipped thirteen sections. One switchable code path in
+`patterns/homepage.php`, no settings to configure.
+
+House Settings additions (Stage 19): craftsmanship statement/paragraph/
+figure, featured collection (select; blank = first collection with an
+editorial story), featured product (select; blank = newest piece), and
+the "why Skirttique" reasons (`Title|Description` lines). The Featured
+Collection section is fed by the Stage 18 term-meta — it upgrades itself
+the moment a collection is given a story or landing hero.
+
+Self-hiding sections: Editorial Lookbook renders nothing until a
+lookbook is published; Instagram renders shipped placeholder tiles until
+Stage 26 hydrates the real feed (and hides entirely if it has neither
+tiles nor a profile URL).
 
 ## SEO / Performance panels — deliberate scope
 

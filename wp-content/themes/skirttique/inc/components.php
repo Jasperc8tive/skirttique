@@ -276,8 +276,10 @@ function product_slider( array $args ): string {
 		return '';
 	}
 
-	$out  = '<section class="st-section st-slider" data-st-slider>';
-	$out .= section_head( array( 'eyebrow' => $args['eyebrow'] ?? '', 'title' => $args['title'] ?? '' ) );
+	$id = trim( (string) ( $args['id'] ?? '' ) );
+
+	$out  = '<section class="st-section st-slider" data-st-slider' . ( '' !== $id ? ' aria-labelledby="' . esc_attr( $id ) . '"' : '' ) . '>';
+	$out .= section_head( array( 'eyebrow' => $args['eyebrow'] ?? '', 'title' => $args['title'] ?? '', 'id' => $id ) );
 	$out .= '<div class="st-slider__viewport"><div class="st-slider__track" data-st-slider-track>';
 
 	foreach ( $items as $product ) {
@@ -455,8 +457,10 @@ function feature_list( array $args ): string {
 		return '';
 	}
 
-	$out  = '<section class="st-section st-features">';
-	$out .= section_head( array( 'eyebrow' => $args['eyebrow'] ?? '', 'title' => $args['title'] ?? '' ) );
+	$id = trim( (string) ( $args['id'] ?? '' ) );
+
+	$out  = '<section class="st-section st-features"' . ( '' !== $id ? ' aria-labelledby="' . esc_attr( $id ) . '"' : '' ) . '>';
+	$out .= section_head( array( 'eyebrow' => $args['eyebrow'] ?? '', 'title' => $args['title'] ?? '', 'id' => $id ) );
 	$out .= '<div class="st-features__list">';
 
 	foreach ( $items as $i => $item ) {
@@ -629,6 +633,269 @@ function breadcrumbs(): string {
 		}
 	}
 	$out .= '</nav>';
+
+	return $out;
+}
+
+/**
+ * Featured collection — one product_cat as a wide editorial spotlight.
+ *
+ * Reads the Stage 18 editorial term-meta (story + landing hero; keys
+ * mirror Skirttique\Core\Services\CollectionMeta — the plugin owns the
+ * fields, the theme reads them). Blank slug picks the first collection
+ * carrying editorial meta, so the section improves itself the moment
+ * the owner dresses a collection.
+ *
+ * @param array{slug?: string, eyebrow?: string, cta_label?: string, fallback_story?: string, fallback_img?: string, id?: string} $args Args.
+ */
+function featured_collection( array $args ): string {
+	if ( ! taxonomy_exists( 'product_cat' ) ) {
+		return '';
+	}
+
+	$slug = sanitize_title( (string) ( $args['slug'] ?? '' ) );
+	$term = '' !== $slug ? get_term_by( 'slug', $slug, 'product_cat' ) : null;
+
+	if ( ! $term instanceof \WP_Term ) {
+		$terms = get_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => false,
+				'orderby'    => 'name',
+				'exclude'    => array( (int) get_option( 'default_product_cat', 0 ) ),
+			)
+		);
+		if ( is_wp_error( $terms ) || ! $terms ) {
+			return '';
+		}
+		foreach ( $terms as $candidate ) {
+			if ( get_term_meta( $candidate->term_id, 'st_collection_hero_id', true )
+				|| '' !== trim( (string) get_term_meta( $candidate->term_id, 'st_collection_story', true ) ) ) {
+				$term = $candidate;
+				break;
+			}
+		}
+		$term = $term instanceof \WP_Term ? $term : $terms[0];
+	}
+
+	$story = trim( (string) get_term_meta( $term->term_id, 'st_collection_story', true ) );
+	if ( '' === $story ) {
+		$story = trim( (string) $term->description );
+	}
+	if ( '' === $story ) {
+		$story = trim( (string) ( $args['fallback_story'] ?? '' ) );
+	}
+
+	$image_id = absint( get_term_meta( $term->term_id, 'st_collection_hero_id', true ) );
+	if ( ! $image_id ) {
+		$image_id = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
+	}
+	$media = $image_id
+		? wp_get_attachment_image( $image_id, 'woocommerce_single', false, array( 'alt' => '', 'loading' => 'lazy' ) )
+		: (string) ( $args['fallback_img'] ?? '' );
+
+	$id  = trim( (string) ( $args['id'] ?? '' ) );
+	$cta = trim( (string) ( $args['cta_label'] ?? '' ) );
+	if ( '' === $cta ) {
+		/* translators: %s: collection name. */
+		$cta = sprintf( __( 'Explore %s', 'skirttique' ), $term->name );
+	}
+
+	$out = '<section class="st-section st-featured"' . ( '' !== $id ? ' aria-labelledby="' . esc_attr( $id ) . '"' : '' ) . '>';
+	if ( '' !== $media ) {
+		$out .= '<div class="st-drape"><figure class="st-featured__frame">' . $media . '</figure></div>';
+	}
+	$out .= '<div class="st-drape st-drape--delay-2"><div class="st-featured__copy">';
+	if ( ! empty( $args['eyebrow'] ) ) {
+		$out .= '<p class="st-section__eyebrow">' . esc_html( (string) $args['eyebrow'] ) . '</p>';
+	}
+	$out .= '<h2 class="st-featured__name"' . ( '' !== $id ? ' id="' . esc_attr( $id ) . '"' : '' ) . '>' . esc_html( $term->name ) . '</h2>';
+	if ( '' !== $story ) {
+		$out .= '<p class="st-featured__story">' . esc_html( $story ) . '</p>';
+	}
+	$out .= '<a class="st-hemline" href="' . esc_url( (string) get_term_link( $term ) ) . '">' . esc_html( $cta ) . '</a>';
+	$out .= '</div></div></section>';
+
+	return $out;
+}
+
+/**
+ * Featured product — one piece given the full editorial spotlight.
+ *
+ * @param array{product_id?: int, eyebrow?: string, cta_label?: string, id?: string} $args 0 product_id = the newest piece.
+ */
+function featured_product( array $args ): string {
+	if ( ! function_exists( 'wc_get_product' ) ) {
+		return '';
+	}
+
+	$product    = null;
+	$product_id = absint( $args['product_id'] ?? 0 );
+	if ( $product_id ) {
+		$candidate = wc_get_product( $product_id );
+		if ( $candidate instanceof \WC_Product && $candidate->is_visible() ) {
+			$product = $candidate;
+		}
+	}
+	if ( ! $product ) {
+		$product = products( 'newest', 1 )[0] ?? null;
+	}
+	if ( ! $product ) {
+		return '';
+	}
+
+	$id    = trim( (string) ( $args['id'] ?? '' ) );
+	$prose = trim( wp_strip_all_tags( $product->get_short_description() ) );
+	$cta   = trim( (string) ( $args['cta_label'] ?? '' ) );
+	if ( '' === $cta ) {
+		/* translators: %s: product name. */
+		$cta = sprintf( __( 'Discover the %s', 'skirttique' ), $product->get_name() );
+	}
+
+	$out  = '<section class="st-section st-spotlight"' . ( '' !== $id ? ' aria-labelledby="' . esc_attr( $id ) . '"' : '' ) . '>';
+	$out .= '<div class="st-drape"><figure class="st-spotlight__frame">'
+		. $product->get_image( 'woocommerce_single', array( 'loading' => 'lazy' ) )
+		. '</figure></div>';
+	$out .= '<div class="st-drape st-drape--delay-2"><div class="st-spotlight__copy">';
+	if ( ! empty( $args['eyebrow'] ) ) {
+		$out .= '<p class="st-section__eyebrow">' . esc_html( (string) $args['eyebrow'] ) . '</p>';
+	}
+	$out .= '<h2 class="st-spotlight__name"' . ( '' !== $id ? ' id="' . esc_attr( $id ) . '"' : '' ) . '>' . esc_html( $product->get_name() ) . '</h2>';
+	$out .= '<p class="st-spotlight__price">' . wp_kses_post( $product->get_price_html() ) . '</p>';
+	if ( '' !== $prose ) {
+		$out .= '<p class="st-spotlight__prose">' . esc_html( $prose ) . '</p>';
+	}
+	$out .= '<a class="st-hemline" href="' . esc_url( (string) $product->get_permalink() ) . '">' . esc_html( $cta ) . '</a>';
+	$out .= '</div></div></section>';
+
+	return $out;
+}
+
+/**
+ * Lookbook feature — the latest (or a chosen) lookbook as a full-width
+ * cover tease. Renders nothing until a lookbook is published, so the
+ * homepage degrades gracefully on a young site.
+ *
+ * @param array{lookbook_id?: int, eyebrow?: string, cta_label?: string, fallback_img?: string, id?: string} $args 0 lookbook_id = latest.
+ */
+function lookbook_feature( array $args ): string {
+	$lookbook_id = absint( $args['lookbook_id'] ?? 0 );
+	if ( $lookbook_id ) {
+		$post = get_post( $lookbook_id );
+		if ( ! $post || 'lookbook' !== $post->post_type || 'publish' !== $post->post_status ) {
+			$post = null;
+		}
+	} else {
+		$found = get_posts(
+			array(
+				'post_type'   => 'lookbook',
+				'post_status' => 'publish',
+				'numberposts' => 1,
+			)
+		);
+		$post  = $found[0] ?? null;
+	}
+	if ( ! $post ) {
+		return '';
+	}
+
+	$media = get_the_post_thumbnail( $post, 'woocommerce_single', array( 'alt' => '', 'loading' => 'lazy' ) );
+	if ( '' === $media ) {
+		$media = (string) ( $args['fallback_img'] ?? '' );
+	}
+
+	$id      = trim( (string) ( $args['id'] ?? '' ) );
+	$excerpt = trim( (string) $post->post_excerpt ); // Manual excerpt only: lookbook content is blocks, not prose.
+	$eyebrow = array_key_exists( 'eyebrow', $args ) ? trim( (string) $args['eyebrow'] ) : __( 'The lookbook', 'skirttique' );
+	$cta     = trim( (string) ( $args['cta_label'] ?? '' ) );
+	if ( '' === $cta ) {
+		$cta = __( 'View the lookbook', 'skirttique' );
+	}
+
+	$out = '<section class="st-lookfeature"' . ( '' !== $id ? ' aria-labelledby="' . esc_attr( $id ) . '"' : '' ) . '>';
+	if ( '' !== $media ) {
+		$out .= '<div class="st-lookfeature__media">' . $media . '</div>';
+	}
+	$out .= '<div class="st-drape"><div class="st-lookfeature__content">';
+	if ( '' !== $eyebrow ) {
+		$out .= '<p class="st-lookfeature__eyebrow">' . esc_html( $eyebrow ) . '</p>';
+	}
+	$out .= '<h2 class="st-lookfeature__title"' . ( '' !== $id ? ' id="' . esc_attr( $id ) . '"' : '' ) . '>' . esc_html( get_the_title( $post ) ) . '</h2>';
+	if ( '' !== $excerpt ) {
+		$out .= '<p class="st-lookfeature__sub">' . esc_html( $excerpt ) . '</p>';
+	}
+	$out .= '<a class="st-hemline st-lookfeature__cta" href="' . esc_url( (string) get_permalink( $post ) ) . '">' . esc_html( $cta ) . '</a>';
+	$out .= '</div></div></section>';
+
+	return $out;
+}
+
+/**
+ * Instagram — a quiet tile strip and one follow link. Deliberately a
+ * placeholder: tiles come from chosen media (or shipped fallbacks) until
+ * Stage 26 hydrates [data-st-instagram] from the cached official API.
+ * Tiles are decorative (single follow link, not six identical anchors).
+ *
+ * @param array{url?: string, eyebrow?: string, title?: string, image_ids?: list<int>, fallback_images?: list<string>, id?: string} $args Blank url = the house Instagram profile.
+ */
+function instagram( array $args ): string {
+	$url = trim( (string) ( $args['url'] ?? '' ) );
+	if ( '' === $url || '#' === $url ) {
+		$links = apply_filters( 'skirttique_social_links', array() );
+		$url   = trim( (string) ( $links['Instagram'] ?? '' ) );
+	}
+	$linked = '' !== $url && '#' !== $url;
+
+	$handle = '';
+	if ( $linked ) {
+		$path   = trim( (string) wp_parse_url( $url, PHP_URL_PATH ), '/' );
+		$handle = '' !== $path ? '@' . basename( $path ) : '';
+	}
+
+	$tiles = array();
+	foreach ( array_filter( array_map( 'absint', (array) ( $args['image_ids'] ?? array() ) ) ) as $image_id ) {
+		$img = wp_get_attachment_image( $image_id, 'medium_large', false, array( 'alt' => '', 'loading' => 'lazy' ) );
+		if ( $img ) {
+			$tiles[] = $img;
+		}
+	}
+	if ( ! $tiles ) {
+		foreach ( (array) ( $args['fallback_images'] ?? array() ) as $photo ) {
+			$tiles[] = '<img src="' . esc_url( 'https://images.unsplash.com/' . $photo . '?q=80&w=600&h=600&auto=format&fit=crop' ) . '" alt="" loading="lazy" width="600" height="600">';
+		}
+	}
+	$tiles = array_slice( $tiles, 0, 6 );
+
+	if ( ! $tiles && ! $linked ) {
+		return '';
+	}
+
+	$id = trim( (string) ( $args['id'] ?? '' ) );
+
+	$out  = '<section class="st-section st-instagram" data-st-instagram' . ( '' !== $id ? ' aria-labelledby="' . esc_attr( $id ) . '"' : '' ) . '>';
+	$out .= section_head(
+		array(
+			'eyebrow' => $args['eyebrow'] ?? __( 'On Instagram', 'skirttique' ),
+			'title'   => $args['title'] ?? __( 'The house, worn', 'skirttique' ),
+			'id'      => $id,
+		)
+	);
+
+	if ( $tiles ) {
+		$out .= '<div class="st-instagram__grid">';
+		foreach ( $tiles as $i => $tile ) {
+			$out .= '<div class="st-drape ' . esc_attr( drape_delay( $i ) ) . '"><figure class="st-instagram__tile">' . $tile . '</figure></div>';
+		}
+		$out .= '</div>';
+	}
+
+	if ( $linked ) {
+		$out .= '<div class="st-drape"><p class="st-instagram__follow"><a class="st-hemline" href="' . esc_url( $url ) . '" rel="noopener">'
+			. esc_html( '' !== $handle ? sprintf( /* translators: %s: Instagram handle. */ __( 'Follow %s on Instagram', 'skirttique' ), $handle ) : __( 'Follow the house on Instagram', 'skirttique' ) )
+			. '</a></p></div>';
+	}
+
+	$out .= '</section>';
 
 	return $out;
 }

@@ -234,6 +234,47 @@ const BLOCKS = {
 		icon: 'admin-links',
 		fields: [],
 	},
+	'skirttique/featured-collection': {
+		title: __( 'Featured Collection', 'skirttique' ),
+		description: __( 'One collection as a wide editorial spotlight — story and hero from Products → Categories.', 'skirttique' ),
+		icon: 'awards',
+		fields: [
+			{ key: 'eyebrow', type: 'text', label: __( 'Eyebrow', 'skirttique' ), default: __( 'Collection in focus', 'skirttique' ) },
+			{ key: 'slug', type: 'text', label: __( 'Collection slug', 'skirttique' ), help: __( 'Blank picks the first collection with an editorial story or hero.', 'skirttique' ) },
+			{ key: 'ctaLabel', type: 'text', label: __( 'CTA label', 'skirttique' ), help: __( 'Blank: “Explore {collection}”.', 'skirttique' ) },
+		],
+	},
+	'skirttique/featured-product': {
+		title: __( 'Featured Product', 'skirttique' ),
+		description: __( 'One piece given the full editorial spotlight.', 'skirttique' ),
+		icon: 'star-filled',
+		fields: [
+			{ key: 'eyebrow', type: 'text', label: __( 'Eyebrow', 'skirttique' ), default: __( 'The featured piece', 'skirttique' ) },
+			{ key: 'productId', type: 'id', label: __( 'Product id', 'skirttique' ), help: __( '0 or blank: the newest piece.', 'skirttique' ) },
+			{ key: 'ctaLabel', type: 'text', label: __( 'CTA label', 'skirttique' ), help: __( 'Blank: “Discover the {product}”.', 'skirttique' ) },
+		],
+	},
+	'skirttique/lookbook': {
+		title: __( 'Lookbook Feature', 'skirttique' ),
+		description: __( 'The latest (or a chosen) lookbook as a full-width cover tease.', 'skirttique' ),
+		icon: 'camera',
+		fields: [
+			{ key: 'eyebrow', type: 'text', label: __( 'Eyebrow', 'skirttique' ), default: __( 'The lookbook', 'skirttique' ) },
+			{ key: 'lookbookId', type: 'id', label: __( 'Lookbook id', 'skirttique' ), help: __( '0 or blank: the latest published lookbook.', 'skirttique' ) },
+			{ key: 'ctaLabel', type: 'text', label: __( 'CTA label', 'skirttique' ), help: __( 'Blank: “View the lookbook”.', 'skirttique' ) },
+		],
+	},
+	'skirttique/instagram': {
+		title: __( 'Instagram', 'skirttique' ),
+		description: __( 'A quiet tile strip with one follow link. Placeholder until the feed integration (Stage 26).', 'skirttique' ),
+		icon: 'instagram',
+		fields: [
+			{ key: 'eyebrow', type: 'text', label: __( 'Eyebrow', 'skirttique' ), default: __( 'On Instagram', 'skirttique' ) },
+			{ key: 'title', type: 'text', label: __( 'Title', 'skirttique' ), default: __( 'The house, worn', 'skirttique' ) },
+			{ key: 'url', type: 'url', label: __( 'Profile URL', 'skirttique' ), help: __( 'Blank: the Instagram profile from House Settings → Social.', 'skirttique' ) },
+			{ key: 'imageIds', type: 'images', label: __( 'Tiles (up to six)', 'skirttique' ) },
+		],
+	},
 };
 
 /** Render one sidebar control for a field. */
@@ -248,6 +289,16 @@ function Field( { field, attributes, setAttributes } ) {
 			return <ToggleControl label={ field.label } checked={ !! value } onChange={ set } />;
 		case 'number':
 			return <RangeControl label={ field.label } min={ field.min ?? 0 } max={ field.max ?? 100 } value={ value ?? field.default ?? 0 } onChange={ set } />;
+		case 'id':
+			return (
+				<TextControl
+					label={ field.label }
+					help={ field.help }
+					type="number"
+					value={ value ? String( value ) : '' }
+					onChange={ ( next ) => set( parseInt( next, 10 ) || 0 ) }
+				/>
+			);
 		case 'select':
 			return <SelectControl label={ field.label } options={ field.options } value={ value } onChange={ set } />;
 		case 'image':
@@ -330,7 +381,7 @@ function attributesFor( config ) {
 			attrs[ field.key ] = { type: 'array', default: [] };
 		} else if ( 'toggle' === field.type ) {
 			attrs[ field.key ] = { type: 'boolean', default: field.default ?? false };
-		} else if ( 'number' === field.type || 'image' === field.type ) {
+		} else if ( 'number' === field.type || 'image' === field.type || 'id' === field.type ) {
 			attrs[ field.key ] = { type: 'number', default: field.default ?? 0 };
 		} else {
 			attrs[ field.key ] = { type: 'string', default: field.default ?? '' };

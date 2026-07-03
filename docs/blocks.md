@@ -1,6 +1,6 @@
-# Skirttique Block Library — Stage 17
+# Skirttique Block Library — Stages 17 & 19
 
-Sixteen native Gutenberg blocks in a "Skirttique" editor category — the
+Twenty native Gutenberg blocks in a "Skirttique" editor category — the
 reusable components every Phase 2 page composes from. No page-builder
 plugin; the block editor **is** the builder.
 
@@ -11,7 +11,7 @@ Three layers, one source of markup:
 ```
 inc/components.php   ← canonical section renderers (THE markup)
         ↑                       ↑
-patterns/*.php          inc/blocks.php (16 render callbacks)
+patterns/*.php          inc/blocks.php (20 render callbacks)
 (homepage, footer)      + src/editor/index.jsx (sidebar fields,
                           ServerSideRender previews)
 ```
@@ -52,9 +52,15 @@ patterns/*.php          inc/blocks.php (16 render callbacks)
 | Video | Poster-first; ambient mode = muted loop, reduced-motion safe |
 | Pricing | `Tier\|Price\|Description` hairline cards (Custom Orders) |
 | Breadcrumbs | Trail from the queried object; empty outside a query |
+| Featured Collection *(19)* | One collection, wide spotlight; story + hero from the Stage 18 term-meta; blank slug auto-picks the first dressed collection |
+| Featured Product *(19)* | One piece, full editorial spotlight; id 0 = newest; price via `get_price_html()` (multi-currency aware) |
+| Lookbook Feature *(19)* | Latest (or chosen) lookbook as a full-width cover tease; renders nothing until one is published |
+| Instagram *(19)* | Tile strip + one follow link (blank URL = House Settings → Social). Placeholder: Stage 26 hydrates `[data-st-instagram]` from the cached official API |
 
 Simple repeaters use pipe-delimited textarea lines — deliberate: fast to
 edit, trivial to store, no nested-block complexity for three-line lists.
+Instagram tiles are decorative figures with a single follow link — six
+identical anchors would be screen-reader noise.
 
 ## Motion primitives (also Stage 17)
 

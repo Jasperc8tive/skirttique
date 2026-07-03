@@ -42,6 +42,14 @@ $skirttique_blocks = <<<'HTML'
 
 <!-- wp:skirttique/trust-badges {"made":true} /-->
 
+<!-- wp:skirttique/featured-collection /-->
+
+<!-- wp:skirttique/featured-product /-->
+
+<!-- wp:skirttique/lookbook /-->
+
+<!-- wp:skirttique/instagram {"url":"https://www.instagram.com/"} /-->
+
 <!-- wp:skirttique/breadcrumbs /-->
 
 <!-- wp:skirttique/newsletter /-->

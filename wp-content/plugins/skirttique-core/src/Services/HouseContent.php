@@ -166,6 +166,9 @@ final class HouseContent implements ServiceInterface {
 		$sections = array(
 			'announcement' => __( 'Announcement bar', 'skirttique-core' ),
 			'hero'         => __( 'Homepage — hero', 'skirttique-core' ),
+			'craft'        => __( 'Homepage — craftsmanship', 'skirttique-core' ),
+			'featured'     => __( 'Homepage — featured', 'skirttique-core' ),
+			'why'          => __( 'Homepage — why Skirttique', 'skirttique-core' ),
 			'philosophy'   => __( 'Homepage — philosophy', 'skirttique-core' ),
 			'press'        => __( 'Homepage — in their words', 'skirttique-core' ),
 			'closing'      => __( 'Homepage — closing band', 'skirttique-core' ),
@@ -185,6 +188,17 @@ final class HouseContent implements ServiceInterface {
 		$this->field( 'hero_sub', __( 'Supporting line', 'skirttique-core' ), 'st_hero' );
 		$this->field( 'hero_cta', __( 'Button label', 'skirttique-core' ), 'st_hero' );
 		$this->field( 'hero_image_id', __( 'Hero image', 'skirttique-core' ), 'st_hero', 'image' );
+
+		// Stage 19 homepage sections — every field blank falls back to the
+		// shipped copy, exactly like the hero and philosophy above.
+		$this->field( 'craft_statement', __( 'Statement', 'skirttique-core' ), 'st_craft' );
+		$this->field( 'craft_prose', __( 'Paragraph', 'skirttique-core' ), 'st_craft', 'textarea' );
+		$this->field( 'craft_image_id', __( 'Figure image', 'skirttique-core' ), 'st_craft', 'image' );
+
+		$this->field( 'featured_collection', __( 'Featured collection', 'skirttique-core' ), 'st_featured', 'collection' );
+		$this->field( 'featured_product_id', __( 'Featured product', 'skirttique-core' ), 'st_featured', 'product' );
+
+		$this->field( 'why_items', __( 'Reasons (one per line: Title|Description, up to four)', 'skirttique-core' ), 'st_why', 'textarea' );
 
 		$this->field( 'philosophy_statement', __( 'Statement', 'skirttique-core' ), 'st_philosophy' );
 		$this->field( 'philosophy_prose', __( 'Paragraph', 'skirttique-core' ), 'st_philosophy', 'textarea' );
@@ -259,6 +273,38 @@ final class HouseContent implements ServiceInterface {
 						checked( 'off' !== $value, true, false ),
 						esc_html__( 'Enabled', 'skirttique-core' )
 					);
+				} elseif ( 'collection' === $type ) {
+					$terms = get_terms(
+						array(
+							'taxonomy'   => 'product_cat',
+							'hide_empty' => false,
+							'orderby'    => 'name',
+							'exclude'    => array( (int) get_option( 'default_product_cat', 0 ) ),
+						)
+					);
+					printf( '<select name="%s">', $name );
+					printf( '<option value="">%s</option>', esc_html__( 'Automatic — first collection with an editorial story', 'skirttique-core' ) );
+					foreach ( is_wp_error( $terms ) ? array() : $terms as $term ) {
+						printf( '<option value="%s"%s>%s</option>', esc_attr( $term->slug ), selected( $value, $term->slug, false ), esc_html( $term->name ) );
+					}
+					echo '</select>';
+				} elseif ( 'product' === $type ) {
+					$found = function_exists( 'wc_get_products' )
+						? wc_get_products(
+							array(
+								'status'  => 'publish',
+								'limit'   => 100,
+								'orderby' => 'title',
+								'order'   => 'ASC',
+							)
+						)
+						: array();
+					printf( '<select name="%s">', $name );
+					printf( '<option value="">%s</option>', esc_html__( 'Automatic — the newest piece', 'skirttique-core' ) );
+					foreach ( $found as $product ) {
+						printf( '<option value="%d"%s>%s</option>', (int) $product->get_id(), selected( $value, (string) $product->get_id(), false ), esc_html( $product->get_name() ) );
+					}
+					echo '</select>';
 				} elseif ( 'image' === $type ) {
 					$id  = absint( $value );
 					$src = $id ? wp_get_attachment_image_url( $id, 'medium' ) : '';
@@ -318,7 +364,12 @@ final class HouseContent implements ServiceInterface {
 			} elseif ( str_ends_with( $key, '_image_id' ) ) {
 				$id            = absint( $value );
 				$clean[ $key ] = $id && wp_attachment_is_image( $id ) ? (string) $id : '';
-			} elseif ( 'announcements' === $key || str_starts_with( $key, 'quote_' ) || str_ends_with( $key, '_prose' ) ) {
+			} elseif ( 'featured_collection' === $key ) {
+				$clean[ $key ] = sanitize_title( $value );
+			} elseif ( str_ends_with( $key, '_product_id' ) ) {
+				$id            = absint( $value );
+				$clean[ $key ] = $id ? (string) $id : '';
+			} elseif ( 'announcements' === $key || 'contact_location' === $key || str_starts_with( $key, 'quote_' ) || str_ends_with( $key, '_prose' ) || str_ends_with( $key, '_items' ) ) {
 				$clean[ $key ] = sanitize_textarea_field( $value );
 			} else {
 				$clean[ $key ] = sanitize_text_field( $value );

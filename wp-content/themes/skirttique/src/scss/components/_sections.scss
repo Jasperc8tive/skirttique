@@ -229,6 +229,205 @@
 	}
 }
 
+/* --- Featured collection (Stage 19) — wide frame beside the story ------------ */
+.st-featured {
+	display: grid;
+	grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+	gap: var(--st-space-16);
+	align-items: center;
+
+	&__frame {
+		margin: 0;
+		aspect-ratio: var(--st-ratio-editorial);
+		overflow: hidden;
+		background: var(--st-color-surface);
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__name {
+		margin: 0 0 var(--st-space-6);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h1);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+	}
+
+	&__story {
+		margin: 0 0 var(--st-space-8);
+		max-width: var(--st-measure);
+		color: var(--st-color-ink-soft);
+		line-height: var(--st-leading-body);
+	}
+
+	@media (max-width: 60rem) {
+		grid-template-columns: 1fr;
+		gap: var(--st-space-8);
+	}
+}
+
+/* --- Featured product spotlight (Stage 19) ------------------------------------ */
+.st-spotlight {
+	display: grid;
+	grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+	gap: var(--st-space-16);
+	align-items: center;
+
+	&__frame {
+		margin: 0;
+		aspect-ratio: var(--st-ratio-portrait);
+		overflow: hidden;
+		background: var(--st-color-surface);
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__name {
+		margin: 0 0 var(--st-space-3);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h1);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+	}
+
+	&__price {
+		margin: 0 0 var(--st-space-6);
+		font-size: var(--st-text-body-lg);
+		color: var(--st-color-seaweed);
+	}
+
+	&__prose {
+		margin: 0 0 var(--st-space-8);
+		max-width: var(--st-measure);
+		color: var(--st-color-ink-soft);
+		line-height: var(--st-leading-body);
+	}
+
+	@media (max-width: 60rem) {
+		grid-template-columns: 1fr;
+		gap: var(--st-space-8);
+	}
+}
+
+/* --- Lookbook feature (Stage 19) — a mid-page cover tease ---------------------- */
+.st-lookfeature {
+	position: relative;
+	display: flex;
+	align-items: flex-end;
+	min-height: 32rem;
+	max-height: 44rem;
+	height: 70vh;
+	margin-top: var(--st-section);
+	overflow: hidden;
+	color: var(--st-color-nectar);
+	background: var(--st-color-seaweed);
+
+	&__media {
+		position: absolute;
+		inset: 0;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		/* Scrim so the title stays legible over any photograph. */
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(0deg, rgba(18, 27, 26, 0.55) 0%, rgba(18, 27, 26, 0) 45%);
+		}
+	}
+
+	> .st-drape {
+		position: relative;
+		z-index: 1;
+		width: 100%;
+	}
+
+	&__content {
+		max-width: var(--st-container-max);
+		margin-inline: auto;
+		padding: 0 var(--st-gutter) var(--st-space-16);
+		width: 100%;
+		min-width: 0;
+	}
+
+	&__eyebrow {
+		margin: 0 0 var(--st-space-4);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-khaki);
+	}
+
+	&__title {
+		margin: 0 0 var(--st-space-4);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-display);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+		max-width: 24ch;
+	}
+
+	&__sub {
+		margin: 0 0 var(--st-space-6);
+		max-width: var(--st-measure);
+		font-size: var(--st-text-body-lg);
+	}
+
+	@media (max-width: 60rem) {
+		height: auto;
+		min-height: 26rem;
+		padding-top: var(--st-space-24);
+	}
+}
+
+/* --- Instagram strip (Stage 19 placeholder; Stage 26 hydrates the tiles) ------- */
+.st-instagram {
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+		gap: var(--st-space-2);
+	}
+
+	&__tile {
+		margin: 0;
+		aspect-ratio: 1;
+		overflow: hidden;
+		background: var(--st-color-surface);
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__follow {
+		margin: var(--st-space-8) 0 0;
+	}
+
+	@media (max-width: 60rem) {
+		&__grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+}
+
 /* --- Editorial media-side flip ------------------------------------------------
    The grid children are the .st-drape wrappers, so order applies there. */
 .st-philosophy--media-left {
