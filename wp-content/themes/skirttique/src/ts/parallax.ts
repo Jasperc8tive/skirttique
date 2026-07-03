@@ -21,6 +21,10 @@ export function initParallax(): void {
 	if ( reduced || items.length === 0 ) {
 		return;
 	}
+	// Owner's Experience switch (House Settings).
+	if ( window.stConfig?.motion?.parallax === false ) {
+		return;
+	}
 
 	let ticking = false;
 

@@ -8,6 +8,10 @@
 interface StConfig {
 	loggedIn?: boolean;
 	wishlistNonce?: string;
+	motion?: {
+		transitions?: boolean;
+		parallax?: boolean;
+	};
 }
 
 declare global {

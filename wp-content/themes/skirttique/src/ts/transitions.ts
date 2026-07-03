@@ -33,6 +33,10 @@ export function initTransitions(): void {
 	if ( window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
 		return;
 	}
+	// Owner's Experience switch (House Settings).
+	if ( window.stConfig?.motion?.transitions === false ) {
+		return;
+	}
 
 	const veil = document.createElement( 'div' );
 	veil.className = 'st-veil';

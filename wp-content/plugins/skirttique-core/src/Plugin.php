@@ -12,6 +12,8 @@ namespace Skirttique\Core;
 use Skirttique\Core\Contracts\ServiceInterface;
 use Skirttique\Core\Payments\GatewayRouter;
 use Skirttique\Core\Services\CartAjax;
+use Skirttique\Core\Services\CollectionMeta;
+use Skirttique\Core\Services\ContentTypes;
 use Skirttique\Core\Services\Currency;
 use Skirttique\Core\Services\HouseContent;
 use Skirttique\Core\Services\Market;
@@ -32,6 +34,8 @@ final class Plugin {
 	private const SERVICES = array(
 		Market::class,
 		Currency::class,
+		ContentTypes::class,
+		CollectionMeta::class,
 		HouseContent::class,
 		Newsletter::class,
 		CartAjax::class,

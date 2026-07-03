@@ -39,14 +39,22 @@ function enqueue(): void {
 			array( 'strategy' => 'defer' )
 		);
 
-		// Config the bundle needs: login state and the wishlist nonce
-		// (action shared with Skirttique\Core\Services\Wishlist).
+		// Config the bundle needs: login state, the wishlist nonce
+		// (action shared with Skirttique\Core\Services\Wishlist), and the
+		// owner's Experience switches (House Settings; '' = never saved =
+		// enabled — only an explicit 'off' disables).
+		$house = (array) get_option( 'skirttique_house', array() );
+
 		wp_add_inline_script(
 			'skirttique-main',
 			'window.stConfig = ' . (string) wp_json_encode(
 				array(
 					'loggedIn'      => is_user_logged_in(),
 					'wishlistNonce' => wp_create_nonce( 'skirttique_wishlist' ),
+					'motion'        => array(
+						'transitions' => 'off' !== ( $house['motion_transitions'] ?? '' ),
+						'parallax'    => 'off' !== ( $house['motion_parallax'] ?? '' ),
+					),
 				)
 			) . ';',
 			'before'

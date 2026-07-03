@@ -170,6 +170,8 @@ final class HouseContent implements ServiceInterface {
 			'press'        => __( 'Homepage — in their words', 'skirttique-core' ),
 			'closing'      => __( 'Homepage — closing band', 'skirttique-core' ),
 			'social'       => __( 'Social profiles', 'skirttique-core' ),
+			'contact'      => __( 'Contact details', 'skirttique-core' ),
+			'experience'   => __( 'Experience', 'skirttique-core' ),
 			'rates'        => __( 'Currency rates', 'skirttique-core' ),
 		);
 		foreach ( $sections as $id => $title ) {
@@ -200,6 +202,18 @@ final class HouseContent implements ServiceInterface {
 		$this->field( 'social_instagram', __( 'Instagram URL', 'skirttique-core' ), 'st_social', 'url' );
 		$this->field( 'social_tiktok', __( 'TikTok URL', 'skirttique-core' ), 'st_social', 'url' );
 		$this->field( 'social_pinterest', __( 'Pinterest URL', 'skirttique-core' ), 'st_social', 'url' );
+
+		// Contact details — consumed by the Contact page, footer, and
+		// WhatsApp links (Stage 25 surfaces).
+		$this->field( 'contact_email', __( 'Client care email', 'skirttique-core' ), 'st_contact' );
+		$this->field( 'contact_whatsapp', __( 'WhatsApp number (international format, e.g. +2348000000000)', 'skirttique-core' ), 'st_contact' );
+		$this->field( 'contact_hours', __( 'Business hours', 'skirttique-core' ), 'st_contact' );
+		$this->field( 'contact_location', __( 'Studio location', 'skirttique-core' ), 'st_contact', 'textarea' );
+
+		// Experience — sitewide motion switches (both default ON; the
+		// theme also honours prefers-reduced-motion regardless).
+		$this->field( 'motion_transitions', __( 'Page transitions', 'skirttique-core' ), 'st_experience', 'checkbox' );
+		$this->field( 'motion_parallax', __( 'Parallax drift', 'skirttique-core' ), 'st_experience', 'checkbox' );
 
 		foreach ( self::RATE_CURRENCIES as $code => $placeholder ) {
 			add_settings_field(
@@ -236,6 +250,15 @@ final class HouseContent implements ServiceInterface {
 
 				if ( 'textarea' === $type ) {
 					printf( '<textarea name="%s" rows="3" class="large-text">%s</textarea>', $name, esc_textarea( $value ) );
+				} elseif ( 'checkbox' === $type ) {
+					// Hidden 'off' guarantees the key posts when unchecked;
+					// '' (never saved) and 'on' both mean enabled.
+					printf(
+						'<input type="hidden" name="%1$s" value="off"><label><input type="checkbox" name="%1$s" value="on" %2$s> %3$s</label>',
+						$name,
+						checked( 'off' !== $value, true, false ),
+						esc_html__( 'Enabled', 'skirttique-core' )
+					);
 				} elseif ( 'image' === $type ) {
 					$id  = absint( $value );
 					$src = $id ? wp_get_attachment_image_url( $id, 'medium' ) : '';
@@ -288,6 +311,10 @@ final class HouseContent implements ServiceInterface {
 
 			if ( str_starts_with( $key, 'social_' ) ) {
 				$clean[ $key ] = esc_url_raw( trim( $value ) );
+			} elseif ( str_ends_with( $key, '_email' ) ) {
+				$clean[ $key ] = sanitize_email( $value );
+			} elseif ( str_starts_with( $key, 'motion_' ) ) {
+				$clean[ $key ] = 'off' === $value ? 'off' : 'on';
 			} elseif ( str_ends_with( $key, '_image_id' ) ) {
 				$id            = absint( $value );
 				$clean[ $key ] = $id && wp_attachment_is_image( $id ) ? (string) $id : '';
