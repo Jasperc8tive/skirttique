@@ -139,7 +139,7 @@ function editorial( array $args ): string {
 /**
  * Collection cards — product_cat terms as editorial cards.
  *
- * @param array{eyebrow?: string, title?: string, fallback_images?: array<string, string>} $args Args.
+ * @param array{eyebrow?: string, title?: string, fallback_images?: array<string, string>, exclude?: int} $args exclude = a term id to omit (the collection being viewed).
  */
 function collection_cards( array $args ): string {
 	$terms = get_terms(
@@ -147,7 +147,12 @@ function collection_cards( array $args ): string {
 			'taxonomy'   => 'product_cat',
 			'hide_empty' => false,
 			'orderby'    => 'name',
-			'exclude'    => array( (int) get_option( 'default_product_cat', 0 ) ),
+			'exclude'    => array_filter(
+				array(
+					(int) get_option( 'default_product_cat', 0 ),
+					absint( $args['exclude'] ?? 0 ),
+				)
+			),
 		)
 	);
 	if ( is_wp_error( $terms ) || ! $terms ) {

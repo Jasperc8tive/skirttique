@@ -258,7 +258,11 @@ function slim_variation( array $variation ): array {
 }
 
 /**
- * PDP accordion panels: description, size & fit, delivery & returns.
+ * PDP accordion panels: description, story, fabric, care, size & fit,
+ * delivery & returns. Story/fabric/care read the Stage 21 product meta
+ * (keys mirror Skirttique\Core\Services\ProductEditorial — the plugin
+ * owns the fields, the theme reads them); story and fabric hide when
+ * blank, care falls back to the house note.
  *
  * @return list<array{title: string, content: string}>
  */
@@ -272,6 +276,31 @@ function pdp_panels( \WC_Product $product ): array {
 			'content' => wp_kses_post( wpautop( $description ) ),
 		);
 	}
+
+	$story = trim( (string) $product->get_meta( '_st_story' ) );
+	if ( '' !== $story ) {
+		$panels[] = array(
+			'title'   => __( 'The story', 'skirttique' ),
+			'content' => wp_kses_post( wpautop( $story ) ),
+		);
+	}
+
+	$fabric = trim( (string) $product->get_meta( '_st_fabric' ) );
+	if ( '' !== $fabric ) {
+		$panels[] = array(
+			'title'   => __( 'Fabric & composition', 'skirttique' ),
+			'content' => wp_kses_post( wpautop( $fabric ) ),
+		);
+	}
+
+	$care = trim( (string) $product->get_meta( '_st_care' ) );
+	if ( '' === $care ) {
+		$care = __( 'Treat it like the investment it is: dry-clean, or a cold, gentle hand-wash where the care label allows. Steam rather than iron, and hang to rest between wears.', 'skirttique' );
+	}
+	$panels[] = array(
+		'title'   => __( 'Care', 'skirttique' ),
+		'content' => wp_kses_post( wpautop( $care ) ),
+	);
 
 	$panels[] = array(
 		'title'   => __( 'Size & fit', 'skirttique' ),
@@ -331,6 +360,211 @@ function companion_products( \WC_Product $product, int $limit = 4 ): array {
 	}
 
 	return $products;
+}
+
+/**
+ * Products worn with this one (Stage 21): curated cross-sells first,
+ * padded from the piece's own collection — distinct from the upsell
+ * rail below ("more from the house" is browsing; this is pairing).
+ *
+ * @return list<\WC_Product>
+ */
+function paired_products( \WC_Product $product, int $limit = 2 ): array {
+	$ids = $product->get_cross_sell_ids();
+
+	if ( count( $ids ) < $limit ) {
+		$terms = get_the_terms( $product->get_id(), 'product_cat' );
+		$slug  = $terms && ! is_wp_error( $terms ) ? $terms[0]->slug : '';
+		if ( '' !== $slug ) {
+			$same_collection = wc_get_products(
+				array(
+					'status'   => 'publish',
+					'limit'    => $limit + 2,
+					'category' => array( $slug ),
+					'orderby'  => 'date',
+					'order'    => 'DESC',
+					'exclude'  => array_merge( array( $product->get_id() ), $ids ),
+					'return'   => 'ids',
+				)
+			);
+			$ids             = array_merge( $ids, array_map( 'intval', $same_collection ) );
+		}
+	}
+
+	$products = array();
+	foreach ( $ids as $id ) {
+		if ( count( $products ) >= $limit ) {
+			break;
+		}
+		$paired = wc_get_product( $id );
+		if ( $paired && 'publish' === $paired->get_status() && $paired->is_visible() ) {
+			$products[] = $paired;
+		}
+	}
+
+	return $products;
+}
+
+/**
+ * "Worn with" — compact pairing rows in the PDP summary. Simple pieces
+ * add straight to the bag (the delegated quick-add handler); variable
+ * pieces link through to choose a size.
+ */
+function product_pairing( \WC_Product $product ): string {
+	$paired = paired_products( $product );
+	if ( ! $paired ) {
+		return '';
+	}
+
+	$out  = '<aside class="st-pairing" aria-labelledby="st-pairing-title">';
+	$out .= '<h2 class="st-pairing__title" id="st-pairing-title">' . esc_html__( 'Worn with', 'skirttique' ) . '</h2>';
+	$out .= '<ul class="st-pairing__list">';
+
+	foreach ( $paired as $piece ) {
+		$permalink = (string) $piece->get_permalink();
+
+		$out .= '<li class="st-pairing__item">';
+		$out .= '<a class="st-pairing__media" href="' . esc_url( $permalink ) . '" tabindex="-1" aria-hidden="true">'
+			. $piece->get_image( 'woocommerce_gallery_thumbnail', array( 'loading' => 'lazy' ) )
+			. '</a>';
+		$out .= '<div class="st-pairing__meta">';
+		$out .= '<a class="st-pairing__name" href="' . esc_url( $permalink ) . '">' . esc_html( $piece->get_name() ) . '</a>';
+		$out .= '<span class="st-pairing__price">' . wp_kses_post( $piece->get_price_html() ) . '</span>';
+		$out .= '</div>';
+
+		if ( $piece->is_type( 'simple' ) && $piece->is_purchasable() && $piece->is_in_stock() ) {
+			$out .= '<button type="button" class="st-pairing__add" data-st-quick-add="' . esc_attr( (string) $piece->get_id() ) . '">'
+				. esc_html__( 'Add', 'skirttique' )
+				. '<span class="screen-reader-text"> — ' . esc_html( $piece->get_name() ) . '</span></button>';
+		} else {
+			$out .= '<a class="st-pairing__add st-pairing__add--link" href="' . esc_url( $permalink ) . '">' . esc_html__( 'View', 'skirttique' )
+				. '<span class="screen-reader-text"> — ' . esc_html( $piece->get_name() ) . '</span></a>';
+		}
+
+		$out .= '</li>';
+	}
+
+	$out .= '</ul></aside>';
+
+	return $out;
+}
+
+/**
+ * Star row for a rating, with a screen-reader sentence.
+ */
+function rating_stars( float $rating, int $max = 5 ): string {
+	$out = '<span class="st-stars" role="img" aria-label="' . esc_attr(
+		sprintf(
+			/* translators: 1: rating, 2: maximum rating. */
+			__( 'Rated %1$s of %2$d', 'skirttique' ),
+			number_format_i18n( $rating, 1 ),
+			$max
+		)
+	) . '">';
+
+	for ( $i = 1; $i <= $max; $i++ ) {
+		$fill = $rating >= ( $i - 0.25 ) ? 'currentColor' : 'none';
+		$out .= '<svg viewBox="0 0 20 20" width="14" height="14" fill="' . esc_attr( $fill ) . '" stroke="currentColor" stroke-width="1.1" aria-hidden="true"><path d="M10 2l2.35 4.76 5.25.74-3.8 3.7.9 5.23L10 14l-4.7 2.43.9-5.23-3.8-3.7 5.25-.74z"/></svg>';
+	}
+
+	return $out . '</span>';
+}
+
+/**
+ * Reviews (Stage 21): the house-styled list + rating form. Standard
+ * WordPress comments underneath — the form posts to
+ * wp-comments-post.php and WooCommerce classifies it as a review and
+ * stores the rating (its preprocess_comment/comment_post hooks). New
+ * reviews follow the site's moderation settings.
+ */
+function product_reviews( \WC_Product $product ): string {
+	if ( 'yes' !== get_option( 'woocommerce_enable_reviews', 'yes' ) || ! comments_open( $product->get_id() ) ) {
+		return '';
+	}
+
+	$reviews = get_comments(
+		array(
+			'post_id' => $product->get_id(),
+			'status'  => 'approve',
+			'type'    => 'review',
+		)
+	);
+	$count   = is_array( $reviews ) ? count( $reviews ) : 0;
+	$average = (float) $product->get_average_rating();
+
+	$out  = '<section class="st-reviews" id="reviews" aria-labelledby="st-reviews-title">';
+	$out .= '<div class="st-section__head"><p class="st-section__eyebrow">' . esc_html__( 'From the clients', 'skirttique' ) . '</p>';
+	$out .= '<h2 class="st-section__title st-pdp__rail-title" id="st-reviews-title">' . esc_html__( 'Reviews', 'skirttique' ) . '</h2></div>';
+
+	if ( $count > 0 ) {
+		$out .= '<p class="st-reviews__summary">' . rating_stars( $average ) . ' <span>' . esc_html(
+			sprintf(
+				/* translators: 1: average rating, 2: review count. */
+				_n( '%1$s — %2$d review', '%1$s — %2$d reviews', $count, 'skirttique' ),
+				number_format_i18n( $average, 1 ),
+				$count
+			)
+		) . '</span></p>';
+
+		$out .= '<ul class="st-reviews__list">';
+		foreach ( $reviews as $review ) {
+			$rating   = (float) get_comment_meta( (int) $review->comment_ID, 'rating', true );
+			$verified = function_exists( 'wc_review_is_from_verified_owner' ) && wc_review_is_from_verified_owner( (int) $review->comment_ID );
+
+			$out .= '<li class="st-reviews__item">';
+			if ( $rating > 0 ) {
+				$out .= rating_stars( $rating );
+			}
+			$out .= '<blockquote class="st-reviews__quote">' . wp_kses_post( wpautop( $review->comment_content ) ) . '</blockquote>';
+			$out .= '<p class="st-reviews__by"><cite>' . esc_html( $review->comment_author ) . '</cite>';
+			if ( $verified ) {
+				$out .= ' <span class="st-reviews__verified">' . esc_html__( 'Verified owner', 'skirttique' ) . '</span>';
+			}
+			$out .= ' <time datetime="' . esc_attr( (string) mysql2date( 'c', $review->comment_date_gmt, false ) ) . '">' . esc_html( (string) mysql2date( get_option( 'date_format' ), $review->comment_date ) ) . '</time></p>';
+			$out .= '</li>';
+		}
+		$out .= '</ul>';
+	} else {
+		$out .= '<p class="st-reviews__none">' . esc_html__( 'No reviews yet — this piece is waiting for its first word.', 'skirttique' ) . '</p>';
+	}
+
+	// The form: guests need name + email; signed-in clients just write.
+	$commenter = wp_get_current_commenter();
+
+	$out .= '<form class="st-review-form" method="post" action="' . esc_url( site_url( '/wp-comments-post.php' ) ) . '">';
+	$out .= '<h3 class="st-review-form__title">' . esc_html__( 'Leave a review', 'skirttique' ) . '</h3>';
+	$out .= '<input type="hidden" name="comment_post_ID" value="' . esc_attr( (string) $product->get_id() ) . '">';
+	$out .= '<input type="hidden" name="comment_parent" value="0">';
+
+	$out .= '<fieldset class="st-review-form__rating"><legend>' . esc_html__( 'Your rating', 'skirttique' ) . '</legend><div class="st-review-form__stars">';
+	for ( $i = 5; $i >= 1; $i-- ) {
+		$out .= '<input type="radio" name="rating" id="st-rating-' . $i . '" value="' . $i . '" required>';
+		$out .= '<label for="st-rating-' . $i . '">' . esc_html(
+			sprintf(
+				/* translators: %d: star rating. */
+				_n( '%d star', '%d stars', $i, 'skirttique' ),
+				$i
+			)
+		) . '</label>';
+	}
+	$out .= '</div></fieldset>';
+
+	if ( ! is_user_logged_in() ) {
+		$out .= '<div class="st-review-form__row">';
+		$out .= '<p><label for="st-review-author">' . esc_html__( 'Name', 'skirttique' ) . '</label>'
+			. '<input type="text" name="author" id="st-review-author" value="' . esc_attr( $commenter['comment_author'] ) . '" autocomplete="name" required></p>';
+		$out .= '<p><label for="st-review-email">' . esc_html__( 'Email (never shown)', 'skirttique' ) . '</label>'
+			. '<input type="email" name="email" id="st-review-email" value="' . esc_attr( $commenter['comment_author_email'] ) . '" autocomplete="email" required></p>';
+		$out .= '</div>';
+	}
+
+	$out .= '<p><label for="st-review-comment">' . esc_html__( 'Your review', 'skirttique' ) . '</label>'
+		. '<textarea name="comment" id="st-review-comment" rows="5" required></textarea></p>';
+	$out .= '<p class="st-review-form__actions"><button type="submit" class="st-btn st-btn--primary">' . esc_html__( 'Submit review', 'skirttique' ) . '</button>';
+	$out .= '<span class="st-review-form__note">' . esc_html__( 'Reviews appear once the house approves them.', 'skirttique' ) . '</span></p>';
+	$out .= '</form></section>';
+
+	return $out;
 }
 
 /**

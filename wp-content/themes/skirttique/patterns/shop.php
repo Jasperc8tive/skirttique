@@ -13,10 +13,18 @@
  * templates/archive-product.html, which renders this pattern inside the
  * main product query.
  *
+ * Stage 20: collection archives become editorial landing pages — a
+ * full-bleed hero carrying the h1 and the collection story (Stage 18
+ * term-meta, falling back to the description), breadcrumbs, and a
+ * "more from the house" strip after the grid. A collection with no
+ * imagery keeps the plain text head; shop and search are untouched.
+ *
  * @package Skirttique
  */
 
 declare( strict_types=1 );
+
+use Skirttique\Components;
 
 if ( ! function_exists( 'wc_get_page_permalink' ) ) {
 	return;
@@ -32,18 +40,62 @@ $st_shop_url = wc_get_page_permalink( 'shop' );
 $st_heading     = __( 'Everything', 'skirttique' );
 $st_description = __( 'Midi and maxi skirts, made to be kept.', 'skirttique' );
 $st_current_cat = 0;
+$st_story       = '';
+$st_hero        = '';
 
 if ( is_product_category() ) {
 	$st_term        = get_queried_object();
 	$st_heading     = $st_term->name;
 	$st_description = $st_term->description;
 	$st_current_cat = (int) $st_term->term_id;
+
+	// Editorial landing (Stage 20): story + wide hero from the Stage 18
+	// term-meta (keys mirror Skirttique\Core\Services\CollectionMeta),
+	// each falling back to what WooCommerce already holds.
+	$st_story = trim( (string) get_term_meta( $st_term->term_id, 'st_collection_story', true ) );
+	if ( '' === $st_story ) {
+		$st_story = trim( (string) $st_term->description );
+	}
+
+	$st_hero_id = absint( get_term_meta( $st_term->term_id, 'st_collection_hero_id', true ) );
+	if ( ! $st_hero_id ) {
+		$st_hero_id = absint( get_term_meta( $st_term->term_id, 'thumbnail_id', true ) );
+	}
+	if ( $st_hero_id ) {
+		$st_hero = wp_get_attachment_image(
+			$st_hero_id,
+			'woocommerce_single',
+			false,
+			array(
+				'alt'           => '',
+				'loading'       => 'eager',
+				'fetchpriority' => 'high',
+			)
+		);
+	}
 } elseif ( is_search() ) {
 	/* translators: %s: search query. */
 	$st_heading     = sprintf( __( 'Search — %s', 'skirttique' ), get_search_query() );
 	$st_description = '';
 }
+?>
 
+<?php if ( '' !== $st_hero ) : ?>
+	<section class="st-collection-hero">
+		<div class="st-collection-hero__media"><?php echo $st_hero; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image(). ?></div>
+		<div class="st-drape">
+			<div class="st-collection-hero__content">
+				<p class="st-collection-hero__eyebrow"><?php esc_html_e( 'The collection', 'skirttique' ); ?></p>
+				<h1 class="st-collection-hero__title"><?php echo esc_html( $st_heading ); ?></h1>
+				<?php if ( '' !== $st_story ) : ?>
+					<p class="st-collection-hero__story"><?php echo esc_html( $st_story ); ?></p>
+				<?php endif; ?>
+			</div>
+		</div>
+	</section>
+<?php endif; ?>
+
+<?php
 $st_categories = get_terms(
 	array(
 		'taxonomy'   => 'product_cat',
@@ -60,12 +112,20 @@ $st_total   = (int) $wp_query->found_posts;
 $st_orderby = isset( $_GET['orderby'] ) ? wc_clean( wp_unslash( $_GET['orderby'] ) ) : 'date'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only sort choice.
 ?>
 
-<div class="st-shop">
+<div class="st-shop<?php echo '' !== $st_hero ? ' st-shop--landing' : ''; ?>">
 	<header class="st-shop__head">
-		<p class="st-shop__eyebrow"><?php esc_html_e( 'The collection', 'skirttique' ); ?></p>
-		<h1 class="st-shop__title"><?php echo esc_html( $st_heading ); ?></h1>
-		<?php if ( $st_description ) : ?>
-			<p class="st-shop__lede"><?php echo esc_html( $st_description ); ?></p>
+		<?php if ( $st_current_cat ) : ?>
+			<?php echo Components\breadcrumbs(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped within the component. ?>
+		<?php endif; ?>
+
+		<?php if ( '' === $st_hero ) : /* The hero owns the h1 on dressed collections. */ ?>
+			<p class="st-shop__eyebrow"><?php esc_html_e( 'The collection', 'skirttique' ); ?></p>
+			<h1 class="st-shop__title"><?php echo esc_html( $st_heading ); ?></h1>
+			<?php if ( $st_current_cat && '' !== $st_story ) : ?>
+				<p class="st-shop__lede"><?php echo esc_html( $st_story ); ?></p>
+			<?php elseif ( ! $st_current_cat && $st_description ) : ?>
+				<p class="st-shop__lede"><?php echo esc_html( $st_description ); ?></p>
+			<?php endif; ?>
 		<?php endif; ?>
 
 		<?php if ( $st_categories ) : ?>
@@ -147,3 +207,17 @@ $st_orderby = isset( $_GET['orderby'] ) ? wc_clean( wp_unslash( $_GET['orderby']
 		</div>
 	<?php endif; ?>
 </div>
+
+<?php
+// The other collections, after a collection's grid (Stage 20).
+if ( $st_current_cat ) {
+	echo Components\collection_cards( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped within the component.
+		array(
+			'eyebrow' => __( 'Keep exploring', 'skirttique' ),
+			'title'   => __( 'More from the house', 'skirttique' ),
+			'id'      => 'st-more-collections-title',
+			'exclude' => $st_current_cat,
+		)
+	);
+}
+?>

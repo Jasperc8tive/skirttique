@@ -395,3 +395,342 @@
 		}
 	}
 }
+
+/* ------------------------------------------------------------------ */
+/* Stage 21 — trust strip, pairing, reviews, sticky add-to-bag         */
+/* ------------------------------------------------------------------ */
+
+/* The trust strip sits between the buy form and the panels. */
+.st-pdp__summary .st-trust {
+	margin: var(--st-space-6) 0;
+
+	&__list {
+		gap: var(--st-space-3) var(--st-space-6);
+	}
+}
+
+/* --- Worn with — compact pairing rows -------------------------------- */
+.st-pairing {
+	margin: 0 0 var(--st-space-8);
+
+	&__title {
+		margin: 0 0 var(--st-space-4);
+		font-size: var(--st-text-caption);
+		font-weight: inherit;
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+
+	&__list {
+		display: grid;
+		gap: var(--st-space-3);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__item {
+		display: flex;
+		align-items: center;
+		gap: var(--st-space-4);
+		padding: var(--st-space-3);
+		border: 1px solid var(--st-color-hairline);
+	}
+
+	&__media {
+		flex: 0 0 3.5rem;
+		display: block;
+		aspect-ratio: var(--st-ratio-portrait);
+		overflow: hidden;
+		background: var(--st-color-surface);
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__meta {
+		flex: 1 1 auto;
+		min-width: 0;
+		display: grid;
+		gap: var(--st-space-1);
+	}
+
+	&__name {
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+		line-height: var(--st-leading-heading);
+		color: inherit;
+		text-decoration: none;
+
+		&:hover,
+		&:focus-visible {
+			text-decoration: underline;
+			text-underline-offset: 0.2em;
+		}
+	}
+
+	&__price {
+		font-size: var(--st-text-small);
+		color: var(--st-color-ink-soft);
+	}
+
+	&__add {
+		flex: 0 0 auto;
+		padding: 0.625rem 1.125rem;
+		border: 1px solid var(--st-color-seaweed);
+		background: none;
+		color: var(--st-color-seaweed);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		text-decoration: none;
+		cursor: pointer;
+		transition:
+			background var(--st-dur-micro) var(--st-ease-silk),
+			color var(--st-dur-micro) var(--st-ease-silk);
+
+		&:hover,
+		&:focus-visible {
+			background: var(--st-color-seaweed);
+			color: var(--st-color-nectar);
+		}
+	}
+}
+
+/* --- Reviews ------------------------------------------------------------ */
+.st-reviews {
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+	padding: var(--st-section) var(--st-gutter) 0;
+
+	.st-stars {
+		display: inline-flex;
+		gap: 2px;
+		color: var(--st-color-foliage);
+	}
+
+	&__summary {
+		display: flex;
+		align-items: center;
+		gap: var(--st-space-3);
+		margin: 0 0 var(--st-space-8);
+		color: var(--st-color-ink-soft);
+	}
+
+	&__list {
+		display: grid;
+		gap: var(--st-space-6);
+		margin: 0 0 var(--st-space-12);
+		padding: 0;
+		list-style: none;
+		max-width: var(--st-measure);
+	}
+
+	&__item {
+		padding-top: var(--st-space-4);
+		border-top: 1px solid var(--st-color-hairline);
+	}
+
+	&__quote {
+		margin: var(--st-space-2) 0 var(--st-space-3);
+		line-height: var(--st-leading-body);
+
+		p {
+			margin: 0 0 var(--st-space-2);
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	&__by {
+		margin: 0;
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+
+		cite {
+			font-style: normal;
+		}
+
+		time {
+			color: var(--st-color-ink-soft);
+		}
+	}
+
+	&__verified {
+		color: var(--st-color-foliage);
+	}
+
+	&__none {
+		margin: 0 0 var(--st-space-8);
+		color: var(--st-color-ink-soft);
+	}
+}
+
+.st-review-form {
+	max-width: var(--st-measure);
+	padding-top: var(--st-space-6);
+	border-top: 1px solid var(--st-color-hairline);
+
+	&__title {
+		margin: 0 0 var(--st-space-6);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+		font-weight: var(--st-weight-book);
+	}
+
+	label,
+	legend {
+		display: block;
+		margin-bottom: var(--st-space-2);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+
+	input[type="text"],
+	input[type="email"],
+	textarea {
+		width: 100%;
+		padding: 0.875rem 1rem;
+		border: 1px solid var(--st-color-hairline);
+		background: none;
+		font: inherit;
+		color: inherit;
+
+		&:focus-visible {
+			outline: 1px solid var(--st-color-seaweed);
+			outline-offset: 0;
+		}
+	}
+
+	&__rating {
+		margin: 0 0 var(--st-space-4);
+		padding: 0;
+		border: 0;
+	}
+
+	/* Five radios rendered 5→1; row-reversed so they READ 1→5 while
+	   sibling selectors can fill every star up to the hovered/chosen one. */
+	&__stars {
+		display: flex;
+		flex-direction: row-reverse;
+		justify-content: flex-end;
+		gap: var(--st-space-1);
+
+		input {
+			position: absolute;
+			opacity: 0;
+			width: 1px;
+			height: 1px;
+		}
+
+		label {
+			margin: 0;
+			font-size: 0;
+			cursor: pointer;
+
+			&::before {
+				content: "";
+				display: block;
+				width: 22px;
+				height: 22px;
+				background-color: var(--st-color-sage);
+				mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 2l2.35 4.76 5.25.74-3.8 3.7.9 5.23L10 14l-4.7 2.43.9-5.23-3.8-3.7 5.25-.74z"/></svg>') center / contain no-repeat;
+			}
+		}
+
+		label:hover::before,
+		label:hover ~ label::before,
+		input:checked ~ label::before,
+		input:checked + label::before {
+			background-color: var(--st-color-foliage);
+		}
+
+		input:focus-visible + label::before {
+			outline: 2px solid var(--st-color-seaweed);
+			outline-offset: 2px;
+		}
+	}
+
+	&__row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--st-space-4);
+
+		@media (max-width: 40rem) {
+			grid-template-columns: 1fr;
+		}
+
+		p {
+			margin: 0 0 var(--st-space-4);
+		}
+	}
+
+	p {
+		margin: 0 0 var(--st-space-4);
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: var(--st-space-4);
+		flex-wrap: wrap;
+	}
+
+	&__note {
+		font-size: var(--st-text-small);
+		color: var(--st-color-sage-deep);
+	}
+}
+
+/* --- Sticky add-to-bag (mobile) ------------------------------------------ */
+.st-sticky-buy {
+	position: fixed;
+	inset: auto 0 0;
+	z-index: 40;
+	display: none;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--st-space-4);
+	padding: var(--st-space-3) var(--st-gutter) calc(var(--st-space-3) + env(safe-area-inset-bottom, 0px));
+	background: var(--st-color-nectar);
+	border-top: 1px solid var(--st-color-hairline);
+
+	&__meta {
+		display: grid;
+		min-width: 0;
+	}
+
+	&__name {
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+		line-height: var(--st-leading-heading);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__price {
+		font-size: var(--st-text-small);
+		color: var(--st-color-ink-soft);
+	}
+
+	&__cta {
+		flex: 0 0 auto;
+	}
+
+	@media (max-width: 60rem) {
+		&:not([hidden]) {
+			display: flex;
+		}
+	}
+}

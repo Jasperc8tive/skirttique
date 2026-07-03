@@ -18,6 +18,7 @@ use Skirttique\Core\Services\Currency;
 use Skirttique\Core\Services\HouseContent;
 use Skirttique\Core\Services\Market;
 use Skirttique\Core\Services\Newsletter;
+use Skirttique\Core\Services\ProductEditorial;
 use Skirttique\Core\Services\QuickView;
 use Skirttique\Core\Services\RecentlyViewed;
 use Skirttique\Core\Services\Wishlist;
@@ -36,6 +37,7 @@ final class Plugin {
 		Currency::class,
 		ContentTypes::class,
 		CollectionMeta::class,
+		ProductEditorial::class,
 		HouseContent::class,
 		Newsletter::class,
 		CartAjax::class,

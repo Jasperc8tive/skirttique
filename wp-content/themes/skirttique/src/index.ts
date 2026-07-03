@@ -24,6 +24,7 @@ import { initQuickView } from './ts/quickview';
 import { initRecentlyViewed } from './ts/recently-viewed';
 import { initRotators } from './ts/rotator';
 import { initSliders } from './ts/slider';
+import { initStickyBuy } from './ts/sticky-atc';
 import { initTransitions } from './ts/transitions';
 import { initWishlist } from './ts/wishlist';
 
@@ -38,6 +39,7 @@ const boot = (): void => {
 	initQuickView();
 	initWishlist();
 	initPurchaseScopes();
+	initStickyBuy();
 	initRecentlyViewed();
 	initSliders();
 	initParallax();

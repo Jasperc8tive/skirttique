@@ -60,7 +60,7 @@ $st_companions = Skirttique\WooCommerce\companion_products( $st_product );
 	<div class="st-pdp__layout">
 		<div class="st-pdp__gallery">
 			<?php foreach ( $st_gallery_ids as $st_i => $st_image_id ) : ?>
-				<figure class="st-pdp__figure">
+				<figure class="st-pdp__figure" data-st-zoom>
 					<?php
 					echo wp_get_attachment_image(
 						$st_image_id,
@@ -90,6 +90,10 @@ $st_companions = Skirttique\WooCommerce\companion_products( $st_product );
 
 			<?php echo Skirttique\WooCommerce\purchase_form( $st_product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in purchase_form(). ?>
 
+			<?php echo Skirttique\Components\trust_badges( array( 'badges' => array( 'delivery', 'returns', 'secure' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped within the component. ?>
+
+			<?php echo Skirttique\WooCommerce\product_pairing( $st_product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in product_pairing(). ?>
+
 			<div class="st-pdp__panels">
 				<?php foreach ( Skirttique\WooCommerce\pdp_panels( $st_product ) as $st_panel ) : ?>
 					<details class="st-panel-fold">
@@ -117,6 +121,8 @@ $st_companions = Skirttique\WooCommerce\companion_products( $st_product );
 		</section>
 	<?php endif; ?>
 
+	<?php echo Skirttique\WooCommerce\product_reviews( $st_product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in product_reviews(). ?>
+
 	<section class="st-pdp__rail" data-st-recent hidden aria-labelledby="st-recent-title">
 		<div class="st-section__head">
 			<p class="st-section__eyebrow"><?php esc_html_e( 'Where you have been', 'skirttique' ); ?></p>
@@ -124,5 +130,17 @@ $st_companions = Skirttique\WooCommerce\companion_products( $st_product );
 		</div>
 		<div class="st-card-grid" data-st-recent-grid></div>
 	</section>
+
+	<?php if ( $st_product->is_purchasable() && $st_product->is_in_stock() ) : ?>
+		<div class="st-sticky-buy" data-st-sticky-buy hidden>
+			<div class="st-sticky-buy__meta">
+				<span class="st-sticky-buy__name"><?php echo esc_html( $st_product->get_name() ); ?></span>
+				<span class="st-sticky-buy__price"><?php echo $st_product->get_price_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WooCommerce price HTML. ?></span>
+			</div>
+			<button type="button" class="st-btn st-btn--primary st-sticky-buy__cta" data-st-sticky-cta>
+				<?php echo esc_html( $st_product->is_type( 'variable' ) ? __( 'Choose size', 'skirttique' ) : __( 'Add to bag', 'skirttique' ) ); ?>
+			</button>
+		</div>
+	<?php endif; ?>
 
 </main>

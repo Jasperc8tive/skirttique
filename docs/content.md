@@ -79,6 +79,67 @@ lookbook is published; Instagram renders shipped placeholder tiles until
 Stage 26 hydrates the real feed (and hides entirely if it has neither
 tiles nor a profile URL).
 
+## Collection landing pages (Stage 20)
+
+Every collection (product_cat) archive is now an editorial landing —
+one code path in `patterns/shop.php`, no separate template:
+
+- **Full-bleed hero** carrying the h1 and the collection story. Image:
+  landing hero term-meta → category thumbnail. Story: term-meta →
+  description. A collection with no imagery keeps the plain text head.
+- **Breadcrumbs** + the existing collection switcher and sorted grid.
+- **"More from the house"** — the other collections as cards after the
+  grid (the current one excluded).
+
+Dressing a collection is entirely a Products → Categories task: name,
+description, thumbnail, story, landing hero. Shipped stories were seeded
+for the four live collections
+(`tools/seed-collection-stories.php`, idempotent, never overwrites) —
+replace them in wp-admin whenever the house prefers its own words.
+Adding a future collection = create the category, add products, dress
+it; the landing page exists immediately.
+
+Also fixed here: product search rendered WooCommerce's default block
+template because the theme never provided
+`templates/product-search-results.html` — it now routes through the
+same shop pattern as everything else.
+
+## Product Page v2 (Stage 21)
+
+- **Zoom** — every gallery figure carries `data-st-zoom` (the Stage 17
+  primitive): pointer-origin close-up, keyboard-accessible, reduced-
+  motion safe.
+- **Editorial panels** — products gained a **Skirttique tab** (Products
+  → edit): Fabric & composition, Care, The story
+  (`Skirttique\Core\Services\ProductEditorial`, keys `_st_fabric` /
+  `_st_care` / `_st_story`). Story and fabric panels hide when blank;
+  care falls back to the house note. Panel order: The piece · The story
+  · Fabric & composition · Care · Size & fit · Delivery & returns.
+- **Worn with** — compact pairing rows in the summary: curated
+  cross-sells first, padded from the piece's own collection. Simple
+  pieces add straight to the bag; variable pieces link through.
+  (Distinct from the upsell rail: the rail is browsing, this is pairing.)
+- **Trust strip** — delivery/returns/secure badges between the buy form
+  and the panels.
+- **Reviews** — house-styled list (stars, verified-owner badge) + a
+  rating form posting through standard WordPress comments; WooCommerce
+  classifies the comment as a review and stores the rating. Follows the
+  site's moderation settings; no rating pre-selected. Hidden entirely if
+  reviews are disabled. Woo's structured data picks up the aggregate
+  rating automatically.
+- **Sticky add-to-bag** (mobile) — a bar that appears once the buy form
+  scrolls out of view; simple pieces add directly, variable pieces read
+  "Choose size" and scroll back to the choice (upgrading to a direct add
+  once a size is picked). Implementation note: computed from the rect on
+  an rAF-throttled scroll listener, NOT an IntersectionObserver — an
+  instant jump past the form never produces an intersection transition,
+  so an observer sleeps through anchor jumps.
+- **360° spin** remains deferred until spin photography exists
+  (decision of record from the Phase 2 kickoff).
+
+Dev-only demo data: `tools/seed-product-editorial.php` (refuses to run
+in production) dresses two demo pieces and adds two sample reviews.
+
 ## SEO / Performance panels — deliberate scope
 
 The PRD asked for SEO and Performance settings panels. SEO settings
