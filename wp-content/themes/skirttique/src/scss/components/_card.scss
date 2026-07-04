@@ -3,6 +3,9 @@
    for keyboard focus. Sale <ins> is the view's single amber moment. */
 
 .st-card {
+	display: flex;
+	flex-direction: column;
+
 	&__frame {
 		position: relative;
 		overflow: hidden;
@@ -98,10 +101,29 @@
 
 	&__name {
 		margin: 0;
-		font-family: var(--st-font-display);
-		font-size: var(--st-text-h3);
+		/* Quiet, image-led: the Garet body face at ~14px, not the La Luxes
+		   display caps. The photograph is the hero; the name supports it
+		   (the COS / Totême / The Row register). La Luxes is caps-only, so
+		   at card scale it read as shouting — the opposite of restraint. */
+		font-family: var(--st-font-body);
+		font-size: var(--st-text-card-name);
 		font-weight: var(--st-weight-book);
 		line-height: var(--st-leading-heading);
+		letter-spacing: var(--st-track-body);
+		color: var(--st-color-seaweed);
+
+		/* Clamp to two lines and reserve their height. A one-line and a
+		   three-line name then leave the price on the same baseline, so
+		   every card in a row is identical height. The reservation is
+		   em-based, so it follows the name's font-size when that is tuned
+		   in P1 — no rework needed. break-word stops a long single token
+		   from spilling out of a narrow slide. */
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+		overflow-wrap: break-word;
+		min-height: calc(2 * var(--st-leading-heading) * 1em);
 
 		a {
 			color: inherit;

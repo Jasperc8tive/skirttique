@@ -225,6 +225,12 @@
 					"fluid": false
 				},
 				{
+					"slug": "card-name",
+					"name": "Card Name",
+					"size": "clamp(0.875rem, 0.84rem + 0.2vw, 0.9375rem)",
+					"fluid": false
+				},
+				{
 					"slug": "caption",
 					"name": "Caption",
 					"size": "0.75rem",

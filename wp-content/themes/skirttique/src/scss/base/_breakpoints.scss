@@ -1,0 +1,20 @@
+/* Named breakpoints — the theme's three responsive thresholds in one
+   place, so every component reads the same values and a future change
+   happens once.
+
+   CSS custom properties cannot be used inside @media conditions, so
+   these are Sass variables (compiled away). Usage in a component:
+
+     @use "../base/breakpoints" as bp;
+     …
+     @media (max-width: bp.$md) { … }
+
+   The scale (mirrors the design-system's device tiers):
+     sm  40rem / 640px   — phones          (grids → 1 col, tables stack)
+     md  60rem / 960px   — tablets/laptops (nav collapses, grids → 2 col,
+                            sliders peek, drawers go full-width)
+     lg  75rem / 1200px  — wide laptops    (4-col grids → 2 col) */
+
+$sm: 40rem;
+$md: 60rem;
+$lg: 75rem;

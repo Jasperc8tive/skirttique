@@ -54,6 +54,7 @@
   --st-text-body-lg: 1.125rem;
   --st-text-body:    1rem;
   --st-text-small:   0.875rem;
+  --st-text-card-name: clamp(0.875rem, 0.84rem + 0.2vw, 0.9375rem); /* product card name — quiet, image-led (14 → 15px) */
   --st-text-caption: 0.75rem;   /* always uppercase + tracked */
   --st-text-script:  clamp(1.75rem, 3vw, 2.75rem);
 

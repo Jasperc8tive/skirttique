@@ -2,15 +2,27 @@
 
 .st-slider {
 	&__viewport {
+		/* `contain: paint` is essential, not decorative. The track inside is
+		   a nested horizontal scroll container; an `overflow: hidden`
+		   ancestor still leaks that container's scrollable width up to the
+		   document, giving the whole page a phantom horizontal scroll on
+		   mobile (the rail is only ~340px, but the document reported 963px).
+		   Paint containment clips WITHOUT creating a scrollport, so the
+		   scrollable overflow stops here. */
 		overflow: hidden;
+		contain: paint;
 		margin-inline: calc(-1 * var(--st-gutter));
 		padding-inline: var(--st-gutter);
 	}
 
 	&__track {
-		display: grid;
-		grid-auto-flow: column;
-		grid-auto-columns: minmax(0, calc((100% - 3 * var(--st-grid-gap)) / 4));
+		/* A flex rail, NOT a grid. Each slide keeps a fixed basis and does
+		   not shrink, so the track overflows its viewport and scrolls.
+		   `grid-auto-columns: minmax(0, …)` collapsed every slide to fit the
+		   container instead (the min of 0 lets them shrink to near-zero),
+		   which is why the rail used to cram all cards into one screen and
+		   the names overlapped on mobile. */
+		display: flex;
 		gap: var(--st-grid-gap);
 		overflow-x: auto;
 		scroll-snap-type: x mandatory;
@@ -23,6 +35,7 @@
 		}
 
 		> * {
+			flex: 0 0 calc((100% - 3 * var(--st-grid-gap)) / 4); /* 4-up rail */
 			scroll-snap-align: start;
 		}
 	}
@@ -60,8 +73,8 @@
 	}
 
 	@media (max-width: 60rem) {
-		&__track {
-			grid-auto-columns: minmax(0, 72%);
+		&__track > * {
+			flex-basis: 72%; /* one card + a peek of the next */
 		}
 
 		&__nav {
