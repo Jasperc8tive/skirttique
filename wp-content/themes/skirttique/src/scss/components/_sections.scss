@@ -428,6 +428,160 @@
 	}
 }
 
+/* --- Size chart (Stage 25) — the measurements with a cm/in switch --------------- */
+.st-sizes {
+	&__units {
+		display: inline-flex;
+		margin-bottom: var(--st-space-6);
+		border: 1px solid var(--st-color-hairline-dark);
+
+		button {
+			padding: var(--st-space-2) var(--st-space-6);
+			border: 0;
+			background: transparent;
+			font-family: var(--st-font-body);
+			font-size: var(--st-text-caption);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			color: var(--st-color-sage-deep);
+			cursor: pointer;
+			transition:
+				background-color var(--st-dur-micro) var(--st-ease-silk),
+				color var(--st-dur-micro) var(--st-ease-silk);
+
+			&[aria-pressed="true"] {
+				background: var(--st-color-foliage);
+				color: var(--st-color-nectar);
+			}
+		}
+	}
+
+	&__scroll {
+		overflow-x: auto;
+	}
+
+	&__table {
+		width: 100%;
+		border-collapse: collapse;
+
+		caption {
+			caption-side: bottom;
+			padding-top: var(--st-space-3);
+			text-align: left;
+			font-size: var(--st-text-caption);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			color: var(--st-color-sage-deep);
+		}
+
+		th,
+		td {
+			padding: var(--st-space-4) var(--st-space-6) var(--st-space-4) 0;
+			border-bottom: 1px solid var(--st-color-hairline);
+			text-align: left;
+		}
+
+		thead th {
+			font-size: var(--st-text-caption);
+			font-weight: var(--st-weight-book);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			color: var(--st-color-sage-deep);
+		}
+
+		tbody th {
+			font-family: var(--st-font-display);
+			font-size: var(--st-text-h3);
+			font-weight: var(--st-weight-book);
+		}
+
+		td {
+			color: var(--st-color-ink-soft);
+			font-variant-numeric: tabular-nums;
+		}
+	}
+
+	&__note {
+		margin: var(--st-space-6) 0 0;
+		max-width: var(--st-measure);
+		font-size: var(--st-text-small);
+		color: var(--st-color-ink-soft);
+	}
+}
+
+/* --- Contact details (Stage 25) — client-care channels on hairline rows --------- */
+.st-contact {
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: var(--st-grid-gap) var(--st-space-12);
+	}
+
+	&__item {
+		padding-top: var(--st-space-4);
+		border-top: 1px solid var(--st-color-hairline);
+	}
+
+	&__label {
+		margin: 0 0 var(--st-space-2);
+		font-family: var(--st-font-body);
+		font-size: var(--st-text-caption);
+		font-weight: var(--st-weight-book);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+
+	&__value {
+		margin: 0 0 var(--st-space-3);
+		font-size: var(--st-text-small);
+		line-height: var(--st-leading-body);
+		color: var(--st-color-ink-soft);
+	}
+}
+
+/* --- Locations (Stage 25) — where the house receives ----------------------------- */
+.st-locations {
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		gap: var(--st-grid-gap);
+	}
+
+	&__card {
+		height: 100%;
+		padding: var(--st-space-8);
+		border: 1px solid var(--st-color-hairline);
+	}
+
+	&__name {
+		margin: 0 0 var(--st-space-3);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-heading);
+	}
+
+	&__address {
+		margin: 0 0 var(--st-space-3);
+		line-height: var(--st-leading-body);
+		color: var(--st-color-ink-soft);
+	}
+
+	&__hours {
+		margin: 0 0 var(--st-space-4);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+}
+
+/* Anchored sections (the FAQ page's jump links) land clear of the header. */
+.st-section[id] {
+	scroll-margin-top: var(--st-space-16);
+}
+
 /* --- Editorial media-side flip ------------------------------------------------
    The grid children are the .st-drape wrappers, so order applies there. */
 .st-philosophy--media-left {

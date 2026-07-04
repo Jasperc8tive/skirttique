@@ -223,6 +223,9 @@ final class HouseContent implements ServiceInterface {
 		$this->field( 'contact_whatsapp', __( 'WhatsApp number (international format, e.g. +2348000000000)', 'skirttique-core' ), 'st_contact' );
 		$this->field( 'contact_hours', __( 'Business hours', 'skirttique-core' ), 'st_contact' );
 		$this->field( 'contact_location', __( 'Studio location', 'skirttique-core' ), 'st_contact', 'textarea' );
+		// Stage 25: the Visit page's location cards. Blank falls back to
+		// one card built from the studio location + hours above.
+		$this->field( 'store_locations', __( 'Ateliers (one per line: Name|Address|Hours|Map link)', 'skirttique-core' ), 'st_contact', 'textarea' );
 
 		// Experience — sitewide motion switches (both default ON; the
 		// theme also honours prefers-reduced-motion regardless).
@@ -369,7 +372,7 @@ final class HouseContent implements ServiceInterface {
 			} elseif ( str_ends_with( $key, '_product_id' ) ) {
 				$id            = absint( $value );
 				$clean[ $key ] = $id ? (string) $id : '';
-			} elseif ( 'announcements' === $key || 'contact_location' === $key || str_starts_with( $key, 'quote_' ) || str_ends_with( $key, '_prose' ) || str_ends_with( $key, '_items' ) ) {
+			} elseif ( 'announcements' === $key || 'contact_location' === $key || str_starts_with( $key, 'quote_' ) || str_ends_with( $key, '_prose' ) || str_ends_with( $key, '_items' ) || str_ends_with( $key, '_locations' ) ) {
 				$clean[ $key ] = sanitize_textarea_field( $value );
 			} else {
 				$clean[ $key ] = sanitize_text_field( $value );

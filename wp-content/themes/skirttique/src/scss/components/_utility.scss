@@ -1,0 +1,190 @@
+/* Utility surfaces (Stage 25): the FAQ jump row, the cookie-consent
+   banner, the 404, and the coming-soon splash. */
+
+/* --- Jump row — anchor links under a composed page's hero ------------------- */
+.st-jump {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--st-space-3) var(--st-space-6);
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+	padding: var(--st-space-8) var(--st-gutter) 0;
+	font-size: var(--st-text-caption);
+	text-transform: uppercase;
+	letter-spacing: var(--st-track-caps);
+
+	a {
+		color: var(--st-color-sage-deep);
+		text-decoration: none;
+		border-bottom: 1px solid var(--st-color-hairline-dark);
+		padding-bottom: var(--st-space-1);
+		transition:
+			color var(--st-dur-micro) var(--st-ease-silk),
+			border-color var(--st-dur-micro) var(--st-ease-silk);
+
+		&:hover,
+		&:focus-visible {
+			color: var(--st-color-seaweed);
+			border-color: currentcolor;
+		}
+	}
+}
+
+/* --- Cookie consent — a quiet card, never a wall ----------------------------- */
+.st-consent {
+	position: fixed;
+	inset-inline-end: var(--st-space-4);
+	inset-block-end: var(--st-space-4);
+	z-index: 60;
+	max-width: 24rem;
+	padding: var(--st-space-6);
+	background: var(--st-color-nectar);
+	border: 1px solid var(--st-color-hairline-dark);
+	box-shadow: var(--st-shadow-drawer);
+
+	&__copy {
+		margin: 0 0 var(--st-space-4);
+		font-size: var(--st-text-small);
+		line-height: var(--st-leading-body);
+		color: var(--st-color-ink-soft);
+
+		a {
+			color: var(--st-color-seaweed);
+			text-decoration: underline;
+			text-underline-offset: 0.2em;
+		}
+	}
+
+	&__actions {
+		display: flex;
+		gap: var(--st-space-3);
+		flex-wrap: wrap;
+
+		.st-btn {
+			padding: var(--st-space-3) var(--st-space-6);
+		}
+	}
+
+	@media (max-width: 40rem) {
+		inset-inline: var(--st-space-4);
+		max-width: none;
+	}
+}
+
+/* The footer's reopener sits among the legal links, dressed as one. */
+.st-footer__legal-links button {
+	padding: 0;
+	border: 0;
+	background: none;
+	font: inherit;
+	color: inherit;
+	cursor: pointer;
+}
+
+/* --- 404 — the lost page ------------------------------------------------------ */
+.st-lost {
+	text-align: center;
+
+	&__statement {
+		margin: 0 0 var(--st-space-4);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-display);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+	}
+
+	&__sub {
+		margin: 0 auto var(--st-space-8);
+		max-width: var(--st-measure);
+		color: var(--st-color-ink-soft);
+		line-height: var(--st-leading-body);
+	}
+
+	&__search {
+		display: flex;
+		justify-content: center;
+		gap: var(--st-space-3);
+		max-width: 32rem;
+		margin: 0 auto var(--st-space-8);
+
+		input[type="search"] {
+			flex: 1;
+			min-width: 0;
+			padding: 0.875rem 1rem;
+			border: 1px solid var(--st-color-hairline-dark);
+			background: none;
+			font: inherit;
+			color: inherit;
+
+			&:focus-visible {
+				outline: 1px solid var(--st-color-seaweed);
+				outline-offset: 0;
+			}
+		}
+	}
+
+	&__paths {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: var(--st-space-4) var(--st-space-8);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+}
+
+/* --- Coming soon — the house is dressing --------------------------------------- */
+.st-coming {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	padding: var(--st-space-12) var(--st-gutter);
+	text-align: center;
+	background: var(--st-color-foliage);
+	color: var(--st-color-nectar);
+
+	&__logotype {
+		margin: 0 0 var(--st-space-8);
+		font-family: var(--st-font-script);
+		font-size: var(--st-text-script);
+		line-height: 1;
+	}
+
+	&__statement {
+		margin: 0 0 var(--st-space-4);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-hero);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+		max-width: 18ch;
+	}
+
+	&__sub {
+		margin: 0 0 var(--st-space-12);
+		max-width: var(--st-measure);
+		font-size: var(--st-text-body-lg);
+		color: var(--st-color-khaki);
+	}
+
+	/* The house-list form, recomposed for a dark centred ground. */
+	.st-footer__news {
+		display: block;
+		max-width: 34rem;
+	}
+
+	&__social {
+		display: flex;
+		gap: var(--st-space-6);
+		margin: var(--st-space-12) 0 0;
+		padding: 0;
+		list-style: none;
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+	}
+}

@@ -320,9 +320,10 @@ function pdp_panels( \WC_Product $product ): array {
 		'content' => wp_kses_post(
 			wpautop(
 				sprintf(
-					/* translators: %s: delivery and returns URL. */
-					__( 'Dispatched from Lagos. Local delivery via GIG Logistics; worldwide via DHL. Unworn pieces return within 14 days. <a href="%s">Delivery &amp; returns, in full</a>.', 'skirttique' ),
-					esc_url( home_url( '/delivery-returns/' ) )
+					/* translators: 1: shipping page URL, 2: returns page URL. */
+					__( 'Dispatched from Lagos — GIG Logistics at home, DHL worldwide: <a href="%1$s">shipping, in full</a>. Unworn pieces return within 14 days: <a href="%2$s">how returns work</a>.', 'skirttique' ),
+					esc_url( home_url( '/shipping/' ) ),
+					esc_url( home_url( '/returns/' ) )
 				)
 			)
 		),

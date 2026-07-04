@@ -906,6 +906,189 @@ function instagram( array $args ): string {
 }
 
 /**
+ * Size chart — the house measurements on hairline rows, with a cm/in
+ * switch kept honest by size-guide.ts (numeric cells carry their
+ * centimetre value in data-st-cm; no JavaScript leaves the cm table).
+ *
+ * @param array{eyebrow?: string, title?: string, items: list<array{size: string, waist: string, hips: string, length: string}>, note?: string} $args Measurements in centimetres.
+ */
+function size_chart( array $args ): string {
+	$rows = (array) ( $args['items'] ?? array() );
+	if ( ! $rows ) {
+		return '';
+	}
+
+	$columns = array(
+		'size'   => __( 'Size', 'skirttique' ),
+		'waist'  => __( 'Waist', 'skirttique' ),
+		'hips'   => __( 'Hips', 'skirttique' ),
+		'length' => __( 'Length', 'skirttique' ),
+	);
+
+	$out  = '<section class="st-section st-sizes" data-st-size-chart>';
+	$out .= section_head( array( 'eyebrow' => $args['eyebrow'] ?? '', 'title' => $args['title'] ?? '' ) );
+
+	$out .= '<div class="st-sizes__units" role="group" aria-label="' . esc_attr__( 'Measurement units', 'skirttique' ) . '">'
+		. '<button type="button" data-st-unit="cm" aria-pressed="true">' . esc_html__( 'cm', 'skirttique' ) . '</button>'
+		. '<button type="button" data-st-unit="in" aria-pressed="false">' . esc_html__( 'in', 'skirttique' ) . '</button>'
+		. '</div>';
+
+	$out .= '<div class="st-drape"><div class="st-sizes__scroll"><table class="st-sizes__table">';
+	$out .= '<caption class="st-sizes__caption" data-st-unit-caption aria-live="polite">' . esc_html__( 'All measurements in centimetres.', 'skirttique' ) . '</caption>';
+
+	$out .= '<thead><tr>';
+	foreach ( $columns as $label ) {
+		$out .= '<th scope="col">' . esc_html( $label ) . '</th>';
+	}
+	$out .= '</tr></thead><tbody>';
+
+	foreach ( $rows as $row ) {
+		$out .= '<tr><th scope="row">' . esc_html( (string) ( $row['size'] ?? '' ) ) . '</th>';
+		foreach ( array( 'waist', 'hips', 'length' ) as $key ) {
+			$value = trim( (string) ( $row[ $key ] ?? '' ) );
+			$out  .= is_numeric( $value )
+				? '<td data-st-cm="' . esc_attr( $value ) . '">' . esc_html( $value ) . '</td>'
+				: '<td>' . esc_html( $value ) . '</td>';
+		}
+		$out .= '</tr>';
+	}
+
+	$out .= '</tbody></table></div></div>';
+
+	if ( ! empty( $args['note'] ) ) {
+		$out .= '<p class="st-sizes__note">' . esc_html( (string) $args['note'] ) . '</p>';
+	}
+
+	$out .= '</section>';
+
+	return $out;
+}
+
+/**
+ * Contact details — the client-care channels from House Settings on
+ * hairline cards. Every value falls back to shipped copy, so the block
+ * renders sensibly before the owner fills the Contact section in.
+ *
+ * @param array{eyebrow?: string, title?: string} $args Args.
+ */
+function contact_details( array $args ): string {
+	$house = (array) get_option( 'skirttique_house', array() );
+	$value = static fn ( string $key ): string => trim( (string) ( $house[ $key ] ?? '' ) );
+
+	$email = $value( 'contact_email' );
+	if ( '' === $email ) {
+		$email = (string) get_option( 'admin_email' );
+	}
+
+	$whatsapp = $value( 'contact_whatsapp' );
+	$digits   = preg_replace( '/[^0-9]/', '', $whatsapp ) ?? '';
+
+	$hours    = $value( 'contact_hours' );
+	$location = $value( 'contact_location' );
+
+	$out  = '<section class="st-section st-contact">';
+	$out .= section_head( array( 'eyebrow' => $args['eyebrow'] ?? '', 'title' => $args['title'] ?? '' ) );
+	$out .= '<div class="st-contact__grid">';
+
+	$i     = 0;
+	$card  = static function ( string $label, string $body, string $link_label = '', string $link_url = '' ) use ( &$i ): string {
+		$item  = '<div class="st-drape ' . esc_attr( drape_delay( $i++ ) ) . '"><div class="st-contact__item">';
+		$item .= '<h3 class="st-contact__label">' . esc_html( $label ) . '</h3>';
+		$item .= '<p class="st-contact__value">' . $body . '</p>'; // Body escaped by the caller (may carry <br>).
+		if ( '' !== $link_label && '' !== $link_url ) {
+			$item .= '<a class="st-hemline" href="' . esc_url( $link_url ) . '"' . ( str_starts_with( $link_url, 'http' ) ? ' rel="noopener"' : '' ) . '>' . esc_html( $link_label ) . '</a>';
+		}
+		$item .= '</div></div>';
+
+		return $item;
+	};
+
+	$out .= $card(
+		__( 'Write', 'skirttique' ),
+		esc_html__( 'Client care reads every message personally and replies within one working day.', 'skirttique' ),
+		$email,
+		'mailto:' . $email
+	);
+
+	if ( '' !== $digits ) {
+		$out .= $card(
+			__( 'WhatsApp', 'skirttique' ),
+			esc_html__( 'For sizing advice and order questions, in the moment.', 'skirttique' ),
+			$whatsapp,
+			'https://wa.me/' . $digits
+		);
+	}
+
+	$out .= $card(
+		__( 'Hours', 'skirttique' ),
+		esc_html( '' !== $hours ? $hours : __( 'Monday to Saturday, 9:00–18:00 WAT.', 'skirttique' ) )
+	);
+
+	$out .= $card(
+		__( 'The atelier', 'skirttique' ),
+		nl2br( esc_html( '' !== $location ? $location : __( 'Lagos, Nigeria — by appointment.', 'skirttique' ) ) )
+	);
+
+	$out .= '</div></section>';
+
+	return $out;
+}
+
+/**
+ * Locations — where the house receives, as hairline cards with
+ * directions links. Reads House Settings → Ateliers
+ * (`store_locations`, one per line: Name|Address|Hours|Map link);
+ * empty falls back to one card built from the contact details, so the
+ * page never renders blank. No embedded map: a keyed map service is an
+ * owner decision (the gateway-keys principle) — directions links cost
+ * nothing and work everywhere.
+ *
+ * @param array{eyebrow?: string, title?: string} $args Args.
+ */
+function locations( array $args ): string {
+	$house = (array) get_option( 'skirttique_house', array() );
+	$items = parse_lines( trim( (string) ( $house['store_locations'] ?? '' ) ), array( 'name', 'address', 'hours', 'map' ) );
+
+	if ( ! $items ) {
+		$location = trim( (string) ( $house['contact_location'] ?? '' ) );
+		$hours    = trim( (string) ( $house['contact_hours'] ?? '' ) );
+		$items    = array(
+			array(
+				'name'    => __( 'The Lagos atelier', 'skirttique' ),
+				'address' => '' !== $location ? $location : __( 'Lagos, Nigeria', 'skirttique' ),
+				'hours'   => '' !== $hours ? $hours : __( 'By appointment', 'skirttique' ),
+				'map'     => '',
+			),
+		);
+	}
+
+	$out  = '<section class="st-section st-locations">';
+	$out .= section_head( array( 'eyebrow' => $args['eyebrow'] ?? '', 'title' => $args['title'] ?? '' ) );
+	$out .= '<div class="st-locations__grid">';
+
+	foreach ( $items as $i => $item ) {
+		$map = trim( (string) ( $item['map'] ?? '' ) );
+
+		$out .= '<div class="st-drape ' . esc_attr( drape_delay( $i ) ) . '"><div class="st-locations__card">';
+		$out .= '<h3 class="st-locations__name">' . esc_html( (string) ( $item['name'] ?? '' ) ) . '</h3>';
+		if ( '' !== trim( (string) ( $item['address'] ?? '' ) ) ) {
+			$out .= '<p class="st-locations__address">' . nl2br( esc_html( (string) $item['address'] ) ) . '</p>';
+		}
+		if ( '' !== trim( (string) ( $item['hours'] ?? '' ) ) ) {
+			$out .= '<p class="st-locations__hours">' . esc_html( (string) $item['hours'] ) . '</p>';
+		}
+		if ( '' !== $map ) {
+			$out .= '<a class="st-hemline" href="' . esc_url( $map ) . '" rel="noopener" target="_blank">' . esc_html__( 'Directions', 'skirttique' ) . '<span class="screen-reader-text"> ' . esc_html__( '(opens in a new tab)', 'skirttique' ) . '</span></a>';
+		}
+		$out .= '</div></div>';
+	}
+
+	$out .= '</div></section>';
+
+	return $out;
+}
+
+/**
  * Parse "A|B" textarea lines into keyed pairs — the storage format the
  * block sidebar uses for simple repeaters.
  *

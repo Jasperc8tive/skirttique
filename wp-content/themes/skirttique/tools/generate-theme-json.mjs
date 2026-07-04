@@ -173,6 +173,15 @@ const themeJson = {
     { name: "header", title: "Header", area: "header" },
     { name: "footer", title: "Footer", area: "footer" },
   ],
+  customTemplates: [
+    {
+      // Full-width block-composed pages (FAQ, size guide, newsletter,
+      // visit, …) — the About canvas, assignable from the editor.
+      name: "page-canvas",
+      title: "Canvas — full-width sections",
+      postTypes: ["page"],
+    },
+  ],
 };
 
 writeFileSync(themeJsonPath, JSON.stringify(themeJson, null, "\t") + "\n");

@@ -30,6 +30,53 @@ function setup(): void {
 add_action( 'after_setup_theme', __NAMESPACE__ . '\\setup' );
 
 /**
+ * Whether this request resolved to the coming-soon splash
+ * (WooCommerce's site-visibility mode swaps the block template in; the
+ * theme provides templates/coming-soon.html). In a block theme the
+ * included FILE is always template-canvas.php — the chosen template is
+ * identified by $_wp_current_template_id ('skirttique//coming-soon'),
+ * set during resolution, before wp_head prints any robots meta.
+ * (Woo's swap does not populate $_wp_current_template_slug.)
+ */
+function is_coming_soon(): bool {
+	return str_ends_with( (string) ( $GLOBALS['_wp_current_template_id'] ?? '' ), '//coming-soon' );
+}
+
+/**
+ * The splash must never be indexed — it is a placeholder, not the
+ * store. Late priority so it also overrides the SEO plugin's robots.
+ *
+ * @param array<string, bool|string> $robots Robots directives.
+ * @return array<string, bool|string>
+ */
+function coming_soon_robots( array $robots ): array {
+	return is_coming_soon()
+		? array(
+			'noindex'  => true,
+			'nofollow' => true,
+		)
+		: $robots;
+}
+add_filter( 'wp_robots', __NAMESPACE__ . '\\coming_soon_robots', PHP_INT_MAX );
+
+/**
+ * Rank Math prints its own robots meta (core's wp_robots never renders
+ * while it is active) — mirror the splash noindex through its filter.
+ *
+ * @param array<string, string> $robots Rank Math directives.
+ * @return array<string, string>
+ */
+function coming_soon_robots_rank_math( array $robots ): array {
+	return is_coming_soon()
+		? array(
+			'noindex'  => 'noindex',
+			'nofollow' => 'nofollow',
+		)
+		: $robots;
+}
+add_filter( 'rank_math/frontend/robots', __NAMESPACE__ . '\\coming_soon_robots_rank_math', PHP_INT_MAX );
+
+/**
  * Register the theme's block pattern category.
  */
 function register_pattern_category(): void {

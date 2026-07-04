@@ -53,6 +53,17 @@ final class HouseContentSanitizeTest extends TestCase {
 		$this->assertStringContainsString( "\n", $clean['quote_1'] );
 	}
 
+	/** Ateliers keep their line-per-location, pipe-delimited structure. */
+	public function test_store_locations_keep_lines_and_pipes(): void {
+		$clean = $this->house->sanitize(
+			array( 'store_locations' => "Lagos atelier|12 Idowu Martins, VI|Mon–Sat 9–18|https://maps.example/lagos\nAbuja room|Maitama|By appointment|" )
+		);
+
+		$this->assertStringContainsString( "\n", $clean['store_locations'] );
+		$this->assertStringContainsString( '|', $clean['store_locations'] );
+		$this->assertStringNotContainsString( '<', $this->house->sanitize( array( 'store_locations' => '<script>x</script>Name|Addr' ) )['store_locations'] );
+	}
+
 	/** Social links run through URL sanitisation. */
 	public function test_social_links_are_url_sanitised(): void {
 		$clean = $this->house->sanitize( array( 'social_instagram' => '  https://instagram.com/skirttique  ' ) );

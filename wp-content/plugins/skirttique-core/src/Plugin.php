@@ -14,9 +14,11 @@ use Skirttique\Core\Payments\GatewayRouter;
 use Skirttique\Core\Services\BespokeRequests;
 use Skirttique\Core\Services\CartAjax;
 use Skirttique\Core\Services\CollectionMeta;
+use Skirttique\Core\Services\ContactMessages;
 use Skirttique\Core\Services\ContentTypes;
 use Skirttique\Core\Services\Currency;
 use Skirttique\Core\Services\HouseContent;
+use Skirttique\Core\Services\LegacyPaths;
 use Skirttique\Core\Services\Market;
 use Skirttique\Core\Services\Newsletter;
 use Skirttique\Core\Services\ProductEditorial;
@@ -37,12 +39,14 @@ final class Plugin {
 	private const SERVICES = array(
 		Market::class,
 		Currency::class,
+		LegacyPaths::class,
 		ContentTypes::class,
 		CollectionMeta::class,
 		ProductEditorial::class,
 		HouseContent::class,
 		Newsletter::class,
 		BespokeRequests::class,
+		ContactMessages::class,
 		CartAjax::class,
 		Wishlist::class,
 		RecentlyViewed::class,

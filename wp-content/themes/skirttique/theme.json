@@ -389,5 +389,14 @@
 			"title": "Footer",
 			"area": "footer"
 		}
+	],
+	"customTemplates": [
+		{
+			"name": "page-canvas",
+			"title": "Canvas — full-width sections",
+			"postTypes": [
+				"page"
+			]
+		}
 	]
 }

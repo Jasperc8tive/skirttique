@@ -22,7 +22,8 @@ declare( strict_types=1 );
 		<ul class="st-checkout-foot__links">
 			<li><a href="<?php echo esc_url( home_url( '/privacy/' ) ); ?>"><?php esc_html_e( 'Privacy', 'skirttique' ); ?></a></li>
 			<li><a href="<?php echo esc_url( home_url( '/terms/' ) ); ?>"><?php esc_html_e( 'Terms', 'skirttique' ); ?></a></li>
-			<li><a href="<?php echo esc_url( home_url( '/delivery-returns/' ) ); ?>"><?php esc_html_e( 'Delivery & returns', 'skirttique' ); ?></a></li>
+			<li><a href="<?php echo esc_url( home_url( '/shipping/' ) ); ?>"><?php esc_html_e( 'Shipping', 'skirttique' ); ?></a></li>
+			<li><a href="<?php echo esc_url( home_url( '/returns/' ) ); ?>"><?php esc_html_e( 'Returns', 'skirttique' ); ?></a></li>
 		</ul>
 	</div>
 </footer>

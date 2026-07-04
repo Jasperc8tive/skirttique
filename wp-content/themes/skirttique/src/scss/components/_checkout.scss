@@ -528,8 +528,10 @@
 	padding: 0 0 var(--st-space-12);
 }
 
-/* Bespoke request form (Custom Orders page). */
-.st-bespoke {
+/* Enquiry forms — bespoke (Custom Orders) and client care (Contact)
+   share one voice; the two class families compile from one ruleset. */
+.st-bespoke,
+.st-enquiry {
 	&__form {
 		max-width: var(--st-measure);
 	}
@@ -561,6 +563,7 @@
 	input[type="text"],
 	input[type="email"],
 	input[type="tel"],
+	select,
 	textarea {
 		width: 100%;
 		padding: 0.875rem 1rem;

@@ -73,7 +73,7 @@ $pages = array(
 	'checkout'         => (int) get_option( 'woocommerce_checkout_page_id' ),
 	'my-account'       => (int) get_option( 'woocommerce_myaccount_page_id' ),
 );
-foreach ( array( 'saved', 'about', 'journal', 'size-guide', 'delivery-returns', 'privacy', 'terms', 'faqs', 'contact' ) as $slug ) {
+foreach ( array( 'saved', 'about', 'journal', 'custom-orders', 'size-guide', 'shipping', 'returns', 'privacy', 'terms', 'cookies', 'faqs', 'contact', 'newsletter', 'visit' ) as $slug ) {
 	$page            = get_page_by_path( $slug );
 	$pages[ $slug ] = $page ? (int) $page->ID : 0;
 }

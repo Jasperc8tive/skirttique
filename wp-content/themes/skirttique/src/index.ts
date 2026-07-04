@@ -10,6 +10,7 @@
 import './scss/main.scss';
 
 import { initCartSync } from './ts/cart';
+import { initConsent } from './ts/consent';
 import { initDrape } from './ts/drape';
 import { initDrawers } from './ts/drawer';
 import { initHeader } from './ts/header';
@@ -25,6 +26,7 @@ import { initRecentlyViewed } from './ts/recently-viewed';
 import { initRotators } from './ts/rotator';
 import { initInstantSearch } from './ts/search';
 import { initShipProgress } from './ts/ship-progress';
+import { initSizeChart } from './ts/size-guide';
 import { initSliders } from './ts/slider';
 import { initStickyBuy } from './ts/sticky-atc';
 import { initTransitions } from './ts/transitions';
@@ -45,6 +47,8 @@ const boot = (): void => {
 	initInstantSearch();
 	initStickyBuy();
 	initRecentlyViewed();
+	initSizeChart();
+	initConsent();
 	initSliders();
 	initParallax();
 	initZoom();

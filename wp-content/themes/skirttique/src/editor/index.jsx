@@ -164,6 +164,7 @@ const BLOCKS = {
 			{ key: 'eyebrow', type: 'text', label: __( 'Eyebrow', 'skirttique' ) },
 			{ key: 'title', type: 'text', label: __( 'Title', 'skirttique' ) },
 			{ key: 'items', type: 'textarea', label: __( 'Questions', 'skirttique' ), help: __( 'One per line: Question|Answer', 'skirttique' ), rows: 8 },
+			{ key: 'anchor', type: 'text', label: __( 'Anchor', 'skirttique' ), help: __( 'Jump-link id for a category nav — lowercase, no spaces (e.g. “delivery”).', 'skirttique' ) },
 		],
 	},
 	'skirttique/stats': {
@@ -273,6 +274,35 @@ const BLOCKS = {
 			{ key: 'title', type: 'text', label: __( 'Title', 'skirttique' ), default: __( 'The house, worn', 'skirttique' ) },
 			{ key: 'url', type: 'url', label: __( 'Profile URL', 'skirttique' ), help: __( 'Blank: the Instagram profile from House Settings → Social.', 'skirttique' ) },
 			{ key: 'imageIds', type: 'images', label: __( 'Tiles (up to six)', 'skirttique' ) },
+		],
+	},
+	'skirttique/size-chart': {
+		title: __( 'Size Chart', 'skirttique' ),
+		description: __( 'The house measurements with a cm/in switch.', 'skirttique' ),
+		icon: 'editor-table',
+		fields: [
+			{ key: 'eyebrow', type: 'text', label: __( 'Eyebrow', 'skirttique' ), default: __( 'The measurements', 'skirttique' ) },
+			{ key: 'title', type: 'text', label: __( 'Title', 'skirttique' ), default: __( 'True to the tape', 'skirttique' ) },
+			{ key: 'items', type: 'textarea', label: __( 'Sizes', 'skirttique' ), help: __( 'One per line, in centimetres: Size|Waist|Hips|Length', 'skirttique' ), rows: 7 },
+			{ key: 'note', type: 'textarea', label: __( 'Fit note', 'skirttique' ), default: __( 'Between sizes, take the larger — the waist is where the piece should sit closest.', 'skirttique' ) },
+		],
+	},
+	'skirttique/contact-details': {
+		title: __( 'Contact Details', 'skirttique' ),
+		description: __( 'The client-care channels, from House Settings → Contact.', 'skirttique' ),
+		icon: 'email-alt',
+		fields: [
+			{ key: 'eyebrow', type: 'text', label: __( 'Eyebrow', 'skirttique' ), default: __( 'Client care', 'skirttique' ) },
+			{ key: 'title', type: 'text', label: __( 'Title', 'skirttique' ), default: __( 'Speak with the house', 'skirttique' ) },
+		],
+	},
+	'skirttique/locations': {
+		title: __( 'Locations', 'skirttique' ),
+		description: __( 'Where the house receives — ateliers from House Settings → Contact, with directions links.', 'skirttique' ),
+		icon: 'location',
+		fields: [
+			{ key: 'eyebrow', type: 'text', label: __( 'Eyebrow', 'skirttique' ), default: __( 'Visit', 'skirttique' ) },
+			{ key: 'title', type: 'text', label: __( 'Title', 'skirttique' ), default: __( 'Where the house receives', 'skirttique' ) },
 		],
 	},
 };

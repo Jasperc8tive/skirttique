@@ -95,7 +95,9 @@ $st_social = apply_filters(
 					<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>"><?php esc_html_e( 'About', 'skirttique' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/journal/' ) ); ?>"><?php esc_html_e( 'Journal', 'skirttique' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/custom-orders/' ) ); ?>"><?php esc_html_e( 'Custom orders', 'skirttique' ); ?></a></li>
+					<li><a href="<?php echo esc_url( home_url( '/visit/' ) ); ?>"><?php esc_html_e( 'Visit the atelier', 'skirttique' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact', 'skirttique' ); ?></a></li>
+					<li><a href="<?php echo esc_url( home_url( '/newsletter/' ) ); ?>"><?php esc_html_e( 'Newsletter', 'skirttique' ); ?></a></li>
 				</ul>
 			</nav>
 
@@ -105,7 +107,8 @@ $st_social = apply_filters(
 					<li><a href="<?php echo esc_url( home_url( '/saved/' ) ); ?>"><?php esc_html_e( 'Saved pieces', 'skirttique' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/size-guide/' ) ); ?>"><?php esc_html_e( 'Size guide', 'skirttique' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/faqs/' ) ); ?>"><?php esc_html_e( 'FAQs', 'skirttique' ); ?></a></li>
-					<li><a href="<?php echo esc_url( home_url( '/delivery-returns/' ) ); ?>"><?php esc_html_e( 'Delivery & returns', 'skirttique' ); ?></a></li>
+					<li><a href="<?php echo esc_url( home_url( '/shipping/' ) ); ?>"><?php esc_html_e( 'Shipping', 'skirttique' ); ?></a></li>
+					<li><a href="<?php echo esc_url( home_url( '/returns/' ) ); ?>"><?php esc_html_e( 'Returns', 'skirttique' ); ?></a></li>
 					<li><a href="<?php echo esc_url( $st_account_url ); ?>"><?php esc_html_e( 'Account', 'skirttique' ); ?></a></li>
 				</ul>
 			</nav>
@@ -129,6 +132,8 @@ $st_social = apply_filters(
 			<ul class="st-footer__legal-links">
 				<li><a href="<?php echo esc_url( home_url( '/privacy/' ) ); ?>"><?php esc_html_e( 'Privacy', 'skirttique' ); ?></a></li>
 				<li><a href="<?php echo esc_url( home_url( '/terms/' ) ); ?>"><?php esc_html_e( 'Terms', 'skirttique' ); ?></a></li>
+				<li><a href="<?php echo esc_url( home_url( '/cookies/' ) ); ?>"><?php esc_html_e( 'Cookies', 'skirttique' ); ?></a></li>
+				<li><button type="button" data-st-consent-open><?php esc_html_e( 'Cookie preferences', 'skirttique' ); ?></button></li>
 			</ul>
 
 			<div class="st-footer__markets" role="group" aria-label="<?php esc_attr_e( 'Market', 'skirttique' ); ?>">
@@ -141,6 +146,17 @@ $st_social = apply_filters(
 		</div>
 	</div>
 </div>
+
+<aside class="st-consent" data-st-consent hidden role="region" aria-label="<?php esc_attr_e( 'Cookies', 'skirttique' ); ?>">
+	<p class="st-consent__copy">
+		<?php esc_html_e( 'Skirttique sets only the cookies the store needs — your bag, your sign-in, your market. Anything more would only ever follow your yes.', 'skirttique' ); ?>
+		<a href="<?php echo esc_url( home_url( '/cookies/' ) ); ?>"><?php esc_html_e( 'The cookie policy', 'skirttique' ); ?></a>
+	</p>
+	<div class="st-consent__actions">
+		<button type="button" class="st-btn st-btn--primary" data-st-consent-choice="all"><?php esc_html_e( 'Accept all', 'skirttique' ); ?></button>
+		<button type="button" class="st-btn st-btn--secondary" data-st-consent-choice="essential"><?php esc_html_e( 'Essential only', 'skirttique' ); ?></button>
+	</div>
+</aside>
 
 <dialog class="st-drawer st-drawer--modal" id="st-drawer-quickview" aria-label="<?php esc_attr_e( 'Quick view', 'skirttique' ); ?>">
 	<div class="st-drawer__bar">

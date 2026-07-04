@@ -2,8 +2,9 @@
 /**
  * The Skirttique block library.
  *
- * Twenty dynamic blocks (sixteen from Stage 17, four from Stage 19),
- * registered natively from one PHP manifest. Each render callback is a
+ * Twenty-three dynamic blocks (sixteen from Stage 17, four from Stage
+ * 19, three from Stage 25), registered natively from one PHP manifest.
+ * Each render callback is a
  * thin adapter onto the canonical
  * component renderers in inc/components.php — the same functions the
  * shipped patterns call — so editor-composed pages and the patterns
@@ -183,13 +184,15 @@ function manifest(): array {
 				'eyebrow' => $str(),
 				'title'   => $str(),
 				'items'   => $str(), // One per line: Question|Answer.
+				'anchor'  => $str(), // Jump-link id (the FAQ page's category nav).
 			),
 			'render'     => static function ( array $a ): string {
 				$items = Components\parse_lines( $a['items'], array( 'q', 'a' ) );
 				if ( ! $items ) {
 					return '';
 				}
-				$out  = '<section class="st-section st-faq">';
+				$anchor = sanitize_title( $a['anchor'] );
+				$out    = '<section class="st-section st-faq"' . ( '' !== $anchor ? ' id="' . esc_attr( $anchor ) . '"' : '' ) . '>';
 				$out .= Components\section_head( array( 'eyebrow' => $a['eyebrow'], 'title' => $a['title'] ) );
 				$out .= '<div class="st-faq__list">';
 				foreach ( $items as $item ) {
@@ -361,6 +364,51 @@ function manifest(): array {
 					'title'     => $a['title'],
 					'url'       => $a['url'],
 					'image_ids' => (array) $a['imageIds'],
+				)
+			),
+		),
+
+		// Stage 25 — the utility surfaces.
+
+		'skirttique/size-chart'       => array(
+			'attributes' => array(
+				'eyebrow' => $str( __( 'The measurements', 'skirttique' ) ),
+				'title'   => $str( __( 'True to the tape', 'skirttique' ) ),
+				'items'   => $str(), // One per line: Size|Waist cm|Hips cm|Length cm.
+				'note'    => $str( __( 'Between sizes, take the larger — the waist is where the piece should sit closest.', 'skirttique' ) ),
+			),
+			'render'     => static fn ( array $a ): string => Components\size_chart(
+				array(
+					'eyebrow' => $a['eyebrow'],
+					'title'   => $a['title'],
+					'items'   => Components\parse_lines( $a['items'], array( 'size', 'waist', 'hips', 'length' ) ),
+					'note'    => $a['note'],
+				)
+			),
+		),
+
+		'skirttique/contact-details'  => array(
+			'attributes' => array(
+				'eyebrow' => $str( __( 'Client care', 'skirttique' ) ),
+				'title'   => $str( __( 'Speak with the house', 'skirttique' ) ),
+			),
+			'render'     => static fn ( array $a ): string => Components\contact_details(
+				array(
+					'eyebrow' => $a['eyebrow'],
+					'title'   => $a['title'],
+				)
+			),
+		),
+
+		'skirttique/locations'        => array(
+			'attributes' => array(
+				'eyebrow' => $str( __( 'Visit', 'skirttique' ) ),
+				'title'   => $str( __( 'Where the house receives', 'skirttique' ) ),
+			),
+			'render'     => static fn ( array $a ): string => Components\locations(
+				array(
+					'eyebrow' => $a['eyebrow'],
+					'title'   => $a['title'],
 				)
 			),
 		),

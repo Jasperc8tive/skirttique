@@ -238,6 +238,88 @@ Not installed in this stage: shipping a third-party loyalty plugin the
 house hasn't licensed (or an arbitrary free one) would be a liability,
 not a feature. This mirrors how gateway keys are handled.
 
+## Utility & Legal (Stage 25)
+
+The service surfaces — every one composed from the block library where
+it can be, so the owner edits it like any page.
+
+- **Size Guide** (`/size-guide/`, `page-canvas` template) — the new
+  `skirttique/size-chart` block renders the measurements in centimetres,
+  every numeric cell carrying `data-st-cm`; `size-guide.ts` toggles
+  cm/in as pure presentation (no-JS page = the cm table), persisting the
+  choice in `localStorage` and announcing it through the table caption.
+  Page = hero → chart → how-to-measure feature list → fit FAQ → contact
+  CTA. Verified in-browser: 62cm→24.4in, caption swaps, choice persists.
+- **Contact** (`/contact/`, `page-contact.html`) — `skirttique/contact-details`
+  reads House Settings → Contact (email, WhatsApp as a `wa.me` link,
+  hours, location; each falls back to shipped copy). The message form
+  (`contact-form.php` → `Services\ContactMessages`) mirrors the bespoke
+  flow exactly: nonce + honeypot, capped option storage, email to
+  client care, read-only inbox at **Skirttique → Messages**, and a
+  `skirttique_contact_message` action for a future CRM. Round-trip
+  verified (redirect flag + stored entry). Enquiry forms share one
+  ruleset with the bespoke form (`.st-bespoke, .st-enquiry`).
+- **FAQ** (`/faqs/`, `page-canvas`) — the `skirttique/faq` block gained
+  an `anchor` attribute (renders as the section id); the page is six
+  anchored categories (Ordering, Delivery, Returns, Sizing, Custom
+  orders, Care) under a jump row. `.st-section[id]` carries
+  `scroll-margin-top` so anchors land clear of the header.
+- **Shipping / Returns split** — the old Delivery & Returns page is
+  *renamed* to `/shipping/` (Shipping & Delivery) and a new `/returns/`
+  (Returns & Exchanges) is seeded. Footer Care column, checkout footer,
+  and the PDP Delivery panel all point at the two. The retired
+  `/delivery-returns/` 301s via `Services\LegacyPaths` (WordPress's own
+  old-slug redirect does **not** cover pages — it keys on `name`, page
+  requests parse as `pagename` — so the map is explicit, and in the
+  plugin because URL permanence must survive a theme change).
+- **Legal + consent** — Privacy and Terms rewritten to reference the
+  split pages; a new **Cookie Policy** (`/cookies/`) lists every cookie
+  honestly (essential only today; analytics gated on consent). The
+  consent banner lives in the footer pattern (`[data-st-consent]`,
+  server-rendered `hidden`); `consent.ts` shows it until a choice is
+  made, writes `skirttique_consent` (all|essential, 180d), fires a
+  `st:consent` event for future scripts to gate on, and the footer's
+  "Cookie preferences" (`[data-st-consent-open]`) reopens it. Verified
+  in-browser end to end.
+- **404** (`templates/404.html` → `skirttique/lost`) — house-voiced
+  head, a product search (plain GET, `post_type=product`), paths onward,
+  then collection cards + the newest pieces. Verified a bogus URL 404s
+  with the dressed page.
+- **Coming Soon** — no custom gate: the theme provides
+  `templates/coming-soon.html` (+ `skirttique/coming-soon` splash:
+  logotype, one line, the house list, socials) and WooCommerce's own
+  **Site visibility** mode (`woocommerce_coming_soon`) swaps it in. The
+  switch stays in Woo's screen (the SEO-in-Rank-Math principle); the
+  splash is `noindex,nofollow` via `inc/setup.php` (keyed on
+  `$_wp_current_template_id === 'skirttique//coming-soon'`, bridged to
+  both `wp_robots` and `rank_math/frontend/robots`). Preflight already
+  FAILs launch while the mode is on. Flip-on/flip-off verified.
+- **Newsletter landing** (`/newsletter/`, `page-canvas`) — hero →
+  why-join feature list → the existing newsletter block. A destination
+  for bio links/QR. Footer House column links it.
+- **Store Locator** (`/visit/`, `page-canvas`) — `skirttique/locations`
+  reads House Settings → Ateliers (`store_locations`, one per line:
+  `Name|Address|Hours|Map link`; blank falls back to one card from the
+  contact location + hours). Directions links only — no embedded map,
+  because a keyed map service is an owner decision (the gateway-keys
+  principle). Footer House column links it as "Visit the atelier".
+- **Campaign landing** — `single-campaign.html` is the minimal canvas
+  (the CPT's block template already ends in a CTA back to the shop); a
+  DEV-ONLY demo campaign ("Midnight in Lagos", `noindex` per the Stage
+  18 decision) proves hero + product grid + CTA. Verified over HTTP.
+
+Three new blocks (size-chart, contact-details, locations) bring the
+library to **23**; all three are mirrored in the editor FIELDS registry
+and `page-canvas` is a new assignable custom template (both emitted by
+`tools/generate-theme-json.mjs` — theme.json is generated, never edited
+by hand). Seeds: `tools/seed-utility-pages.php` (the composed pages +
+demo campaign) and the rewritten `tools/seed-content-pages.php` (the
+five legal/policy pages). **Both must run with `wp eval-file
+--use-include`** — plain eval-file's path-const regex exhausts the PCRE
+JIT stack on these files' long string literals and silently evaluates to
+nothing (exit 0, no output). Sanitiser coverage: `store_locations` added
+to the textarea branch, with a test.
+
 ## SEO / Performance panels — deliberate scope
 
 The PRD asked for SEO and Performance settings panels. SEO settings
