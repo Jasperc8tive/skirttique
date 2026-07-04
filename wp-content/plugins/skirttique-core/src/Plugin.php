@@ -18,6 +18,7 @@ use Skirttique\Core\Services\ContactMessages;
 use Skirttique\Core\Services\ContentTypes;
 use Skirttique\Core\Services\Currency;
 use Skirttique\Core\Services\HouseContent;
+use Skirttique\Core\Services\InstagramFeed;
 use Skirttique\Core\Services\LegacyPaths;
 use Skirttique\Core\Services\Market;
 use Skirttique\Core\Services\Newsletter;
@@ -47,6 +48,7 @@ final class Plugin {
 		Newsletter::class,
 		BespokeRequests::class,
 		ContactMessages::class,
+		InstagramFeed::class,
 		CartAjax::class,
 		Wishlist::class,
 		RecentlyViewed::class,

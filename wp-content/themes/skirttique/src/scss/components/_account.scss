@@ -33,7 +33,7 @@
 			@media (max-width: 60rem) {
 				display: flex;
 				flex-wrap: wrap;
-				gap: var(--st-space-2) var(--st-space-5);
+				gap: var(--st-space-2) var(--st-space-4);
 				border-left: 0;
 				border-bottom: 1px solid var(--st-color-hairline);
 				padding-bottom: var(--st-space-4);
@@ -45,7 +45,7 @@
 
 			a {
 				display: block;
-				padding: var(--st-space-2) 0 var(--st-space-2) var(--st-space-5);
+				padding: var(--st-space-2) 0 var(--st-space-2) var(--st-space-4);
 				margin-left: -1px;
 				border-left: 1px solid transparent;
 				color: var(--st-color-sage-deep);
@@ -141,7 +141,7 @@
 			font-size: var(--st-text-h3);
 			font-weight: var(--st-weight-book);
 			letter-spacing: var(--st-track-display);
-			margin: 0 0 var(--st-space-5);
+			margin: 0 0 var(--st-space-4);
 		}
 
 		/* Buttons — the primary house button everywhere Woo prints one. */
@@ -312,7 +312,7 @@
 		.woocommerce-info,
 		.woocommerce-error {
 			margin: 0 0 var(--st-space-6);
-			padding: var(--st-space-4) var(--st-space-5);
+			padding: var(--st-space-4) var(--st-space-4);
 			border: 1px solid var(--st-color-hairline);
 			border-left: 2px solid var(--st-color-foliage);
 			border-radius: var(--st-radius);
@@ -407,7 +407,7 @@
 
 			@media (max-width: 60rem) {
 				grid-template-columns: 1fr;
-				gap: var(--st-space-10);
+				gap: var(--st-space-8);
 			}
 
 			> div {
@@ -451,7 +451,7 @@
 			font-style: normal;
 			border: 1px solid var(--st-color-hairline);
 			border-radius: var(--st-radius);
-			padding: var(--st-space-5);
+			padding: var(--st-space-4);
 			color: var(--st-color-ink-soft);
 			line-height: var(--st-leading-body);
 		}

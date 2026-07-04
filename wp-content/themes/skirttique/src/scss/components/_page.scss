@@ -10,7 +10,7 @@
 
 	&__title {
 		max-width: var(--st-measure);
-		margin: 0 auto var(--st-space-10);
+		margin: 0 auto var(--st-space-12);
 		font-family: var(--st-font-display);
 		font-size: var(--st-text-h1);
 		font-weight: var(--st-weight-book);
@@ -27,8 +27,8 @@
 		}
 
 		h2 {
-			margin-block-start: var(--st-space-10);
-			padding-block-start: var(--st-space-5);
+			margin-block-start: var(--st-space-12);
+			padding-block-start: var(--st-space-4);
 			border-top: 1px solid var(--st-color-hairline);
 			font-family: var(--st-font-body);
 			font-size: var(--st-text-caption);
@@ -46,7 +46,7 @@
 
 		ul,
 		ol {
-			padding-inline-start: var(--st-space-5);
+			padding-inline-start: var(--st-space-4);
 
 			li::marker {
 				color: var(--st-color-sage);

@@ -131,10 +131,36 @@ foreach ( $terms as $term ) {
 }
 $check( $cats_with_thumb > 0 ? 'PASS' : 'WARN', 'Collection thumbnails', "{$cats_with_thumb} of " . count( $terms ) . ' categories dressed' );
 
+WP_CLI::log( "\n== Content & integrations ==" );
+
+// Block library sanity — all 23 Skirttique blocks must register (a broken
+// build or a manifest/editor drift shows up here before the editor does).
+$registered = array_filter(
+	array_keys( WP_Block_Type_Registry::get_instance()->get_all_registered() ),
+	static fn ( $name ) => str_starts_with( (string) $name, 'skirttique/' )
+);
+$block_count = count( $registered );
+$check( $block_count >= 23 ? 'PASS' : 'FAIL', 'Block library', "{$block_count} Skirttique blocks registered" );
+
+// Instagram feed — optional, but reviewable: connected shows the live
+// strip, unset keeps the shipped placeholder tiles.
+$ig_token = trim( (string) ( $house['instagram_token'] ?? '' ) );
+$check( '' !== $ig_token ? 'PASS' : 'WARN', 'Instagram feed', '' !== $ig_token ? 'token connected — live feed' : 'no token — shipped placeholder tiles' );
+
+// Rewards — a deliberate deferral (owner licensing decision); flagged so
+// it is a conscious review item, not a forgotten one.
+$check( 'WARN', 'Rewards program', 'deferred by decision — see docs/content.md memo' );
+
 WP_CLI::log( "\n== Housekeeping ==" );
 
 $default_post = get_post( 1 );
 $check( ( ! $default_post || 'Hello world!' !== $default_post->post_title ) ? 'PASS' : 'WARN', 'Default content removed', 'Hello World / Sample Page' );
+
+// Dev-only demo content must not ship to production.
+if ( 'production' === $env ) {
+	$demo_campaign = get_page_by_path( 'midnight-in-lagos', OBJECT, 'campaign' );
+	$check( $demo_campaign ? 'WARN' : 'PASS', 'Demo campaign removed', $demo_campaign ? 'delete the “Midnight in Lagos” demo campaign' : 'none' );
+}
 
 WP_CLI::log( "\n" . str_repeat( '─', 60 ) );
 WP_CLI::log( sprintf( 'Preflight: %d blocking (FAIL), %d to review (WARN).', $skirttique_fails, $skirttique_warns ) );

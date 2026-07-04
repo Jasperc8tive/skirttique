@@ -836,10 +836,12 @@ function lookbook_feature( array $args ): string {
 }
 
 /**
- * Instagram — a quiet tile strip and one follow link. Deliberately a
- * placeholder: tiles come from chosen media (or shipped fallbacks) until
- * Stage 26 hydrates [data-st-instagram] from the cached official API.
- * Tiles are decorative (single follow link, not six identical anchors).
+ * Instagram — a quiet tile strip and one follow link. Tiles come, in
+ * order of preference, from: explicitly chosen media (curated block
+ * images); the live feed (the `skirttique_instagram_media` filter, fed
+ * by the plugin's cached Graph-API service when a token is connected —
+ * Stage 26); then the shipped placeholders. Tiles are decorative (single
+ * follow link, not six identical anchors).
  *
  * @param array{url?: string, eyebrow?: string, title?: string, image_ids?: list<int>, fallback_images?: list<string>, id?: string} $args Blank url = the house Instagram profile.
  */
@@ -864,6 +866,25 @@ function instagram( array $args ): string {
 			$tiles[] = $img;
 		}
 	}
+
+	/**
+	 * Live Instagram media, newest first. The plugin's InstagramFeed
+	 * service supplies cached items (each `array{url, permalink?}`, or a
+	 * bare URL) when a token is connected; explicit curated images above
+	 * win, the shipped placeholders below are the last resort.
+	 *
+	 * @param list<array{url: string, permalink?: string}|string> $media Media items.
+	 * @param array<string, mixed>                                $args  Section args.
+	 */
+	if ( ! $tiles ) {
+		foreach ( (array) apply_filters( 'skirttique_instagram_media', array(), $args ) as $media ) {
+			$src = is_array( $media ) ? (string) ( $media['url'] ?? '' ) : (string) $media;
+			if ( '' !== $src ) {
+				$tiles[] = '<img src="' . esc_url( $src ) . '" alt="" loading="lazy" width="600" height="600" referrerpolicy="no-referrer">';
+			}
+		}
+	}
+
 	if ( ! $tiles ) {
 		foreach ( (array) ( $args['fallback_images'] ?? array() ) as $photo ) {
 			$tiles[] = '<img src="' . esc_url( 'https://images.unsplash.com/' . $photo . '?q=80&w=600&h=600&auto=format&fit=crop' ) . '" alt="" loading="lazy" width="600" height="600">';

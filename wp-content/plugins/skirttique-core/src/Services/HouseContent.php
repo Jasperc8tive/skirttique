@@ -175,6 +175,7 @@ final class HouseContent implements ServiceInterface {
 			'social'       => __( 'Social profiles', 'skirttique-core' ),
 			'contact'      => __( 'Contact details', 'skirttique-core' ),
 			'experience'   => __( 'Experience', 'skirttique-core' ),
+			'integrations' => __( 'Integrations', 'skirttique-core' ),
 			'rates'        => __( 'Currency rates', 'skirttique-core' ),
 		);
 		foreach ( $sections as $id => $title ) {
@@ -231,6 +232,12 @@ final class HouseContent implements ServiceInterface {
 		// theme also honours prefers-reduced-motion regardless).
 		$this->field( 'motion_transitions', __( 'Page transitions', 'skirttique-core' ), 'st_experience', 'checkbox' );
 		$this->field( 'motion_parallax', __( 'Parallax drift', 'skirttique-core' ), 'st_experience', 'checkbox' );
+
+		// Integrations — the Instagram feed (Stage 26). Blank keeps the
+		// shipped placeholder tiles; a long-lived Instagram Graph API token
+		// lights up the live "On Instagram" strip (cached one hour). The
+		// profile URL itself lives in Social profiles above.
+		$this->field( 'instagram_token', __( 'Instagram access token', 'skirttique-core' ), 'st_integrations' );
 
 		foreach ( self::RATE_CURRENCIES as $code => $placeholder ) {
 			add_settings_field(

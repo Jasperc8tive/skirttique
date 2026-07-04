@@ -320,6 +320,51 @@ JIT stack on these files' long string literals and silently evaluates to
 nothing (exit 0, no output). Sanitiser coverage: `store_locations` added
 to the textarea branch, with a test.
 
+## Integrations, QA & Launch v2 (Stage 26)
+
+The final Phase 2 stage — the live integration the placeholders were
+waiting for, a full QA pass, and the launch touch-ups.
+
+- **Instagram feed** — the `instagram()` component's tile source now runs
+  curated block images → **live feed** → shipped placeholders. The live
+  feed is `Services\InstagramFeed`: a server-side, cached fetch of the
+  official Instagram Graph API (`graph.instagram.com/me/media`), NOT a
+  third-party widget — no client token exposure, no render-blocking
+  script, no layout shift (tiles are server-rendered through the new
+  `skirttique_instagram_media` filter). Token-gated exactly like the
+  gateways: **House Settings → Integrations → Instagram access token**;
+  blank keeps the placeholder tiles so the section always renders. The
+  result is cached one hour (transient) with a **last-good option** kept
+  alongside, so an expired token or a failed request degrades to the most
+  recent feed rather than a blank strip; the cache is dropped whenever
+  House Settings is saved. Videos fall back to their thumbnail, images
+  and album covers use `media_url`. Verified with a mocked API response:
+  mapping, caching, cache-hit (no second request), last-good fallback,
+  and the no-token placeholder path all pass.
+- **Rewards** — the Stage 24 memo stands: **deferred by owner decision**
+  (a licensing call). No loyalty plugin ships; the integration checklist
+  in the Stage 24 memo is ready for whenever one is licensed. Preflight
+  flags it as a conscious review item.
+- **Full-journey QA** — 45 unit tests + strict TypeScript pass; the live
+  currency matrix reads correctly across all five markets (₦/$/£/R/د.إ);
+  **axe-core (WCAG 2.0/2.1/2.2 A+AA) reports zero violations** across
+  nine views (home, shop, PDP, cart, size-guide, contact, faqs, visit,
+  404); and the whole spine was driven end to end — shop → PDP → add to
+  bag (Store API) → cart (the live ₦-progress bar reading "₦81,500 away
+  from delivery on the house" at 46%) → checkout (trust strip + the split
+  shipping/returns links). The a11y rig: `tools/dev-proxy.mjs`
+  (`PROXY_PUBLIC_HOST=host.docker.internal:PORT`) rewrites the absolute
+  `localhost:8888` asset URLs so the containerised Playwright browser
+  loads real CSS/JS; axe-core is fetched from the theme's own
+  `node_modules` through the proxy (WordPress serves it as a static
+  file). Without the proxy, asset URLs 404 in the container and axe
+  measures unstyled markup (the Stage 12 false-positive trap).
+- **Launch pass** — theme + plugin bumped **1.0.0 → 1.1.0** (Phase 2).
+  Preflight gained a Content & integrations section: block-library
+  sanity (all 23 blocks must register — a FAIL catches a broken build or
+  manifest/editor drift), the Instagram connection state, the Rewards
+  deferral, and (production only) a demo-campaign-removed check.
+
 ## SEO / Performance panels — deliberate scope
 
 The PRD asked for SEO and Performance settings panels. SEO settings

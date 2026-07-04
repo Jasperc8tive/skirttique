@@ -73,9 +73,20 @@ report 0 blockers).
 
 ## Build stages
 
-Delivered in 16 reviewed stages, each stopped for approval: Architecture
-Audit → Design System → Theme Foundation → Header → Homepage → Collection
-Pages → Product Pages → Cart → Checkout → Account → CMS Experience →
-Performance → SEO → Accessibility → Testing → Launch. (The header stage
-brought the footer with it; the homepage stage, the press/social-proof
-band.)
+**Phase 1** — the store, in 16 reviewed stages, each stopped for
+approval: Architecture Audit → Design System → Theme Foundation → Header
+→ Homepage → Collection Pages → Product Pages → Cart → Checkout →
+Account → CMS Experience → Performance → SEO → Accessibility → Testing →
+Launch. (The header stage brought the footer with it; the homepage
+stage, the press/social-proof band.)
+
+**Phase 2** — the editorial expansion, in 10 further reviewed stages
+(theme + plugin 1.1.0): Block & Component Foundation → Content
+Architecture (Journal / Lookbook / Campaign) → Homepage v2 → Collection
+Landing Pages → Product Page v2 → Shop & Search (facets + instant
+search) → Editorial Pages (About / Journal / Lookbook) → Commerce
+Experience (bag progress, Order Success, Custom Orders) → Utility & Legal
+(Size Guide, Contact, FAQ, Shipping/Returns, legal + consent, 404,
+Coming Soon, Newsletter, Store Locator) → Integration, QA & Launch
+(Instagram feed, full-journey QA). The block library is 23 native
+Gutenberg blocks; every "builder" is the block editor composing them.

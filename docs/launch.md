@@ -77,7 +77,21 @@ wp rewrite flush
 
 # Editorial media → local WebP + category/hero wiring (only if not migrating the uploads dir)
 wp eval-file wp-content/themes/skirttique/tools/sideload-editorial-media.php
+
+# Standing pages — legal/policy + the block-composed utility pages.
+# BOTH need --use-include (plain eval-file's path-const regex exhausts the
+# PCRE JIT stack on these files' long literals and silently no-ops).
+wp eval-file --use-include wp-content/themes/skirttique/tools/seed-content-pages.php
+wp eval-file --use-include wp-content/themes/skirttique/tools/seed-utility-pages.php
+
+# New pattern files were added in Phase 2 — clear the pattern cache once.
+wp eval "wp_get_theme()->delete_pattern_cache();"
 ```
+
+The utility/campaign demo content in `seed-utility-pages.php` is
+environment-guarded: the demo campaign is skipped when
+`WP_ENVIRONMENT_TYPE=production`, so only the real pages (Size Guide,
+FAQs, Contact, Newsletter, Visit) are created.
 
 Then, in wp-admin:
 - **WooCommerce → Settings → General**: base country/currency **NGN**,
@@ -85,8 +99,19 @@ Then, in wp-admin:
 - **Skirttique → House Settings**: real hero/philosophy imagery, social
   URLs, announcements, and — critically — **real currency rates**
   (placeholders will FAIL preflight's rate check once env=production).
-- Fill the **Contact** page (support email/hours are marked
-  `[add … before launch]`) and review Size Guide / FAQs copy.
+- **Skirttique → House Settings → Contact**: client-care email,
+  WhatsApp, hours, studio location, and any additional ateliers (the
+  Visit page reads them). Blank falls back to shipped copy.
+- **Skirttique → House Settings → Integrations**: paste a long-lived
+  Instagram access token to light up the live "On Instagram" strip;
+  leaving it blank keeps the shipped placeholder tiles. (The profile
+  URL for the follow link lives under Social profiles.)
+- Review the Size Guide / FAQs / Shipping / Returns / Cookie / Privacy /
+  Terms copy — all shipped with a legal read-through flagged before
+  launch.
+- **Rewards** is deferred by decision (no loyalty plugin ships). When one
+  is licensed, follow the integration checklist in
+  [content.md](content.md) → *Rewards*.
 
 ## 5. Payment gateways — go-live
 
