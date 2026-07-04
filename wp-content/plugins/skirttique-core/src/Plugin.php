@@ -11,6 +11,7 @@ namespace Skirttique\Core;
 
 use Skirttique\Core\Contracts\ServiceInterface;
 use Skirttique\Core\Payments\GatewayRouter;
+use Skirttique\Core\Services\BespokeRequests;
 use Skirttique\Core\Services\CartAjax;
 use Skirttique\Core\Services\CollectionMeta;
 use Skirttique\Core\Services\ContentTypes;
@@ -41,6 +42,7 @@ final class Plugin {
 		ProductEditorial::class,
 		HouseContent::class,
 		Newsletter::class,
+		BespokeRequests::class,
 		CartAjax::class,
 		Wishlist::class,
 		RecentlyViewed::class,

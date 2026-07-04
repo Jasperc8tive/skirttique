@@ -94,6 +94,7 @@ $st_social = apply_filters(
 				<ul>
 					<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>"><?php esc_html_e( 'About', 'skirttique' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/journal/' ) ); ?>"><?php esc_html_e( 'Journal', 'skirttique' ); ?></a></li>
+					<li><a href="<?php echo esc_url( home_url( '/custom-orders/' ) ); ?>"><?php esc_html_e( 'Custom orders', 'skirttique' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact', 'skirttique' ); ?></a></li>
 				</ul>
 			</nav>

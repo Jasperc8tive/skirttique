@@ -24,6 +24,7 @@ import { initQuickView } from './ts/quickview';
 import { initRecentlyViewed } from './ts/recently-viewed';
 import { initRotators } from './ts/rotator';
 import { initInstantSearch } from './ts/search';
+import { initShipProgress } from './ts/ship-progress';
 import { initSliders } from './ts/slider';
 import { initStickyBuy } from './ts/sticky-atc';
 import { initTransitions } from './ts/transitions';
@@ -37,6 +38,7 @@ const boot = (): void => {
 	initMarket();
 	initQuickAdd();
 	initCartSync();
+	initShipProgress();
 	initQuickView();
 	initWishlist();
 	initPurchaseScopes();

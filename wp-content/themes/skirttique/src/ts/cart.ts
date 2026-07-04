@@ -8,8 +8,14 @@ import { initHemlines } from './hemline';
 
 export type CartFragments = Record<string, string>;
 
+export interface StoreCartTotals {
+	total_items?: string;
+	currency_minor_unit?: number;
+	currency_symbol?: string;
+}
+
 interface WpDataRegistry {
-	select: ( store: string ) => { getCartData?: () => { itemsCount?: number } } | undefined;
+	select: ( store: string ) => { getCartData?: () => { itemsCount?: number; totals?: StoreCartTotals } } | undefined;
 	subscribe: ( listener: () => void ) => void;
 }
 

@@ -64,7 +64,9 @@ $skirttique_args = array(
 	'post_title'   => 'Component Library',
 	'post_name'    => 'component-library',
 	'post_status'  => 'private',
-	'post_content' => $skirttique_blocks,
+	// wp_slash: insert/update unslash, which would turn the \n escapes
+	// in block JSON into bare 'n' and collapse the pipe-line lists.
+	'post_content' => wp_slash( $skirttique_blocks ),
 );
 
 if ( $skirttique_existing ) {

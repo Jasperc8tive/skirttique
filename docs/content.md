@@ -168,6 +168,76 @@ everything else), a total, and the full-results URL. search.ts debounces
 and degrades to the plain GET form without JS. "View all n results"
 lands on the Stage 20 search template.
 
+## Editorial pages (Stage 23)
+
+- **About** (`/about/`) — a magazine feature composed entirely from the
+  block library (hero → origin editorial → stats → craftsmanship
+  editorial → convictions → CTA), rendered by `page-about.html` (a
+  full-width canvas). The composition is page content: the owner edits
+  or reorders it in the block editor like any other page. Seeded by
+  `tools/seed-editorial-pages.php` (idempotent — skipped once the page
+  holds any Skirttique block). Copy makes no claims not already shipped
+  elsewhere (no invented founders, dates, or press).
+- **Journal** — `home.html` (posts page) and `category.html` both render
+  the `skirttique/journal` pattern: editorial head, category filter row,
+  article cards (cover, kicker, serif title, excerpt, date), pagination.
+  Articles render through `single.html` → `skirttique/article`: centred
+  kicker/title/date head, wide cover, measured prose, "more like this"
+  from the same category, back-to-journal.
+- **Lookbook archive** (`/lookbook/`) — `archive-lookbook.html` →
+  `skirttique/lookbooks`: full-width covers with the title resting on
+  the photograph. Singles gained an "All lookbooks" foot.
+- Reminder: adding pattern files requires
+  `wp eval "wp_get_theme()->delete_pattern_cache();"`.
+- Demo journal articles are dev-only (environment-guarded in the seed).
+
+## Commerce experience (Stage 24)
+
+- **Bag** — a "delivery on the house" progress bar (server-rendered in
+  `bag-head.php`, kept live by `ship-progress.ts` against
+  `wc/store/cart`). The threshold is the first enabled free-shipping
+  method's `min_amount`; a **placeholder ₦150,000 free-shipping method**
+  was seeded on the NG zone (set the real threshold in WooCommerce →
+  Shipping). Shown only in the NG market: the threshold is configured in
+  NGN and cross-market conversion of `min_amount` is not yet handled —
+  revisit with the real rate feed. Cross-sells were seeded on the demo
+  pairs, so the block cart's cross-sells section now shows, re-clothed.
+- **Checkout** — the trust strip (delivery/returns/secure) joins the
+  encrypted-payments note in the checkout foot.
+- **Order Success** — a house thank-you (`order-head.php`) with
+  what-happens-next (confirmation → dispatch from Lagos in 2–4 working
+  days → tracking) above the WooCommerce confirmation blocks.
+- **Custom Orders** (`/custom-orders/`) — block-composed page (hero,
+  four steps, two pricing tiers, bespoke FAQ) + the enquiry form
+  (`bespoke-form.php` → `Skirttique\Core\Services\BespokeRequests`:
+  nonce + honeypot, capped option storage, email to the client-care
+  address, read-only inbox at Skirttique → Bespoke requests,
+  `skirttique_bespoke_requested` action for future CRM hand-off).
+  Deliberately a form, not a booking system (decision of record).
+  Linked from the footer's House column.
+
+### Rewards — decision memo (owner call required)
+
+The plan of record is an **established plugin styled to the design
+system** — but which plugin is a licensing decision:
+
+- **Recommended:** *WooCommerce Points & Rewards* (official Woo
+  extension, ~$129/yr) — single-purpose, HPOS-compatible, maintained by
+  Woo, cleanest data model for the multi-currency setup (points accrue
+  on order totals, which our orders store natively per currency —
+  configure earn rates per currency or on the NGN-equivalent).
+- **No-budget alternative:** *WPLoyalty (free tier)* — solid free core,
+  upgrade path.
+- Integration when licensed: install via `.wp-env.json` (never `wp
+  plugin install` — see the Rank Math incident), style its account tab
+  + cart notices in `_account.scss`/`_checkout.scss`, surface the
+  balance on the My Account dashboard tile grid, and QA points accrual
+  against a multi-currency order matrix before launch.
+
+Not installed in this stage: shipping a third-party loyalty plugin the
+house hasn't licensed (or an arbitrary free one) would be a liability,
+not a feature. This mirrors how gateway keys are handled.
+
 ## SEO / Performance panels — deliberate scope
 
 The PRD asked for SEO and Performance settings panels. SEO settings

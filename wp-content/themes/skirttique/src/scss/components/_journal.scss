@@ -1,0 +1,371 @@
+/* Stage 23 editorial surfaces: journal index + cards, article, lookbook
+   archive covers, lookbook foot. */
+
+/* --- Journal index ---------------------------------------------------- */
+.st-journal {
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+	padding: var(--st-space-16) var(--st-gutter) var(--st-section);
+
+	&__head {
+		margin-bottom: var(--st-space-12);
+	}
+
+	&__title {
+		margin: 0;
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-display);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+	}
+
+	&__lede {
+		margin: var(--st-space-4) 0 0;
+		max-width: var(--st-measure);
+		color: var(--st-color-ink-soft);
+		line-height: var(--st-leading-body);
+	}
+
+	&__cats {
+		margin-top: var(--st-space-8);
+
+		ul {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--st-space-6);
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		a {
+			display: inline-block;
+			padding-block: var(--st-space-2);
+			border-bottom: 1px solid transparent;
+			color: var(--st-color-ink-soft);
+			text-decoration: none;
+			font-size: var(--st-text-caption);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			transition:
+				color var(--st-dur-micro) var(--st-ease-silk),
+				border-color var(--st-dur-micro) var(--st-ease-silk);
+
+			&:hover,
+			&:focus-visible {
+				color: var(--st-color-seaweed);
+				border-bottom-color: var(--st-color-sage);
+			}
+
+			&[aria-current="page"] {
+				color: var(--st-color-seaweed);
+				border-bottom-color: var(--st-color-seaweed);
+			}
+		}
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: var(--st-space-12) var(--st-grid-gap);
+
+		@media (max-width: 75rem) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		@media (max-width: 40rem) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__pages {
+		margin-top: var(--st-space-16);
+
+		ul {
+			display: flex;
+			justify-content: center;
+			gap: var(--st-space-4);
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			font-size: var(--st-text-caption);
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+		}
+
+		a,
+		span {
+			display: inline-block;
+			padding: var(--st-space-2) var(--st-space-3);
+			color: var(--st-color-ink-soft);
+			text-decoration: none;
+		}
+
+		.current {
+			color: var(--st-color-seaweed);
+			border-bottom: 1px solid var(--st-color-seaweed);
+		}
+	}
+
+	&__empty {
+		margin: 0;
+		color: var(--st-color-ink-soft);
+	}
+}
+
+/* --- Article card ------------------------------------------------------ */
+.st-jcard {
+	&__media {
+		display: block;
+		aspect-ratio: var(--st-ratio-editorial);
+		overflow: hidden;
+		background: var(--st-color-surface);
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: transform var(--st-dur-move) var(--st-ease-drape);
+		}
+	}
+
+	&:hover &__media img,
+	&:focus-within &__media img {
+		transform: scale(1.04);
+	}
+
+	&__meta {
+		padding-top: var(--st-space-4);
+	}
+
+	&__kicker {
+		margin: 0 0 var(--st-space-2);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+
+	&__name {
+		margin: 0 0 var(--st-space-2);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-heading);
+
+		a {
+			color: inherit;
+			text-decoration: none;
+
+			&:hover,
+			&:focus-visible {
+				text-decoration: underline;
+				text-underline-offset: 0.2em;
+			}
+		}
+	}
+
+	&__excerpt {
+		margin: 0 0 var(--st-space-3);
+		font-size: var(--st-text-small);
+		line-height: var(--st-leading-body);
+		color: var(--st-color-ink-soft);
+	}
+
+	&__date {
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+}
+
+/* --- Article ------------------------------------------------------------ */
+.st-article {
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+	padding: var(--st-space-16) var(--st-gutter) 0;
+
+	&__head {
+		max-width: 46rem;
+		margin: 0 auto var(--st-space-12);
+		text-align: center;
+	}
+
+	&__kicker {
+		margin: 0 0 var(--st-space-3);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+
+		a {
+			color: var(--st-color-sage-deep);
+			text-decoration: none;
+
+			&:hover,
+			&:focus-visible {
+				color: var(--st-color-seaweed);
+			}
+		}
+	}
+
+	&__title {
+		margin: 0 0 var(--st-space-4);
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-display);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+	}
+
+	&__date {
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+
+	&__cover {
+		margin: 0 0 var(--st-space-12);
+
+		img {
+			display: block;
+			width: 100%;
+			aspect-ratio: var(--st-ratio-editorial);
+			object-fit: cover;
+		}
+	}
+
+	&__body {
+		max-width: var(--st-measure);
+		margin-inline: auto;
+		line-height: var(--st-leading-body);
+
+		p {
+			margin: 0 0 var(--st-space-5);
+		}
+
+		h2 {
+			margin: var(--st-space-12) 0 var(--st-space-4);
+			font-size: var(--st-text-caption);
+			font-weight: inherit;
+			text-transform: uppercase;
+			letter-spacing: var(--st-track-caps);
+			color: var(--st-color-sage-deep);
+			padding-top: var(--st-space-4);
+			border-top: 1px solid var(--st-color-hairline);
+		}
+
+		img {
+			max-width: 100%;
+			height: auto;
+		}
+	}
+
+	&__foot {
+		max-width: var(--st-measure);
+		margin: var(--st-space-12) auto 0;
+		padding-top: var(--st-space-6);
+		border-top: 1px solid var(--st-color-hairline);
+	}
+
+	&__related {
+		max-width: var(--st-container-max);
+		margin-inline: auto;
+		padding: var(--st-section) var(--st-gutter);
+	}
+}
+
+.st-journal__grid--related {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+
+	@media (max-width: 40rem) {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* --- Lookbook archive covers ---------------------------------------------- */
+.st-lookbooks {
+	max-width: var(--st-container-max);
+	margin-inline: auto;
+	padding: var(--st-space-16) var(--st-gutter) var(--st-section);
+
+	&__list {
+		display: grid;
+		gap: var(--st-space-8);
+	}
+}
+
+.st-lookcover {
+	position: relative;
+	display: flex;
+	align-items: flex-end;
+	min-height: 24rem;
+	height: 60vh;
+	max-height: 38rem;
+	overflow: hidden;
+	color: var(--st-color-nectar);
+	background: var(--st-color-seaweed);
+	text-decoration: none;
+
+	&__media {
+		position: absolute;
+		inset: 0;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: transform var(--st-dur-move) var(--st-ease-drape);
+		}
+
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(0deg, rgba(18, 27, 26, 0.55) 0%, rgba(18, 27, 26, 0) 45%);
+		}
+	}
+
+	&:hover &__media img,
+	&:focus-visible &__media img {
+		transform: scale(1.03);
+	}
+
+	&__content {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		gap: var(--st-space-2);
+		padding: 0 var(--st-space-8) var(--st-space-8);
+	}
+
+	&__eyebrow {
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-khaki);
+	}
+
+	&__title {
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h1);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+	}
+
+	@media (max-width: 60rem) {
+		height: auto;
+		min-height: 20rem;
+		padding-top: var(--st-space-24);
+	}
+}
+
+/* --- Lookbook single foot --------------------------------------------------- */
+.st-lookfoot {
+	display: flex;
+	justify-content: center;
+	padding: var(--st-space-16) var(--st-gutter) var(--st-section);
+}

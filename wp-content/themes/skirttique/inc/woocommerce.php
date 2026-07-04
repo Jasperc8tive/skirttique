@@ -649,6 +649,30 @@ function quickview_html( string $html, \WC_Product $product ): string {
 add_filter( 'skirttique_quickview_html', __NAMESPACE__ . '\\quickview_html', 10, 2 );
 
 /**
+ * The free-delivery threshold (Stage 24): the first enabled
+ * free_shipping method's min_amount across zones, in NGN (the base the
+ * house configures). 0 = no free-shipping offer exists.
+ */
+function free_shipping_threshold(): float {
+	if ( ! class_exists( '\WC_Shipping_Zones' ) ) {
+		return 0.0;
+	}
+
+	foreach ( \WC_Shipping_Zones::get_zones() as $zone ) {
+		foreach ( $zone['shipping_methods'] as $method ) {
+			if ( 'free_shipping' === $method->id && 'yes' === $method->enabled ) {
+				$min = (float) ( $method->min_amount ?? 0 );
+				if ( $min > 0 ) {
+					return $min;
+				}
+			}
+		}
+	}
+
+	return 0.0;
+}
+
+/**
  * The "on sale" catalog facet (?on_sale=1) — Stage 22. Size and price
  * facets ride WooCommerce's native main-query params; this one is ours.
  */

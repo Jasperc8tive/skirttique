@@ -464,3 +464,166 @@
 		}
 	}
 }
+
+/* ------------------------------------------------------------------ */
+/* Stage 24 - shipping progress, checkout trust strip, order head,    */
+/* bespoke form, cross-sells re-clothing                              */
+/* ------------------------------------------------------------------ */
+
+/* Delivery-on-the-house progress (bag page). */
+.st-ship {
+	max-width: 28rem;
+	margin-top: var(--st-space-6);
+
+	&__note {
+		margin: 0 0 var(--st-space-2);
+		font-size: var(--st-text-small);
+		color: var(--st-color-ink-soft);
+
+		.woocommerce-Price-amount {
+			color: var(--st-color-seaweed);
+		}
+	}
+
+	&__track {
+		height: 2px;
+		background: var(--st-color-hairline);
+	}
+
+	&__bar {
+		height: 100%;
+		background: var(--st-color-foliage);
+		transition: width var(--st-dur-move) var(--st-ease-silk);
+	}
+}
+
+/* Trust strip in the checkout foot: quiet, centred. */
+.st-checkout-foot .st-trust {
+	margin-bottom: var(--st-space-6);
+
+	&__list {
+		justify-content: center;
+		border: 0;
+		padding: 0;
+	}
+}
+
+/* Order Success head. */
+.st-order-head {
+	margin-bottom: var(--st-space-8);
+
+	&__title {
+		margin: var(--st-space-2) 0 0;
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h1);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-display);
+		letter-spacing: var(--st-track-display);
+	}
+}
+
+/* The what-happens-next list sits inside the confirm column - no
+   section-scale padding. */
+.st-confirm .st-features {
+	padding: 0 0 var(--st-space-12);
+}
+
+/* Bespoke request form (Custom Orders page). */
+.st-bespoke {
+	&__form {
+		max-width: var(--st-measure);
+	}
+
+	&__hp {
+		position: absolute;
+		left: -9999px;
+	}
+
+	&__row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--st-space-4);
+
+		@media (max-width: 40rem) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	label {
+		display: block;
+		margin-bottom: var(--st-space-2);
+		font-size: var(--st-text-caption);
+		text-transform: uppercase;
+		letter-spacing: var(--st-track-caps);
+		color: var(--st-color-sage-deep);
+	}
+
+	input[type="text"],
+	input[type="email"],
+	input[type="tel"],
+	textarea {
+		width: 100%;
+		padding: 0.875rem 1rem;
+		border: 1px solid var(--st-color-hairline);
+		background: none;
+		font: inherit;
+		color: inherit;
+
+		&:focus-visible {
+			outline: 1px solid var(--st-color-seaweed);
+			outline-offset: 0;
+		}
+	}
+
+	p {
+		margin: 0 0 var(--st-space-4);
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: var(--st-space-4);
+		flex-wrap: wrap;
+	}
+
+	&__note {
+		font-size: var(--st-text-small);
+		color: var(--st-color-sage-deep);
+	}
+
+	&__done {
+		margin: 0;
+		max-width: var(--st-measure);
+		font-size: var(--st-text-body-lg);
+		color: var(--st-color-seaweed);
+	}
+
+	&__error {
+		margin: 0 0 var(--st-space-4);
+		max-width: var(--st-measure);
+		color: var(--st-color-amber-deep);
+	}
+}
+
+/* Block-cart cross-sells, re-clothed to the card voice. */
+.st-bag .cross-sells-block,
+.st-bag .wp-block-woocommerce-cart-cross-sells-block {
+	h2 {
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h2);
+		font-weight: var(--st-weight-book);
+		line-height: var(--st-leading-heading);
+	}
+
+	.wc-block-components-product-name {
+		font-family: var(--st-font-display);
+		font-size: var(--st-text-h3);
+		color: var(--st-color-seaweed);
+		text-decoration: none;
+	}
+
+	.wc-block-components-product-image img {
+		aspect-ratio: var(--st-ratio-product);
+		object-fit: cover;
+	}
+}
