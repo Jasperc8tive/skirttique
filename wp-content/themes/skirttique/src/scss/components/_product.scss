@@ -1,3 +1,5 @@
+@use "../base/breakpoints" as bp;
+
 /* Product page + purchase form + quick view. */
 
 /* Shared 4-up card grid (PDP rails, Saved page reuses .st-shop__grid). */
@@ -6,7 +8,7 @@
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: var(--st-space-12) var(--st-grid-gap);
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: var(--st-space-8) var(--st-space-4);
 	}
@@ -118,7 +120,7 @@
 		font-size: var(--st-text-h2);
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		&__layout {
 			grid-template-columns: 1fr;
 			gap: var(--st-space-8);
@@ -387,7 +389,7 @@
 		margin-top: var(--st-space-6);
 	}
 
-	@media (max-width: 40rem) {
+	@media (max-width: bp.$sm) {
 		grid-template-columns: 1fr;
 
 		&__media {
@@ -666,7 +668,7 @@
 		grid-template-columns: 1fr 1fr;
 		gap: var(--st-space-4);
 
-		@media (max-width: 40rem) {
+		@media (max-width: bp.$sm) {
 			grid-template-columns: 1fr;
 		}
 
@@ -728,7 +730,7 @@
 		flex: 0 0 auto;
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		&:not([hidden]) {
 			display: flex;
 		}

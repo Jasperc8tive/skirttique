@@ -1,3 +1,5 @@
+@use "../base/breakpoints" as bp;
+
 /* Stage 23 editorial surfaces: journal index + cards, article, lookbook
    archive covers, lookbook foot. */
 
@@ -70,11 +72,11 @@
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: var(--st-space-12) var(--st-grid-gap);
 
-		@media (max-width: 75rem) {
+		@media (max-width: bp.$lg) {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 
-		@media (max-width: 40rem) {
+		@media (max-width: bp.$sm) {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -280,7 +282,7 @@
 .st-journal__grid--related {
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 
-	@media (max-width: 40rem) {
+	@media (max-width: bp.$sm) {
 		grid-template-columns: 1fr;
 	}
 }
@@ -356,7 +358,7 @@
 		letter-spacing: var(--st-track-display);
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		height: auto;
 		min-height: 20rem;
 		padding-top: var(--st-space-24);

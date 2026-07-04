@@ -1,3 +1,5 @@
+@use "../base/breakpoints" as bp;
+
 /* The catalog: collection header, toolbar, product grid, pagination. */
 
 /* Collection landing hero (Stage 20) — full-bleed, carries the h1. */
@@ -68,7 +70,7 @@
 		font-size: var(--st-text-body-lg);
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		height: auto;
 		min-height: 22rem;
 		padding-top: var(--st-space-24);
@@ -164,7 +166,7 @@
 		margin-left: auto;
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		gap: var(--st-space-3) var(--st-space-6);
 
 		&__clear {
@@ -355,7 +357,7 @@
 		font-size: var(--st-text-h2);
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		&__grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 			gap: var(--st-space-8) var(--st-space-4);

@@ -1,3 +1,5 @@
+@use "../base/breakpoints" as bp;
+
 /* Footer — Foliage ground: the house list, nav columns, legal bar. */
 
 .st-footer {
@@ -188,7 +190,7 @@
 		}
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		&__news {
 			grid-template-columns: 1fr;
 			align-items: start;

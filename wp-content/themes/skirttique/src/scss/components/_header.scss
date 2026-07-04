@@ -1,3 +1,5 @@
+@use "../base/breakpoints" as bp;
+
 /* Site header — sticky, hairline-structured, quiet. */
 
 .st-header {
@@ -127,7 +129,7 @@
 }
 
 /* Tablet & below: nav collapses into the menu drawer. */
-@media (max-width: 60rem) {
+@media (max-width: bp.$md) {
 	.st-header__nav {
 		display: none;
 	}

@@ -1,3 +1,5 @@
+@use "../base/breakpoints" as bp;
+
 /* Stage 8 — the bag page, checkout, and order confirmation.
    WooCommerce's cart/checkout are React blocks; we don't rebuild them,
    we re-clothe them: every rule below overrides a wc-block component
@@ -73,7 +75,7 @@
 		color: var(--st-color-sage-deep);
 	}
 
-	@media (max-width: 40rem) {
+	@media (max-width: bp.$sm) {
 		&__back span,
 		&__back {
 			font-size: var(--st-text-caption);
@@ -546,7 +548,7 @@
 		grid-template-columns: 1fr 1fr;
 		gap: var(--st-space-4);
 
-		@media (max-width: 40rem) {
+		@media (max-width: bp.$sm) {
 			grid-template-columns: 1fr;
 		}
 	}

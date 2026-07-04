@@ -1,3 +1,5 @@
+@use "../base/breakpoints" as bp;
+
 /* Homepage — hero, collections, philosophy, the edit, closing band. */
 
 /* Shared section rhythm + eyebrow/title, reused by collections/edit. */
@@ -232,14 +234,14 @@
 	letter-spacing: var(--st-track-display);
 }
 
-@media (max-width: 75rem) {
+@media (max-width: bp.$lg) {
 	.st-collections__grid,
 	.st-edit__grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }
 
-@media (max-width: 60rem) {
+@media (max-width: bp.$md) {
 	.st-philosophy {
 		grid-template-columns: 1fr;
 		gap: var(--st-space-8);
@@ -281,7 +283,7 @@
 	}
 }
 
-@media (max-width: 40rem) {
+@media (max-width: bp.$sm) {
 	.st-collections__grid,
 	.st-edit__grid {
 		grid-template-columns: 1fr;

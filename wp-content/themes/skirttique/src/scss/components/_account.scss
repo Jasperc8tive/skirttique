@@ -1,3 +1,5 @@
+@use "../base/breakpoints" as bp;
+
 /* Stage 10 — My Account. WooCommerce renders this area through classic
    templates (shortcode), so this file re-clothes Woo's own markup:
    navigation rail, dashboard tiles, orders tables, address cards, and
@@ -17,7 +19,7 @@
 		gap: var(--st-space-12);
 		align-items: start;
 
-		@media (max-width: 60rem) {
+		@media (max-width: bp.$md) {
 			grid-template-columns: 1fr;
 			gap: var(--st-space-6);
 		}
@@ -30,7 +32,7 @@
 			list-style: none;
 			border-left: 1px solid var(--st-color-hairline);
 
-			@media (max-width: 60rem) {
+			@media (max-width: bp.$md) {
 				display: flex;
 				flex-wrap: wrap;
 				gap: var(--st-space-2) var(--st-space-4);
@@ -62,7 +64,7 @@
 					color: var(--st-color-seaweed);
 				}
 
-				@media (max-width: 60rem) {
+				@media (max-width: bp.$md) {
 					padding: var(--st-space-1) 0;
 					margin-left: 0;
 					border-left: 0;
@@ -73,7 +75,7 @@
 				color: var(--st-color-seaweed);
 				border-left-color: var(--st-color-foliage);
 
-				@media (max-width: 60rem) {
+				@media (max-width: bp.$md) {
 					border-left: 0;
 					border-bottom: 1px solid var(--st-color-foliage);
 				}
@@ -96,7 +98,7 @@
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: var(--st-space-4);
 
-		@media (max-width: 40rem) {
+		@media (max-width: bp.$sm) {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -263,7 +265,7 @@
 
 		/* Small screens: responsive tables stack into labelled rows
 		   (Woo supplies data-title on every cell). */
-		@media (max-width: 40rem) {
+		@media (max-width: bp.$sm) {
 			table.shop_table_responsive {
 				display: block;
 
@@ -351,7 +353,7 @@
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 			gap: var(--st-space-4);
 
-			@media (max-width: 40rem) {
+			@media (max-width: bp.$sm) {
 				grid-template-columns: 1fr;
 			}
 
@@ -405,7 +407,7 @@
 			gap: var(--st-space-12);
 			max-width: 64rem;
 
-			@media (max-width: 60rem) {
+			@media (max-width: bp.$md) {
 				grid-template-columns: 1fr;
 				gap: var(--st-space-8);
 			}
@@ -416,7 +418,7 @@
 				float: none;
 			}
 
-			@media (min-width: 60rem) {
+			@media (min-width: bp.$md) {
 				> div + div {
 					border-left: 1px solid var(--st-color-hairline);
 					padding-left: var(--st-space-12);

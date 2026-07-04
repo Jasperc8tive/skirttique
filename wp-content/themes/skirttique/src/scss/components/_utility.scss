@@ -1,3 +1,5 @@
+@use "../base/breakpoints" as bp;
+
 /* Utility surfaces (Stage 25): the FAQ jump row, the cookie-consent
    banner, the 404, and the coming-soon splash. */
 
@@ -65,7 +67,7 @@
 		}
 	}
 
-	@media (max-width: 40rem) {
+	@media (max-width: bp.$sm) {
 		inset-inline: var(--st-space-4);
 		max-width: none;
 	}

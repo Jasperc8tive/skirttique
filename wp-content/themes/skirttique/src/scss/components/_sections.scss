@@ -1,3 +1,5 @@
+@use "../base/breakpoints" as bp;
+
 /* Section components introduced by the block library (Stage 17):
    stats, feature list, trust badges, gallery, video, pricing, FAQ,
    generic breadcrumbs, standalone newsletter band, editorial flip. */
@@ -116,7 +118,7 @@
 		}
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		&--cols-3 .st-gallery__grid,
 		&--cols-4 .st-gallery__grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -265,7 +267,7 @@
 		line-height: var(--st-leading-body);
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		grid-template-columns: 1fr;
 		gap: var(--st-space-8);
 	}
@@ -313,7 +315,7 @@
 		line-height: var(--st-leading-body);
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		grid-template-columns: 1fr;
 		gap: var(--st-space-8);
 	}
@@ -389,7 +391,7 @@
 		font-size: var(--st-text-body-lg);
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		height: auto;
 		min-height: 26rem;
 		padding-top: var(--st-space-24);
@@ -421,7 +423,7 @@
 		margin: var(--st-space-8) 0 0;
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		&__grid {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 		}
@@ -593,7 +595,7 @@
 		order: 1;
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: bp.$md) {
 		> .st-drape {
 			order: initial;
 		}
