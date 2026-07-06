@@ -35,6 +35,29 @@ function cart_count_bubble(): string {
 }
 
 /**
+ * The bag button's accessible name. The visible count bubble is
+ * aria-hidden — a bare "2" reads poorly out of context — so the item
+ * count reaches screen readers through this label instead. The bag
+ * button carries no aria-label, so its accessible name is this text
+ * (the icon and bubble are both aria-hidden). Registered as its own
+ * cart fragment, it stays in step with the bubble after every AJAX
+ * cart change.
+ */
+function cart_count_label(): string {
+	$count = cart_count();
+
+	$label = $count > 0
+		? sprintf(
+			/* translators: %d: number of items in the bag. */
+			_n( 'Open bag, %d item', 'Open bag, %d items', $count, 'skirttique' ),
+			$count
+		)
+		: __( 'Open bag', 'skirttique' );
+
+	return '<span class="screen-reader-text" data-st-cart-label>' . esc_html( $label ) . '</span>';
+}
+
+/**
  * Register header fragments with WooCommerce's cart-fragments refresh.
  *
  * @param array<string, string> $fragments Fragment selector → markup map.
@@ -42,6 +65,7 @@ function cart_count_bubble(): string {
  */
 function cart_fragments( array $fragments ): array {
 	$fragments['[data-st-cart-count]'] = cart_count_bubble();
+	$fragments['[data-st-cart-label]'] = cart_count_label();
 
 	return $fragments;
 }

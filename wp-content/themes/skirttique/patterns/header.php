@@ -125,11 +125,14 @@ $st_current_market = $st_markets[ $st_current_code ];
 				<svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><circle cx="10" cy="6.5" r="3.75"/><path d="M3 17.5c1.2-3.2 3.9-4.75 7-4.75s5.8 1.55 7 4.75"/></svg>
 			</a>
 
-			<button type="button" class="st-header__icon st-header__bag" data-st-drawer-open="st-drawer-bag" aria-label="<?php esc_attr_e( 'Open bag', 'skirttique' ); ?>">
+			<button type="button" class="st-header__icon st-header__bag" data-st-drawer-open="st-drawer-bag">
 				<svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M4 6.5h12l-.9 11a1.5 1.5 0 01-1.5 1.4H6.4a1.5 1.5 0 01-1.5-1.4z"/><path d="M7 8.5V5a3 3 0 016 0v3.5"/></svg>
 				<?php
 				if ( function_exists( 'Skirttique\WooCommerce\cart_count_bubble' ) ) {
 					echo Skirttique\WooCommerce\cart_count_bubble(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built and escaped in cart_count_bubble().
+				}
+				if ( function_exists( 'Skirttique\WooCommerce\cart_count_label' ) ) {
+					echo Skirttique\WooCommerce\cart_count_label(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built and escaped in cart_count_label().
 				}
 				?>
 			</button>
