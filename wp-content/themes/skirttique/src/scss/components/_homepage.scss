@@ -72,6 +72,11 @@
 		/* Flex item: without this, a long headline word sets min-content
 		   width and drags the whole box past the viewport. */
 		min-width: 0;
+		/* Soft depth so overlay text — especially the eyebrow, which rides
+		   high in the frame on narrow screens — stays legible over the
+		   bright regions of any photograph. Invisible where the scrim
+		   already carries the text; the belt to the scrim's braces. */
+		text-shadow: 0 1px 10px rgba(18, 27, 26, 0.28);
 	}
 
 	&__eyebrow {
@@ -251,6 +256,14 @@
 		height: auto;
 		min-height: 34rem;
 		padding-top: var(--st-space-32);
+	}
+
+	/* The hero shrinks and the copy stack grows here, lifting the eyebrow
+	   toward the brighter upper third of the photograph — carry the scrim
+	   higher and a touch deeper so overlay text stays legible over any
+	   image. Desktop keeps its lighter base scrim untouched. */
+	.st-hero__media::after {
+		background: linear-gradient(0deg, rgba(18, 27, 26, 0.62) 0%, rgba(18, 27, 26, 0.34) 38%, rgba(18, 27, 26, 0) 74%);
 	}
 
 	/* The hero clamp minimum (3.25rem caps) cannot fit "RECONSIDERED"
