@@ -22,6 +22,7 @@ use Skirttique\Core\Services\InstagramFeed;
 use Skirttique\Core\Services\LegacyPaths;
 use Skirttique\Core\Services\Market;
 use Skirttique\Core\Services\Newsletter;
+use Skirttique\Core\Services\Privacy;
 use Skirttique\Core\Services\ProductEditorial;
 use Skirttique\Core\Services\QuickView;
 use Skirttique\Core\Services\RecentlyViewed;
@@ -48,6 +49,7 @@ final class Plugin {
 		Newsletter::class,
 		BespokeRequests::class,
 		ContactMessages::class,
+		Privacy::class,
 		InstagramFeed::class,
 		CartAjax::class,
 		Wishlist::class,

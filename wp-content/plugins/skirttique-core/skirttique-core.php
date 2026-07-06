@@ -60,3 +60,14 @@ add_action(
 		\Skirttique\Core\Plugin::instance()->boot();
 	}
 );
+
+/**
+ * Clear the Privacy service's retention cron on deactivation (uninstall.php
+ * also clears it, alongside removing the stored personal data).
+ */
+register_deactivation_hook(
+	SKIRTTIQUE_CORE_FILE,
+	static function (): void {
+		wp_clear_scheduled_hook( 'skirttique_privacy_prune' );
+	}
+);
