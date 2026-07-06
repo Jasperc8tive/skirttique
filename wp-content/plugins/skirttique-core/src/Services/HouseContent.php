@@ -239,6 +239,12 @@ final class HouseContent implements ServiceInterface {
 		// profile URL itself lives in Social profiles above.
 		$this->field( 'instagram_token', __( 'Instagram access token', 'skirttique-core' ), 'st_integrations' );
 
+		// Cloudflare Turnstile — invisible spam protection for the contact
+		// and bespoke forms. Blank leaves them on honeypot + nonce only; the
+		// secret may instead be the SKIRTTIQUE_TURNSTILE_SECRET constant.
+		$this->field( 'turnstile_site_key', __( 'Cloudflare Turnstile site key', 'skirttique-core' ), 'st_integrations' );
+		$this->field( 'turnstile_secret_key', __( 'Cloudflare Turnstile secret key', 'skirttique-core' ), 'st_integrations' );
+
 		foreach ( self::RATE_CURRENCIES as $code => $placeholder ) {
 			add_settings_field(
 				"rate_{$code}",

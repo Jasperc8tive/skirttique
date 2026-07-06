@@ -73,6 +73,12 @@ $st_error = isset( $_GET['st-bespoke-error'] ) ? sanitize_key( wp_unslash( $_GET
 				<textarea name="st_message" id="st-bespoke-message" rows="6" required placeholder="<?php esc_attr_e( 'Length, cloth, colour, movement — as much or as little as you know.', 'skirttique' ); ?>"></textarea>
 			</p>
 
+			<?php
+			if ( class_exists( '\Skirttique\Core\Services\Turnstile' ) ) {
+				echo \Skirttique\Core\Services\Turnstile::field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built and escaped in field().
+			}
+			?>
+
 			<p class="st-bespoke__actions">
 				<button type="submit" class="st-btn st-btn--primary"><?php esc_html_e( 'Send to the atelier', 'skirttique' ); ?></button>
 				<span class="st-bespoke__note"><?php esc_html_e( 'No deposit is taken until the design is agreed.', 'skirttique' ); ?></span>

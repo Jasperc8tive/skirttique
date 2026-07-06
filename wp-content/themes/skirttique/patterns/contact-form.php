@@ -80,6 +80,12 @@ $st_topics = array(
 				<textarea name="st_message" id="st-contact-message" rows="6" required placeholder="<?php esc_attr_e( 'Order numbers help with orders; occasions help with pieces.', 'skirttique' ); ?>"></textarea>
 			</p>
 
+			<?php
+			if ( class_exists( '\Skirttique\Core\Services\Turnstile' ) ) {
+				echo \Skirttique\Core\Services\Turnstile::field(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built and escaped in field().
+			}
+			?>
+
 			<p class="st-enquiry__actions">
 				<button type="submit" class="st-btn st-btn--primary"><?php esc_html_e( 'Send to client care', 'skirttique' ); ?></button>
 				<span class="st-enquiry__note"><?php esc_html_e( 'Replies come from a person, not a queue.', 'skirttique' ); ?></span>

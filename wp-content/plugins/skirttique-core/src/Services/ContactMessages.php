@@ -90,6 +90,12 @@ final class ContactMessages implements ServiceInterface {
 			$this->back_to_form( add_query_arg( 'st-contact', '1', $back ) );
 		}
 
+		// Cloudflare Turnstile (inert until keys are set) — a failed
+		// challenge bounces back for another attempt.
+		if ( ! Turnstile::verify() ) {
+			$this->back_to_form( add_query_arg( 'st-contact-error', 'expired', $back ) );
+		}
+
 		$name    = sanitize_text_field( isset( $_POST['st_name'] ) ? wp_unslash( $_POST['st_name'] ) : '' );
 		$email   = sanitize_email( isset( $_POST['st_email'] ) ? wp_unslash( $_POST['st_email'] ) : '' );
 		$topic   = sanitize_key( isset( $_POST['st_topic'] ) ? wp_unslash( $_POST['st_topic'] ) : '' );
