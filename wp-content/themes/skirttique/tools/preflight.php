@@ -119,7 +119,12 @@ WP_CLI::log( "\n== Brand media ==" );
 
 $house   = (array) get_option( 'skirttique_house', array() );
 $hero_id = isset( $house['hero_image_id'] ) ? absint( $house['hero_image_id'] ) : 0;
-$check( $hero_id && wp_attachment_is_image( $hero_id ) ? 'PASS' : 'WARN', 'Homepage hero image', $hero_id ? "#{$hero_id}" : 'falls back to shipped editorial placeholder' );
+$hero_ok = $hero_id && wp_attachment_is_image( $hero_id );
+$check(
+	$hero_ok ? 'PASS' : ( 'production' === $env ? 'FAIL' : 'WARN' ),
+	'Homepage hero image',
+	$hero_ok ? "#{$hero_id}" : 'no hero image — stock fallback is suppressed in production, leaving a blank hero'
+);
 
 $cats_with_thumb = 0;
 $terms           = get_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => false ) );
@@ -129,7 +134,13 @@ foreach ( $terms as $term ) {
 		++$cats_with_thumb;
 	}
 }
-$check( $cats_with_thumb > 0 ? 'PASS' : 'WARN', 'Collection thumbnails', "{$cats_with_thumb} of " . count( $terms ) . ' categories dressed' );
+$total_cats  = count( $terms );
+$all_dressed = $total_cats > 0 && $cats_with_thumb === $total_cats;
+$check(
+	$all_dressed ? 'PASS' : ( 'production' === $env ? 'FAIL' : 'WARN' ),
+	'Collection thumbnails',
+	"{$cats_with_thumb} of {$total_cats} categories dressed" . ( 'production' === $env && ! $all_dressed ? ' — undressed cards render blank in production' : '' )
+);
 
 WP_CLI::log( "\n== Content & integrations ==" );
 

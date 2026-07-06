@@ -163,7 +163,7 @@ $st_current_market = $st_markets[ $st_current_code ];
 
 					if ( $st_panel_img ) {
 						echo $st_panel_img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image() output.
-					} else {
+					} elseif ( \Skirttique\Components\allow_stock_fallbacks() ) {
 						echo '<img src="https://images.unsplash.com/photo-1722486245824-7bb0ff9827dc?q=80&amp;w=700&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="700" height="875">';
 					}
 					?>

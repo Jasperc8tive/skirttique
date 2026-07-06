@@ -19,6 +19,30 @@ declare( strict_types=1 );
 namespace Skirttique\Components;
 
 /**
+ * Whether the shipped stock-photo (Unsplash) fallbacks may render.
+ *
+ * These hotlinks exist only so a fresh, undressed install is not blank
+ * while the owner adds real imagery. A luxury storefront must never
+ * serve hotlinked stock in production — it is off-brand and a broken-
+ * image risk (third-party host, no control, no responsive candidates).
+ * tools/preflight.php FAILs when a surface still depends on them; this
+ * is the render-time guard, so nothing slips through even if preflight
+ * is skipped. On any explicitly non-production environment (local /
+ * development / staging) the shipped demo still dresses itself.
+ */
+function allow_stock_fallbacks(): bool {
+	$env   = function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production';
+	$allow = 'production' !== $env;
+
+	/**
+	 * Filter whether the shipped stock-photo fallbacks may render.
+	 *
+	 * @param bool $allow Default: false in production, true elsewhere.
+	 */
+	return (bool) apply_filters( 'skirttique_allow_stock_fallbacks', $allow );
+}
+
+/**
  * Shared section head: eyebrow + serif title, drape-revealed.
  *
  * @param array{eyebrow?: string, title?: string, id?: string} $args Args.
@@ -171,7 +195,7 @@ function collection_cards( array $args ): string {
 		$thumb_id = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
 		if ( $thumb_id ) {
 			$frame = wp_get_attachment_image( $thumb_id, 'large', false, array( 'alt' => '', 'loading' => 'lazy' ) );
-		} elseif ( isset( $fallbacks[ $term->slug ] ) ) {
+		} elseif ( isset( $fallbacks[ $term->slug ] ) && allow_stock_fallbacks() ) {
 			$frame = '<img src="' . esc_url( 'https://images.unsplash.com/' . $fallbacks[ $term->slug ] . '?q=80&w=900&auto=format&fit=crop' ) . '" alt="" loading="lazy" width="900" height="1125">';
 		}
 
@@ -885,7 +909,7 @@ function instagram( array $args ): string {
 		}
 	}
 
-	if ( ! $tiles ) {
+	if ( ! $tiles && allow_stock_fallbacks() ) {
 		foreach ( (array) ( $args['fallback_images'] ?? array() ) as $photo ) {
 			$tiles[] = '<img src="' . esc_url( 'https://images.unsplash.com/' . $photo . '?q=80&w=600&h=600&auto=format&fit=crop' ) . '" alt="" loading="lazy" width="600" height="600">';
 		}

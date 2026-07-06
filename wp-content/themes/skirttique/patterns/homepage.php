@@ -44,7 +44,12 @@ $st_text  = static function ( string $key, string $default ) use ( $st_house ): 
 };
 
 // Fallback editorial photography (Design System §Imagery) — used until
-// the owner sets media (House Settings / category thumbnails).
+// the owner sets media (House Settings / category thumbnails). Shipped
+// stock is dev-only: allow_stock_fallbacks() suppresses it in production
+// (a luxury store never serves hotlinked stock — the component-built
+// fallbacks self-gate; these pattern-supplied literals gate on $st_stock).
+$st_stock = Components\allow_stock_fallbacks();
+
 $st_collection_fallbacks = array(
 	'maxi'            => 'photo-1762342676026-09e25daaf607',
 	'midi'            => 'photo-1722486245824-7bb0ff9827dc',
@@ -65,7 +70,7 @@ echo Components\hero( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotE
 		'cta_label'    => $st_text( 'hero_cta', __( 'Shop the collection', 'skirttique' ) ),
 		'cta_url'      => $st_shop_url,
 		'image_id'     => absint( $st_house['hero_image_id'] ?? 0 ),
-		'fallback_img' => '<img src="https://images.unsplash.com/photo-1693259317871-6dfeb116c763?q=80&amp;w=1800&amp;auto=format&amp;fit=crop" alt="" loading="eager" fetchpriority="high" width="1800" height="1200">',
+		'fallback_img' => $st_stock ? '<img src="https://images.unsplash.com/photo-1693259317871-6dfeb116c763?q=80&amp;w=1800&amp;auto=format&amp;fit=crop" alt="" loading="eager" fetchpriority="high" width="1800" height="1200">' : '',
 		'parallax'     => true,
 	)
 );
@@ -103,7 +108,7 @@ echo Components\editorial( // phpcs:ignore WordPress.Security.EscapeOutput.Outpu
 		'image_id'     => absint( $st_house['craft_image_id'] ?? 0 ),
 		'media_side'   => 'left',
 		'id'           => 'st-craft-title',
-		'fallback_img' => '<img src="https://images.unsplash.com/photo-1688582949975-98a0750d7505?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="1200" height="1500">',
+		'fallback_img' => $st_stock ? '<img src="https://images.unsplash.com/photo-1688582949975-98a0750d7505?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="1200" height="1500">' : '',
 	)
 );
 
@@ -124,7 +129,7 @@ echo Components\featured_collection( // phpcs:ignore WordPress.Security.EscapeOu
 		'slug'           => $st_text( 'featured_collection', '' ),
 		'id'             => 'st-featured-title',
 		'fallback_story' => __( 'Signature silhouettes in a numbered run — worn hard, kept long, retired for good.', 'skirttique' ),
-		'fallback_img'   => '<img src="https://images.unsplash.com/photo-1722486245824-7bb0ff9827dc?q=80&amp;w=1600&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="1600" height="900">',
+		'fallback_img'   => $st_stock ? '<img src="https://images.unsplash.com/photo-1722486245824-7bb0ff9827dc?q=80&amp;w=1600&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="1600" height="900">' : '',
 	)
 );
 
@@ -166,7 +171,7 @@ echo Components\editorial( // phpcs:ignore WordPress.Security.EscapeOutput.Outpu
 		'cta_url'      => home_url( '/about/' ),
 		'image_id'     => absint( $st_house['philosophy_image_id'] ?? 0 ),
 		'id'           => 'st-philosophy-title',
-		'fallback_img' => '<img src="https://images.unsplash.com/photo-1774380255851-72e8a36d7a59?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="1200" height="1500">',
+		'fallback_img' => $st_stock ? '<img src="https://images.unsplash.com/photo-1774380255851-72e8a36d7a59?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="1200" height="1500">' : '',
 	)
 );
 
@@ -174,7 +179,7 @@ echo Components\editorial( // phpcs:ignore WordPress.Security.EscapeOutput.Outpu
 echo Components\lookbook_feature( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped within the component.
 	array(
 		'id'           => 'st-lookbook-title',
-		'fallback_img' => '<img src="https://images.unsplash.com/photo-1762342676026-09e25daaf607?q=80&amp;w=1600&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="1600" height="900">',
+		'fallback_img' => $st_stock ? '<img src="https://images.unsplash.com/photo-1762342676026-09e25daaf607?q=80&amp;w=1600&amp;auto=format&amp;fit=crop" alt="" loading="lazy" width="1600" height="900">' : '',
 	)
 );
 
