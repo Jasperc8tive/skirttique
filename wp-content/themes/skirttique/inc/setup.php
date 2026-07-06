@@ -77,6 +77,28 @@ function coming_soon_robots_rank_math( array $robots ): array {
 add_filter( 'rank_math/frontend/robots', __NAMESPACE__ . '\\coming_soon_robots_rank_math', PHP_INT_MAX );
 
 /**
+ * Rank Math carries the store's entire discretionary SEO surface — page
+ * titles, meta descriptions, Open Graph / Twitter cards, the XML sitemap
+ * and the Organization + BreadcrumbList schema graph (see
+ * tools/configure-seo.php and docs/seo.md). WooCommerce core still emits
+ * Product/Offer schema without it, but everything else silently vanishes.
+ * A theme cannot hard-require a plugin, so it warns loudly in wp-admin
+ * when the dependency is missing — the same condition preflight.php flags.
+ */
+function seo_dependency_notice(): void {
+	if ( class_exists( 'RankMath' ) || ! current_user_can( 'activate_plugins' ) ) {
+		return;
+	}
+
+	printf(
+		'<div class="notice notice-warning"><p><strong>%s</strong> %s</p></div>',
+		esc_html__( 'Skirttique SEO is inactive.', 'skirttique' ),
+		esc_html__( 'Rank Math is not active — page titles, meta descriptions, social share cards, the XML sitemap and the Organization/Breadcrumb schema are all switched off until it is installed and activated (product structured data still works). Activate Rank Math, then apply tools/configure-seo.php.', 'skirttique' )
+	);
+}
+add_action( 'admin_notices', __NAMESPACE__ . '\\seo_dependency_notice' );
+
+/**
  * Register the theme's block pattern category.
  */
 function register_pattern_category(): void {
