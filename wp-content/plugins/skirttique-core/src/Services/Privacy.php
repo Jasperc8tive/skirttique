@@ -32,8 +32,9 @@ use Skirttique\Core\Contracts\ServiceInterface;
  */
 final class Privacy implements ServiceInterface {
 
-	public const CLEAR_ACTION = 'skirttique_privacy_clear';
-	public const CRON         = 'skirttique_privacy_prune';
+	public const CLEAR_ACTION  = 'skirttique_privacy_clear';
+	public const EXPORT_ACTION = 'skirttique_inbox_export';
+	public const CRON          = 'skirttique_privacy_prune';
 
 	/** Transactional inboxes: safe to clear by hand and to age-prune. */
 	private const INBOXES = array(
@@ -41,11 +42,18 @@ final class Privacy implements ServiceInterface {
 		BespokeRequests::OPTION,
 	);
 
+	/** CSV column order per inbox (also the export allow-list). */
+	private const EXPORT_COLUMNS = array(
+		ContactMessages::OPTION => array( 'time', 'name', 'email', 'topic', 'message' ),
+		BespokeRequests::OPTION => array( 'time', 'name', 'email', 'whatsapp', 'occasion', 'message' ),
+	);
+
 	public function register(): void {
 		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'exporters' ) );
 		add_filter( 'wp_privacy_personal_data_erasers', array( $this, 'erasers' ) );
 
 		add_action( 'admin_post_' . self::CLEAR_ACTION, array( $this, 'handle_clear' ) );
+		add_action( 'admin_post_' . self::EXPORT_ACTION, array( $this, 'handle_export' ) );
 
 		add_action( self::CRON, array( $this, 'prune' ) );
 		add_action( 'init', array( $this, 'schedule' ) );
@@ -333,9 +341,99 @@ final class Privacy implements ServiceInterface {
 		exit;
 	}
 
+	/**
+	 * A CSV-download form for an inbox screen (owner data portability).
+	 */
+	public static function export_button( string $option, string $label ): string {
+		if ( ! isset( self::EXPORT_COLUMNS[ $option ] ) ) {
+			return '';
+		}
+
+		return sprintf(
+			'<form method="post" action="%1$s" style="display:inline-block;margin-right:.5em">'
+				. '<input type="hidden" name="action" value="%2$s">'
+				. '<input type="hidden" name="option" value="%3$s">'
+				. '%4$s'
+				. '<button type="submit" class="button">%5$s</button>'
+				. '</form>',
+			esc_url( admin_url( 'admin-post.php' ) ),
+			esc_attr( self::EXPORT_ACTION ),
+			esc_attr( $option ),
+			wp_nonce_field( self::EXPORT_ACTION, '_wpnonce', true, false ),
+			esc_html( $label )
+		);
+	}
+
+	/**
+	 * Stream an inbox as a CSV download (newest first).
+	 */
+	public function handle_export(): void {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( esc_html__( 'You are not allowed to do that.', 'skirttique-core' ), '', array( 'response' => 403 ) );
+		}
+		check_admin_referer( self::EXPORT_ACTION );
+
+		$option = isset( $_POST['option'] ) ? sanitize_key( wp_unslash( $_POST['option'] ) ) : '';
+		if ( ! isset( self::EXPORT_COLUMNS[ $option ] ) ) {
+			wp_safe_redirect( wp_get_referer() ?: admin_url() );
+			exit;
+		}
+
+		$columns  = self::EXPORT_COLUMNS[ $option ];
+		$rows     = array_reverse( (array) get_option( $option, array() ) );
+		$filename = str_replace( '_', '-', $option ) . '-' . gmdate( 'Ymd' ) . '.csv';
+
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+
+		// phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+		$handle = fopen( 'php://output', 'w' );
+		fputcsv( $handle, array_map( array( self::class, 'column_label' ), $columns ) );
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			$line = array();
+			foreach ( $columns as $col ) {
+				$value  = 'time' === $col ? self::when( $row['time'] ?? 0 ) : (string) ( $row[ $col ] ?? '' );
+				$line[] = self::csv_cell( $value );
+			}
+			fputcsv( $handle, $line );
+		}
+		fclose( $handle );
+		// phpcs:enable
+
+		exit;
+	}
+
 	/* ----------------------------------------------------------------- */
 	/* Helpers                                                             */
 	/* ----------------------------------------------------------------- */
+
+	/**
+	 * Neutralise spreadsheet formula injection from user-submitted text.
+	 */
+	private static function csv_cell( string $value ): string {
+		return ( '' !== $value && in_array( $value[0], array( '=', '+', '-', '@' ), true ) ) ? "'" . $value : $value;
+	}
+
+	/**
+	 * Human column header for a stored key.
+	 */
+	private static function column_label( string $key ): string {
+		$labels = array(
+			'time'     => __( 'Received', 'skirttique-core' ),
+			'name'     => __( 'Name', 'skirttique-core' ),
+			'email'    => __( 'Email', 'skirttique-core' ),
+			'topic'    => __( 'Concerns', 'skirttique-core' ),
+			'whatsapp' => __( 'WhatsApp', 'skirttique-core' ),
+			'occasion' => __( 'Occasion', 'skirttique-core' ),
+			'message'  => __( 'Message', 'skirttique-core' ),
+		);
+
+		return $labels[ $key ] ?? ucfirst( $key );
+	}
 
 	/**
 	 * Case-insensitive email match against a stored value.

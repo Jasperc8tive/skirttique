@@ -172,6 +172,7 @@ final class BespokeRequests implements ServiceInterface {
 						echo esc_html( sprintf( __( 'Requests older than %s are pruned automatically. To answer a data-subject request for one client, use Tools → Export / Erase Personal Data.', 'skirttique-core' ), Privacy::retention_label() ) );
 						?>
 					</p>
+					<?php echo Privacy::export_button( self::OPTION, __( 'Export CSV', 'skirttique-core' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built and escaped in export_button(). ?>
 					<?php echo Privacy::clear_button( self::OPTION, __( 'Clear all requests', 'skirttique-core' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built and escaped in clear_button(). ?>
 			<?php endif; ?>
 		</div>
